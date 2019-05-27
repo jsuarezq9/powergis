@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import Map from 'ol/Map';
-import Tile from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import View from 'ol/View';
 import Feature from 'ol/Feature';
@@ -17,8 +16,6 @@ import { toStringHDMS } from 'ol/coordinate.js';
 import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
-import wfs from 'ol/source';
-import * as ol from 'openlayers';
 import { defaults, Control, ZoomSlider, OverviewMap, Zoom } from 'ol/control';
 import { Select } from 'ol/interaction';
 import { events } from 'ol/events';
@@ -48,6 +45,30 @@ export class AppComponent implements OnInit {
       autoPanAnimation: {
         duration: 250
       }
+    });
+    closer.onclick = function() {
+      overlay.setPosition(undefined);
+      closer.blur();
+      return false;
+    };
+    const base = new TileLayer({
+      source: new TileJSON({
+        url: 'https://api.tiles.mapbox.com/v3/mapbox.natural-earth-hypso-bathy.json?secure',
+        crossOrigin: 'anonymous'
+      })
+    });
+
+    const map = new Map({
+      // controls: [new Zoom(), new ZoomSlider(),
+      //   new OverviewMap()
+      // ],
+      layers: [base],
+      overlays: [overlay],
+      target: 'map',
+      view: new View({
+        center: fromLonLat([-74.063644, 4.624335]),
+        zoom: 7
+      })
     });
     const vectorSource = new VectorSource({
       format: new GeoJSON(),
@@ -91,55 +112,63 @@ export class AppComponent implements OnInit {
           })
         })*/
         fill: new Fill({
-          color: 'rgba(0, 191, 255, 0.9)'
+          color: 'rgba(120, 191, 255, 0.6)'
         }),
         stroke: new Stroke({
-          color: 'rgba(0, 0, 255, 1.0)',
+          color: 'rgba(0, 0, 255, 0.8)',
           width: 2
         })
       })
     });
-    /*const vector = new VectorLayer({
-      source: vectorSource,
+    // agregar capa vector al mapa
+    map.addLayer(vector);
+    // creo segunda capa tipo vector
+
+    const vectorSource2 = new VectorSource({
+      format: new GeoJSON(),
+      loader(extent, resolution, projection) {
+        const proj = projection.getCode();
+        const url = 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=WFS&' +
+          'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&' +
+          'outputFormat=application/json&srsname=' + proj + '&' +
+          'bbox=' + extent.join(',') + ',' + proj;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        const onError = function () {
+          vectorSource2.removeLoadedExtent(extent);
+        }
+        xhr.onerror = onError;
+        xhr.onload = function () {
+          if (xhr.status == 200) {
+            vectorSource2.addFeatures(
+              vectorSource2.getFormat().readFeatures(xhr.responseText));
+          } else {
+            onError();
+          }
+        }
+        xhr.send();
+      },
+      strategy: bboxStrategy
+    });
+// agrego la segunda fuente de datos a una capa vectorlayer
+    const vector2 = new VectorLayer({
+      source: vectorSource2,
       style: new Style({
-        stroke: new Stroke({
-          color: 'rgba(0, 0, 255, 1.0)',
-          width: 2
+        image: new Circle({
+          radius: 7,
+          fill: new Fill({
+            color: 'rgba(0, 191, 255, 1.0)'
+          }),
+          stroke: new Stroke({
+            color: 'rgba(0, 0, 255, 1.0)',
+            width: 1
+          })
         })
-      })
-    });*/
-
-    const base = new TileLayer({
-      source: new TileJSON({
-        url: 'https://api.tiles.mapbox.com/v3/mapbox.natural-earth-hypso-bathy.json?secure',
-        crossOrigin: 'anonymous'
-      })
+       })
     });
 
-    const map = new Map({
-      // controls: [new Zoom(), new ZoomSlider(),
-      //   new OverviewMap()
-      // ],
-      layers: [
-        base, vector
-      ],
-      overlays: [overlay],
-      target: 'map',
-      view: new View({
-        center: fromLonLat([-74.063644, 4.624335]),
-        zoom: 7
-      })
-    });
-
-    /*const hoverInteraction = new Select({
-      condition: events().condition.pointerMove,
-      layers: [vector]  //Setting layers to be hovered
-    });
-    map.addInteraction(hoverInteraction);*/
-
-
-    // pointermove
-
+    // agrego la capa al mapa
+    map.addLayer(vector2);
 
     map.on('singleclick', function (evt) {
 
@@ -147,12 +176,13 @@ export class AppComponent implements OnInit {
       const hdms = toStringHDMS(toLonLat(coordinate));
 
       console.log(vector.getSource().getFeaturesAtCoordinate(coordinate));
+
       content.innerHTML = '<p>Current coordinates are :</p><code>' + hdms +
         '</code>';
       overlay.setPosition(coordinate);
       const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
         // you can add a condition on layer to restrict the listener
-        layer = vector;
+        layer = [vector,vector2];
         return feature;
       });
       if (feature) {
@@ -160,32 +190,12 @@ export class AppComponent implements OnInit {
         console.log(feature);
         content.innerHTML = '<p>nombre :<code>' + feature.values_.nombre +
           '</code></p> <p>Area: <code>' + feature.values_.shape_area +
-          '</code></p>';
+          '</code></p>' +
+          '</code></p> <p>Nombre Estación: <code>' + feature.values_.nombre_estacion +
+          '</code></p>' +
+          '</code></p> <p>Nombre Sensor: <code>' + feature.values_.nombre_sensor +
+          '</code>' + ' valor: ' + feature.values_.valor + ' ' + feature.values_.unidad + '</p>';
       }
-
-      /*const startMarker = new Feature({
-        geometry: new Point(coordinate),
-      });
-      this.vectorLayer = new VectorLayer({
-        source: new VectorSource({
-          features: [startMarker]
-        }),
-        style: new Style({
-          image: new Circle({
-            radius: 5,
-            fill: new Fill({
-              color: 'black'
-            }),
-            stroke: new Stroke({
-              color: 'rgba(0, 0, 255, 1.0)',
-              width: 1
-            })
-          })
-        })
-      });
-
-     // this.addLayer(this.vectorLayer);*/
-
     });
   }
 }
