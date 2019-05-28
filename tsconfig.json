@@ -19,12 +19,7 @@
       "dom"
     ],
     "paths": {
-      "angular-openlayers-iii": [
-        "dist/angular-openlayers-iii"
-      ],
-      "angular-openlayers-iii/*": [
-        "dist/angular-openlayers-iii/*"
-      ]
+
     }
   }
 }

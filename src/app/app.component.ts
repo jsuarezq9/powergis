@@ -170,7 +170,7 @@ export class AppComponent implements OnInit {
     // agrego la capa al mapa
     map.addLayer(vector2);
 
-    map.on('singleclick', function (evt) {
+    map.on('singleclick', (evt) => {
 
       const coordinate = evt.coordinate;
       const hdms = toStringHDMS(toLonLat(coordinate));
@@ -182,7 +182,7 @@ export class AppComponent implements OnInit {
       overlay.setPosition(coordinate);
       const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
         // you can add a condition on layer to restrict the listener
-        layer = [vector,vector2];
+        layer = [vector, vector2];
         return feature;
       });
       if (feature) {
