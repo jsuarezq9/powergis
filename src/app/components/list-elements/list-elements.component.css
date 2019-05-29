@@ -1,0 +1,8 @@
+.outer-class {
+    width: 25px;
+    height: 35px;
+}
+
+.inner-class {
+    line-height: 30px;
+}

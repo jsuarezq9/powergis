@@ -1,0 +1,11 @@
+.top {
+    background-color: #2F86EA;
+    max-height: 3%;
+    border: 10px;
+    /* the border will curve into a 'D' */
+    border-radius: 0px 20px 20px 0px;
+}
+
+.topContent {
+    color: aliceblue
+}

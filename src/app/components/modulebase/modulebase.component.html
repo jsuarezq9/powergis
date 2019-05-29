@@ -1,0 +1,37 @@
+<div class="col-12 mt-3" style="height: 90%">
+    <div class="collapse multiple-collapse dropToolMenu animated fadeIn moduleFloat border border-white" style="min-height: 100%; max-height: 100%" id="module1" #module1>
+        <!-- Búsqueda y añadir capas -->
+        <div class="container mt-3" style="width: 95%;">
+            <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
+                <div class="col-10">
+                    <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
+                </div>
+                <hr>
+                <button class="col btn btn-lg ripple roundedInputSearch" type="button" aria-pressed="mixed">
+                    <i class="ripple fas fa-search"></i>
+                </button>
+            </div>
+            <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                <div class="col-1 btn-lg text-left">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="col-9 btn-lg text-left">
+                    Capas
+                </div>
+                <button class="col btn btn-lg btn-block ripple roundedInputSearch" aria-pressed="true">
+                    <i class="ripple fas fa-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Capas disponibles en mapa -->
+        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 300px; background-color: white">
+            <br>
+            <!-- <app-list-elements (selected)="selectLayer($event)" [element]="element" *ngFor="let element of layerBaseList"></app-list-elements> -->
+            <br>
+        </div>
+        <!-- Leyenda -->
+        <div class="container mt-3 border border-danger overflow-auto" style="width: 95%; max-height: 200px;">
+            Leyenda
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+.map {
+    height: 100%;
+    width: 100%;
+    padding: 0%;
+    position: fixed;
+    margin: 0%;
+    right: 0px;
+}
+
+
+/* Zoomslider */
+
+.ol-zoomslider {
+    top: 8px;
+    left: auto;
+    right: 8px;
+    background-color: rgba(255, 69, 0, 0.2);
+    width: 200px;
+    height: 15px;
+    padding: 0;
+    box-shadow: 0 0 5px rgb(255, 69, 0);
+    border-radius: 20px;
+}
+
+#map .ol-zoomslider:hover {
+    background-color: rgba(255, 69, 0, 0.3);
+}
+
+#map .ol-zoomslider-thumb {
+    height: 15px;
+    width: 15px;
+    margin: 0;
+    filter: none;
+    background-color: rgba(68, 0, 255, 0.6);
+    border-radius: 20px;
+}
+
+#map .ol-zoomslider-handle:hover {
+    background-color: rgba(0, 255, 106, 0.7);
+}

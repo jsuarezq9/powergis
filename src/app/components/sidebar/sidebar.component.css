@@ -1,0 +1,42 @@
+.nav {
+    display: flex;
+    position: sticky;
+    bottom: 0px;
+    padding-left: 0;
+}
+
+ul li a {
+    color: white;
+}
+
+ul li a:hover {
+    color: grey;
+}
+
+.dropMenu {
+    /* height: 82vh; */
+    max-height: 100%;
+    transition: 2s;
+}
+
+.roundedBot {
+    background-color: #2F86EA;
+    border-radius: 0px 0px 30px 30px;
+}
+
+.circleBot {
+    background-color: #2F86EA;
+    border: 10px;
+    border-radius: 0px 0px 60px 60px;
+}
+
+.rotate {
+    transform: rotate(90deg);
+    transition: 2s;
+}
+
+.borderRightActive {
+    border-right: #2F86EA 5px
+}
+
+.modulesButton {}

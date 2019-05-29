@@ -1,0 +1,31 @@
+<div class="col-12">
+    <div class="row">
+        <!-- cuadrado negro recogido -->
+        <div class="bg-dark roundedBot" style="width: 100%">
+            <!-- círculo azul -->
+            <nav class="navbar navbar-dark circleBot">
+                <button (click)="this.icon.classList.toggle('rotate'); collapseAll()" class="btn btn-block navbar-toggler" type="button" data-toggle="collapse" data-target="#dropbar" aria-controls="dropbar" aria-label="Toggle Map Dashboard">
+                              <span class="navbar-toggler-icon" id="icon" #icon></span>
+                          </button>
+            </nav>
+            <br>
+            <!-- barra negra -->
+            <div class="col bg-dark collapse multiple-collapse dropMenu" id="dropbar">
+                <div class="menuHigh">
+                    <hr class="bg-light">
+                    <button (click)="collapse=!collapse; this.basics.classList.add('activeButton'); borderActive($event);" id="bases" class="btn btn-block modulesButton ripple" type="button" data-toggle="collapse" data-target="#module1" aria-expanded="false" aria-controls="collapseExample"
+                        #basics>
+                          <img src="../../../assets/icons/basic.png" width="100%" alt="Asset Base Icon" id="bases">
+                      </button>
+                    <hr class="bg-light">
+                    <button (click)="collapse=!collapse; this.tems.classList.add('activeButton'); borderActive($event);" id="tems" class="btn btn-block modulesButton ripple" type="button" data-toggle="collapse" data-target="#module2" aria-expanded="false" aria-controls="collapseExample"
+                        #tems>
+                          <img src="../../../assets/icons/tem.png" width="100%" alt="Asset Tem Icon" id="tems">
+                      </button>
+                    <hr class="bg-light">
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>

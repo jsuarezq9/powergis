@@ -1,0 +1,8 @@
+<div class="row m-1 border rounded">
+    <div class="col-2 col-offset-2 border-right outer-class" style="background-color:#E9ECF1;">
+        <div class="inner-class text-center"><input (click)="select(element, $event)" type="checkbox" [id]="element.name" aria-label=""></div>
+    </div>
+    <div class="col outer-class">
+        <label class="inner-class text-wrap">Capa: {{ element['name'] | layerName | uppercase }}</label>
+    </div>
+</div>
