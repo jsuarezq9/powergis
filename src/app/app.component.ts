@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Map from 'ol/Map';
-import OSM from 'ol/source/OSM';
 import View from 'ol/View';
-import Feature from 'ol/Feature';
-import sVector from 'ol/source/Vector';
-import lVector from 'ol/layer/Vector';
-import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj.js';
 import { Tile as TileLayer, Vector as VectorLayer, } from 'ol/layer';
 import TileJSON from 'ol/source/TileJSON';
@@ -16,9 +11,9 @@ import { toStringHDMS } from 'ol/coordinate.js';
 import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
-import { defaults, Control, ZoomSlider, OverviewMap, Zoom } from 'ol/control';
-import { Select } from 'ol/interaction';
-import { events } from 'ol/events';
+import { WeatherService } from './weather.service';
+import Chart from 'chart.js/dist/Chart.js';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'app-root',
@@ -27,11 +22,28 @@ import { events } from 'ol/events';
 })
 
 export class AppComponent implements OnInit {
-  title = 'OpenLayers-Angular';
-  constructor() { }
+  title = 'Browser market shares at a specific website, 2014';
+  type = 'PieChart';
+  data = [
+    ['Firefox', 45.0],
+    ['IE', 26.8],
+    ['Chrome', 12.8],
+    ['Safari', 8.5],
+    ['Opera', 6.2],
+    ['Others', 0.7]
+  ];
+  columnNames = ['Browser', 'Percentage'];
+  options = {};
+  width = 550;
+  height = 400;
+  chart = [];
+
+  constructor(private _weather: WeatherService) { }
 
   ngOnInit() {
     this.initilizeMap();
+
+    this.initializeChart();
   }
 
   initilizeMap() {
@@ -46,7 +58,7 @@ export class AppComponent implements OnInit {
         duration: 250
       }
     });
-    closer.onclick = function() {
+    closer.onclick = function () {
       overlay.setPosition(undefined);
       closer.blur();
       return false;
@@ -82,7 +94,7 @@ export class AppComponent implements OnInit {
         xhr.open('GET', url);
         const onError = function () {
           vectorSource.removeLoadedExtent(extent);
-        }
+        };
         xhr.onerror = onError;
         xhr.onload = function () {
           if (xhr.status == 200) {
@@ -91,7 +103,7 @@ export class AppComponent implements OnInit {
           } else {
             onError();
           }
-        }
+        };
         xhr.send();
       },
       strategy: bboxStrategy
@@ -136,7 +148,7 @@ export class AppComponent implements OnInit {
         xhr.open('GET', url);
         const onError = function () {
           vectorSource2.removeLoadedExtent(extent);
-        }
+        };
         xhr.onerror = onError;
         xhr.onload = function () {
           if (xhr.status == 200) {
@@ -145,12 +157,12 @@ export class AppComponent implements OnInit {
           } else {
             onError();
           }
-        }
+        };
         xhr.send();
       },
       strategy: bboxStrategy
     });
-// agrego la segunda fuente de datos a una capa vectorlayer
+    // agrego la segunda fuente de datos a una capa vectorlayer
     const vector2 = new VectorLayer({
       source: vectorSource2,
       style: new Style({
@@ -164,7 +176,7 @@ export class AppComponent implements OnInit {
             width: 1
           })
         })
-       })
+      })
     });
 
     // agrego la capa al mapa
@@ -198,4 +210,62 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  initializeChart() {
+    this._weather.dailyData('0000016011', '2019-02-01', '2019-05-10')
+      .subscribe(res => {
+        const data = res.filter(res => {
+          return res.id_sensor === '1230    ';
+        });
+        console.log(data);
+        let dataset = [];
+        dataset = data.map(res => {
+          return {
+            t: res.fecha_hora,
+            y: res.valor
+          }
+        });
+        //   const conf =  {
+        //     type: 'line',
+        //     data: {
+        //       backgroundColor: 'red',
+        //       datasets: {
+        //       data: dataset}
+        //     },
+        //     options: {
+        //         scales: {
+        //             xAxes: [{
+        //                 type: 'time',
+        //                 time: {
+        //                     unit: 'hour'
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // };
+        const conf = {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: 'Scatter Dataset',
+              data: dataset
+            }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                type: 'time',
+                position: 'bottom'
+              }]
+            }
+          }
+        };
+        console.log(conf);
+        this.chart = new Chart('canvas', conf);
+      });
+  }
+
+
+
 }
+
