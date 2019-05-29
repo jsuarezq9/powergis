@@ -69,7 +69,7 @@ export class AppComponent implements OnInit {
         crossOrigin: 'anonymous'
       })
     });
-
+// or
     const map = new Map({
       // controls: [new Zoom(), new ZoomSlider(),
       //   new OverviewMap()
