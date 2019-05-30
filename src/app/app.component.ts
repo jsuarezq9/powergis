@@ -10,7 +10,8 @@ import Overlay from 'ol/Overlay';
 import { toStringHDMS } from 'ol/coordinate.js';
 import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
-import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
+import { bbox as bboxStrategy, all } from 'ol/loadingstrategy.js';
+import { boundingExtent, buffer } from 'ol/extent';
 import { WeatherService } from './weather.service';
 import Chart from 'chart.js/dist/Chart.js';
 import 'rxjs/add/operator/map';
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit {
         duration: 250
       }
     });
-    closer.onclick = function () {
+    closer.onclick = function() {
       overlay.setPosition(undefined);
       closer.blur();
       return false;
@@ -69,7 +70,7 @@ export class AppComponent implements OnInit {
         crossOrigin: 'anonymous'
       })
     });
-// or
+    // or
     const map = new Map({
       // controls: [new Zoom(), new ZoomSlider(),
       //   new OverviewMap()
@@ -83,7 +84,9 @@ export class AppComponent implements OnInit {
       })
     });
     const vectorSource = new VectorSource({
-      format: new GeoJSON(),
+      format: new GeoJSON({
+        defaultDataProjection: 'EPSG:4686'
+      }),
       loader(extent, resolution, projection) {
         const proj = projection.getCode();
         const url = 'http://elaacgresf00.enelint.global:8080/geoserver/tem/wfs?service=WFS&' +
@@ -92,14 +95,16 @@ export class AppComponent implements OnInit {
           'bbox=' + extent.join(',') + ',' + proj;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
-        const onError = function () {
+        const onError = function() {
           vectorSource.removeLoadedExtent(extent);
         };
         xhr.onerror = onError;
-        xhr.onload = function () {
-          if (xhr.status == 200) {
+        xhr.onload = function() {
+          if (xhr.status === 200) {
             vectorSource.addFeatures(
-              vectorSource.getFormat().readFeatures(xhr.responseText));
+              vectorSource.getFormat().readFeatures(xhr.responseText, {
+                featureProjection: projection
+              }));
           } else {
             onError();
           }
@@ -112,17 +117,7 @@ export class AppComponent implements OnInit {
     const vector = new VectorLayer({
       source: vectorSource,
       style: new Style({
-        /*
-        image: new Circle({
-          radius: 7,
-          fill: new Fill({
-            color: 'rgba(0, 191, 255, 1.0)'
-          }),
-          stroke: new Stroke({
-            color: 'rgba(0, 0, 255, 1.0)',
-            width: 1
-          })
-        })*/
+
         fill: new Fill({
           color: 'rgba(120, 191, 255, 0.6)'
         }),
@@ -146,14 +141,16 @@ export class AppComponent implements OnInit {
           'bbox=' + extent.join(',') + ',' + proj;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
-        const onError = function () {
+        const onError = function() {
           vectorSource2.removeLoadedExtent(extent);
         };
         xhr.onerror = onError;
-        xhr.onload = function () {
-          if (xhr.status == 200) {
+        xhr.onload = function() {
+          if (xhr.status === 200) {
             vectorSource2.addFeatures(
-              vectorSource2.getFormat().readFeatures(xhr.responseText));
+              vectorSource2.getFormat().readFeatures(xhr.responseText, {
+                featureProjection: projection
+              }));
           } else {
             onError();
           }
@@ -176,73 +173,71 @@ export class AppComponent implements OnInit {
             width: 1
           })
         })
-      })
+      }),
+      renderMode: 'vector',
+
     });
-
-    // agrego la capa al mapa
+     // agrego la capa al mapa
     map.addLayer(vector2);
-
     map.on('singleclick', (evt) => {
-
       const coordinate = evt.coordinate;
       const hdms = toStringHDMS(toLonLat(coordinate));
-
-      console.log(vector.getSource().getFeaturesAtCoordinate(coordinate));
-
+      const view = map.getView();
       content.innerHTML = '<p>Current coordinates are :</p><code>' + hdms +
         '</code>';
       overlay.setPosition(coordinate);
-      const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-        // you can add a condition on layer to restrict the listener
-        layer = [vector, vector2];
-        return feature;
+      const features = [];
+      map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+        features.push(feature);
       });
-      if (feature) {
+      if (features.length > 0) {
         // here you can add you code to display the coordinates or whatever you want to do
-        console.log(feature);
-        content.innerHTML = '<p>nombre :<code>' + feature.values_.nombre +
-          '</code></p> <p>Area: <code>' + feature.values_.shape_area +
-          '</code></p>' +
-          '</code></p> <p>Nombre Estación: <code>' + feature.values_.nombre_estacion +
-          '</code></p>' +
-          '</code></p> <p>Nombre Sensor: <code>' + feature.values_.nombre_sensor +
-          '</code>' + ' valor: ' + feature.values_.valor + ' ' + feature.values_.unidad + '</p>';
+        const sensor = [];
+        const nombreEstacion = [];
+        const valor = [];
+        const fecha = [];
+        const info = [];
+        for (const feature of features) {
+
+          sensor.push(feature.values_.id_sensor);
+          nombreEstacion.push(feature.values_.nombre_estacion);
+          valor.push(feature.values_.valor);
+          fecha.push(feature.values_.fecha_hora);
+          info.push({
+            sensor: feature.values_.id_sensor,
+            estacion: feature.values_.nombre_estacion,
+            fecha: feature.values_.fecha_hora,
+            valor: feature.values_.valor
+          });
+
+        }
+        let html = '<table><tr>';
+        info.forEach(element => html += '<td>' + element.estacion + '</td>' + '<td>' + element.sensor +
+         '</td>' +
+         '<td>fecha :' + element.fecha + '</td>' +
+         '<td>valor :' + element.valor + '</td><td><button>datos</button></td></tr><tr>');
+        //   <tr>sensor :' + element.sensor + '</tr>' +
+        //   '<tr>fecha: ' + element.fecha + '</tr>' +
+        //   '<tr>valor :' + element.valor + '</tr>'
+        html += '</tbody></table>';
+        console.log(html);
+        content.innerHTML += html;
       }
     });
   }
-
   initializeChart() {
     this._weather.dailyData('0000016011', '2019-02-01', '2019-05-10')
       .subscribe(res => {
         const data = res.filter(res => {
           return res.id_sensor === '1230    ';
         });
-        console.log(data);
         let dataset = [];
         dataset = data.map(res => {
           return {
             t: res.fecha_hora,
             y: res.valor
-          }
+          };
         });
-        //   const conf =  {
-        //     type: 'line',
-        //     data: {
-        //       backgroundColor: 'red',
-        //       datasets: {
-        //       data: dataset}
-        //     },
-        //     options: {
-        //         scales: {
-        //             xAxes: [{
-        //                 type: 'time',
-        //                 time: {
-        //                     unit: 'hour'
-        //                 }
-        //             }]
-        //         }
-        //     }
-        // };
         const conf = {
           type: 'line',
           data: {
@@ -264,8 +259,5 @@ export class AppComponent implements OnInit {
         this.chart = new Chart('canvas', conf);
       });
   }
-
-
-
 }
 

@@ -10,18 +10,13 @@
 <div id="map" class="map"></div>
 <div id="popup" class="ol-popup">
   <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-  <div id="popup-content"></div>
-  <button>diaria</button>
-  <button>mensual</button>
-  <div id='weekly-graph'>
-  </div>
-  <google-chart #chart [title]="title" [type]="type" [data]="data" [columnNames]="columnNames" [options]="options"
-    [width]="width" [height]="height">
-  </google-chart>
+  <div id="popup-content">
+
+  <div id='weekly-graph'></div>
   <canvas id="canvas">chart</canvas>
 </div>
-<div id=daily-graph></div>
-
+</div>
+<div id="info">&nbsp;</div>
 
 
 <router-outlet></router-outlet>
