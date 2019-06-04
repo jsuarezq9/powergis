@@ -40,3 +40,9 @@
 .ol-popup-closer:after {
   content: "✖";
 }
+.map {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}

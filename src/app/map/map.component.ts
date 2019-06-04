@@ -12,24 +12,30 @@ import {ImageCanvas as ImageCanvasSource, Stamen} from 'ol/source.js';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
-  map;
+  map = [];
   constructor() { }
 
   ngOnInit() {
+    this.initializeMap();
   }
   initializeMap() {
     this.map = new Map({
       layers: [
         new TileLayer({
           source: new Stamen({
-            layer: 'watercolor'
+            layer: 'terrain'
+          })
+        }),
+        new TileLayer({
+          source: new Stamen({
+            layer: 'terrain-labels'
           })
         })
       ],
       target: 'map',
       view: new View({
-        center: fromLonLat([-97, 38]),
-        zoom: 4
+        center: fromLonLat([-74.063644, 3.924335]),
+        zoom: 12
       })
     });
 

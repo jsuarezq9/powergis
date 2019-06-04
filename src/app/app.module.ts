@@ -1,23 +1,23 @@
+import { MapComponent } from './map/map.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { GoogleChartsModule } from 'angular-google-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { WeatherService } from './weather.service';
+import { TimeSeriesService } from './timeseries.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    GoogleChartsModule,
     HttpClientModule
   ],
-  providers: [WeatherService],
+  providers: [TimeSeriesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

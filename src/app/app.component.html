@@ -1,22 +1,35 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <link rel="stylesheet" href="https://openlayers.org/en/v5.3.0/css/ol.css" type="text/css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
 </div>
-
-<h2>Here are some links to help you start: </h2>
+<nav>
+  <a routerLink="/">home</a>
+  <a routerLink="/map">map</a>
+</nav>
+<router-outlet></router-outlet>
 <div id="map" class="map"></div>
 <div id="popup" class="ol-popup">
   <a href="#" id="popup-closer" class="ol-popup-closer"></a>
   <div id="popup-content">
+    <table class="table table-striped">
+      <tbody>
+          <tr><th  *ngFor="let column of columns">{{column}}</th></tr>
+         <tr *ngFor="let item of info">
+            <td>{{ item.estacion}}</td>
+        <td >{{item.sensor}}</td>
+        <td >{{item.fecha }}</td>
+        <td>{{item.valor}}</td>
+        <td><button mat-button color="primary" (click)="initializeChart(item.idestacion,item.sensor)">datos</button></td>
+         </tr>
+      </tbody>
+    </table>
+    <div id='weekly-graph'></div>
 
-  <div id='weekly-graph'></div>
+  </div>
   <canvas id="canvas">chart</canvas>
 </div>
-</div>
 <div id="info">&nbsp;</div>
-
-
-<router-outlet></router-outlet>
