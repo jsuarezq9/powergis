@@ -13,6 +13,7 @@ import { ModulehidroComponent } from './components/modulehidro/modulehidro.compo
 import { ModuleprecipitationComponent } from './components/moduleprecipitation/moduleprecipitation.component';
 import { LayerNamePipe } from './pipes/layer-name.pipe';
 import { HttpClientModule } from '@angular/common/http';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 
 @NgModule({
@@ -26,11 +27,12 @@ import { HttpClientModule } from '@angular/common/http';
     ModulebaseComponent,
     ModulehidroComponent,
     ModuleprecipitationComponent,
-    LayerNamePipe
+    LayerNamePipe,
+    CapitalizePipe
   ],
   imports: [
     BrowserModule,
-    // AppRoutingModu  le,
+    // AppRoutingModule,
     HttpClientModule,
     GoogleChartsModule
   ],

@@ -135,3 +135,7 @@ body {
     background-size: 100%;
     transition: background 0s;
 }
+
+.textwrapping {
+    font-size: 1vw;
+}

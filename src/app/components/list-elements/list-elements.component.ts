@@ -17,11 +17,10 @@ export class ListElementsComponent implements OnInit {
   }
 
   select(select, event) {
-    let emitevent = {
+    this.selected.emit({
       layer: select,
       e: event
-    };
-    this.selected.emit(emitevent);
+    });
   }
 
 }

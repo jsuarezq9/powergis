@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GeoserverService } from '../../services/geoserver.service';
+import { ComponentsInteractionService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-modulebase',
@@ -7,9 +9,51 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModulebaseComponent implements OnInit {
 
-  constructor() { }
+  layers = [];
+
+  constructor(private geoservice: GeoserverService, private interaction: ComponentsInteractionService) {
+    this.getBases();
+    this.getTems();
+    this.getDWHS();
+  }
 
   ngOnInit() {
+  }
+
+  selectLayer(event: any): void {
+    this.interaction.setLayer(event.layer, event.e.target.checked);
+  }
+
+  getBases() {
+    this.geoservice.getLayers(this.geoservice.BASE).subscribe((bases: any) => {
+      this.concatLayers(bases);
+    }, (error) => {
+      this.handleError(this.geoservice.BASE, error);
+    });
+  }
+
+  getTems() {
+    this.geoservice.getLayers(this.geoservice.TEMS).subscribe((tems: any) => {
+      this.concatLayers(tems);
+    }, (error) => {
+      this.handleError(this.geoservice.TEMS, error);
+    });
+  }
+
+  getDWHS() {
+    this.geoservice.getLayers(this.geoservice.DWHS).subscribe((dwhs) => {
+      this.concatLayers(dwhs);
+    }, (error) => {
+      this.handleError(this.geoservice.DWHS, error);
+    });
+  }
+
+  concatLayers(layer: any[]): void {
+    this.layers = this.layers.length === 0 && layer !== undefined ? layer : this.layers.concat(layer);
+  }
+
+  handleError(type, error) {
+    alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
   }
 
 }

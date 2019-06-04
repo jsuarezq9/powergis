@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +8,14 @@ import { Observable } from 'rxjs';
 export class GeoserverService {
   BASE = 'base';
   TEMS = 'tem';
+  DWHS = 'dwh';
+  WMS = 'wms';
+  WFS = 'wfs';
+  APPJSON = 'application/json';
   host = 'http://10.154.80.177';
   port = 8080;
-  uri = '/geoserver/rest/workspaces/';
-  uriWFS = '/geoserver/tem/wfs';
+  uriWorkSpace = '/geoserver/rest/workspaces';
   authBasic = 'Basic YWRtaW46Z2Vvc2VydmVy';
-  contentType = 'application/json';
   baseLayers: any[];
   temLayers: any[];
   constructor(private http: HttpClient) { }
@@ -21,18 +23,16 @@ export class GeoserverService {
   getLayers(type: string) {
     const headers = new HttpHeaders({
       Authorization: this.authBasic,
-      'content-type': this.contentType
+      'content-type': this.APPJSON
     });
-    return this.http.get(`${this.host}:${this.port}${this.uri}${type}/layers`, { headers });
+    return this.http.get(`${this.host}:${this.port}${this.uriWorkSpace}/${type}/layers`, { headers })
+      .pipe( map ((response: any) => {
+        return this.retrieveInfo(response);
+    }));
   }
 
-  getWFS(type: string, name: string) {
-    const headers = new HttpHeaders({
-      Authorization: this.authBasic
-    });
-// tslint:disable-next-line: max-line-length
-    return this.http.get(`${this.host}:${this.port}/geoserver/${type}/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=${type}:${name}&maxFeatures=50&outputFormat=application/json`, { headers });
+  retrieveInfo(layers: any): any[] {
+    return layers.layers.layer;
   }
 
 }
-

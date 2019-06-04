@@ -6,15 +6,17 @@ import { ComponentsInteractionService } from '../../services/interactions.servic
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
 import OlTileLayer from 'ol/layer/Tile';
+import ImageLayer from 'ol/layer/Image';
+import ImageWMS from 'ol/source/ImageWMS';
 import OlView from 'ol/View';
 import { fromLonLat } from 'ol/proj';
+import lVector from 'ol/layer/Vector';
 
-import * as ol from 'ol';
+import * as ol from 'ol/layer';
 
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
 import sVector from 'ol/source/Vector';
-import lVector from 'ol/layer/Vector';
 import Point from 'ol/geom/Point';
 // import { Tile as TileLayer, Vector as VectorLayer, } from 'ol/layer';
 import TileJSON from 'ol/source/TileJSON';
@@ -28,6 +30,7 @@ import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import { defaults, control, ZoomSlider, OverviewMap, Zoom, ScaleLine, extend } from 'ol/control';
 import { Select } from 'ol/interaction';
 import { events } from 'ol/events';
+import { HttpClient } from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-map',
@@ -43,13 +46,11 @@ export class MapComponent implements OnInit {
   view: OlView;
 
   layers = {};
-  
+
   constructor(private geoservice: GeoserverService,
-    private interaction: ComponentsInteractionService) { 
-    }
-    
+              private interaction: ComponentsInteractionService) { }
+
     ngOnInit() {
-      // Crear capa base 
       this.source = new OlXYZ({
         url: 'http://tile.osm.org/{z}/{x}/{y}.png'
       });
@@ -63,56 +64,164 @@ export class MapComponent implements OnInit {
       this.map = new OlMap({
         target: 'map',
         layers: [this.layer],
-        view: this.view
-        // view: this.view,
-        // controls: ol.control.defaults().extend([new ol.control.ScaleLine])
+        view: this.view,
+        controls: []
       });
 
       // Recibir respuesta de servicio y determinar acción
-      // this.interaction.mapInteraction.subscribe((layer: any) => {
-      //   const type = this.getLayerTypeFromHref(layer);
-      //   if (type && type === this.geoservice.BASE && layer.show) {
-      //     this.addLayerBase(layer.name);
-      //   } else if (type && type === this.geoservice.TEMS && layer.show) {
-      //     this.addLayerWFS(type, layer.name);
-      //   } else if (!layer.show) {
-      //     this.removeLayer(layer.name);
-      //   } else {
-      //     alert('Something went Wrong!!');
-      //   }
-      // });
-      
-      let zoomslider = new ZoomSlider();
-      this.map.addControl(zoomslider);
+      this.interaction.mapInteraction.subscribe((layer: any) => {
+        const type = this.getLayerTypeFromHref(layer);
+        console.log(type, layer);
+        if (type && type === this.geoservice.BASE && layer.show) {
+          this.addLayerBase(layer.name);
+        } else if (type && (type === this.geoservice.TEMS || type === this.geoservice.DWHS) && layer.show) {
+          this.addLayerWFS(type, layer.name);
+        } else if (!layer.show) {
+          this.removeLayer(layer.name);
+        } else {
+          alert('Something went Wrong!!');
+        }
+      });
 
-      let zoomslider_base = document.getElementsByClassName('ol-zoomslider')
-      console.log(zoomslider_base)
-      // zoomslider_base[0].style = `
-      // top: 8px;
-      // left: auto;
-      // right: 8px;
-      // background-color: rgba(255, 69, 0, 0.2);
-      // width: 200px;
-      // height: 15px;
-      // padding: 0;
-      // box-shadow: 0 0 5px rgb(255, 69, 0);
-      // border-radius: 20px;
-      // `
-     
-      // this.initilizeMap();
+      this.map.addControl(new Zoom({
+        target: document.getElementById('control-zoom')
+      }));
+      this.map.addControl(new ScaleLine({
+        target: document.getElementById('control-scale')
+      }));
+      this.map.addControl(new ZoomSlider({
+        target: document.getElementById('control-zoomslider')
+      }));
+
     }
 
-  // Agregar zoom in y out.
-  // initilizeMap(map: OlMap) {
-  // 
-  // }
+    addLayerBase(name: string) {
+      let newLayer: any;
+      this.progressBar(name, true);
+      if (this.layers[name] && this.layers[name] !== undefined) {
+        newLayer = this.layers[name];
+        this.progressBar(name, false);
+      } else {
+        const imageSource = new ImageWMS({
+          url: 'http://10.154.80.177:8080/geoserver/base/wms',
+          serverType: 'geoserver',
+          params: {
+            VERSION: '1..1.0',
+            WIDTH: 500,
+            HEIGHT: 500,
+            BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
+            SRS: 'EPSG:4686',
+            LAYERS: `base:${name}`
+          },
+          opacity: (0.5),
+          ration: 1
+        });
+        imageSource.on('imageloadend', () => {
+          this.progressBar(name, false);
+        });
+        newLayer = new ImageLayer({
+          source: imageSource});
+      }
+      this.saveLayer(name, newLayer);
+    }
+
+    addLayerWFS(type: string, name: string) {
+      let newLayer: any;
+      if (this.layers[name] && this.layers[name] !== undefined) {
+        newLayer = this.layers[name];
+        this.saveLayer(name, newLayer);
+      } else {
+        this.progressBar(name, true);
+        this.requestLayer(type, name);
+      }
+    }
+
+    requestLayer(type: string, name: string) {
+      const vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        loader(extent, resolution, projection) {
+          const proj = projection.getCode();
+          const url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/${type === 'tem' ? 'wfs' : 'ows'}?service=WFS&
+            version=1.1.0&request=GetFeature&typename=${type}:${name}& +
+            outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
+            bbox=${extent.join(',')},${proj}`;
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', url);
+          const onError = () => {
+            document.getElementById(`${name}-progress`).classList.add('bg-danger');
+            vectorSource.removeLoadedExtent(extent);
+// tslint:disable-next-line: no-string-literal
+            document.getElementById(`${name}`)['checked'] = false;
+            alert(`Error while requesting (${name} - ${type})`);
+            // document.getElementById(`${name}-progress`).style.display = 'none';
+          };
+          xhr.onerror = onError;
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              document.getElementById(`${name}-progress`).style.display = 'none';
+              vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
+            } else {
+              onError();
+            }
+          };
+          xhr.send();
+        },
+        strategy: bboxStrategy
+      });
+
+      const vector = new lVector({
+        source: vectorSource,
+        style: new Style({
+          image: new Circle({
+            radius: 2,
+            fill: new Fill({
+              color: 'rgba(0, 191, 255, 1.0)'
+            }),
+            stroke: new Stroke({
+              color: 'rgba(0, 0, 255, 1.0)',
+              width: 1
+            })
+          }),
+          fill: new Fill({
+            color: 'rgba(120, 191, 255, 0.6)'
+          }),
+          stroke: new Stroke({
+            color: 'rgba(0, 0, 255, 0.8)',
+            width: 2
+          })
+        })
+      });
+      this.saveLayer(name, vector);
+    }
+
+    progressBar(name: string, status: boolean): void {
+      console.log(name, status);
+      console.log(status ? 'block' : 'none');
+      document.getElementById(`${name}-progress`).style.display = status ? 'block' : 'none';
+    }
+
+    saveLayer(name: string, layer: any) {
+      this.layers[name] = layer;
+      this.map.addLayer(layer);
+    }
+
+    removeLayer(name: string) {
+      this.map.removeLayer(this.layers[name]);
+    }
 
 
-
-
-
-
-
+    getLayerTypeFromHref(layer: any): string {
+      const uri = `${layer.href}`;
+      if (uri.search(this.geoservice.BASE) > 0) {
+        return this.geoservice.BASE;
+      } else if (uri.search(this.geoservice.TEMS) > 0) {
+        return this.geoservice.TEMS;
+      } else if (uri.search(this.geoservice.DWHS) > 0) {
+        return this.geoservice.DWHS;
+      } else {
+        return null;
+      }
+    }
 
 
 //     const container = document.getElementById('popup');

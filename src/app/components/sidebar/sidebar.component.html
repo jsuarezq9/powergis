@@ -1,28 +1,38 @@
-<div class="col-12">
+<div class="col offset-2">
     <div class="row">
         <!-- cuadrado negro recogido -->
         <div class="bg-dark roundedBot" style="width: 100%">
             <!-- círculo azul -->
-            <nav class="navbar navbar-dark circleBot">
+            <div class="logo-bg p-2">
+                <img class="img-fluid logo" style="width: 37%" src="../../../assets/enel-logo.png" alt="">
+            </div>
+            <nav class="container circleBot" style="padding-top: 5%; padding-bottom: 10%">
                 <button (click)="this.icon.classList.toggle('rotate'); collapseAll()" class="btn btn-block navbar-toggler" type="button" data-toggle="collapse" data-target="#dropbar" aria-controls="dropbar" aria-label="Toggle Map Dashboard">
-                              <span class="navbar-toggler-icon" id="icon" #icon></span>
-                          </button>
+                    <img id="icon" #icon src="../../../assets/icons/PNGs/header/HamburguesaH.png" width="30%" alt="Asset Base Icon" id="bases">
+                </button>
             </nav>
             <br>
             <!-- barra negra -->
-            <div class="col bg-dark collapse multiple-collapse dropMenu" id="dropbar">
+            <div class="col bg-dark collapse multiple-collapse dropMenu shadow" id="dropbar">
                 <div class="menuHigh">
-                    <hr class="bg-light">
-                    <button (click)="collapse=!collapse; this.basics.classList.add('activeButton'); borderActive($event);" id="bases" class="btn btn-block modulesButton ripple" type="button" data-toggle="collapse" data-target="#module1" aria-expanded="false" aria-controls="collapseExample"
-                        #basics>
-                          <img src="../../../assets/icons/basic.png" width="100%" alt="Asset Base Icon" id="bases">
-                      </button>
-                    <hr class="bg-light">
-                    <button (click)="collapse=!collapse; this.tems.classList.add('activeButton'); borderActive($event);" id="tems" class="btn btn-block modulesButton ripple" type="button" data-toggle="collapse" data-target="#module2" aria-expanded="false" aria-controls="collapseExample"
-                        #tems>
-                          <img src="../../../assets/icons/tem.png" width="100%" alt="Asset Tem Icon" id="tems">
-                      </button>
-                    <hr class="bg-light">
+                    <div class="btn-group-vertical" style="height: 45%">
+                        <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event);" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false" aria-controls="collapseExample"
+                            #buttonBases>
+                            <img src="../../../assets/icons/PNGs/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
+                        </button>
+                        <button (click)="collapse=!collapse; this.buttonHidrology.classList.add('activeButton'); borderActive($event);" id="buttonHidrology" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleHidrologyTarget" aria-expanded="false"
+                            aria-controls="collapseExample" #buttonHidrology>
+                            <img src="../../../assets/icons/PNGs/sidebar/MonitoreoHidrometeorologico-{{image.buttonHidrology}}.png" class="w-50 align-content-center pb-1" alt="Asset Tem Icon">
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Modulo Hidrlogía</div>
+                        </button>
+                        <button (click)="collapse=!collapse; this.buttonPrecipitation.classList.add('activeButton'); borderActive($event);" id="buttonPrecipitation" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse" data-target="#modulePrecipitationTarget"
+                            aria-expanded="false" aria-controls="collapseExample" #buttonPrecipitation>
+                            <img src="../../../assets/icons/PNGs/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-1" alt="Asset Tem Icon">
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
+                        </button>
+                        <!-- Poner disabled fuera de todo para no permitir click -->
+                    </div>
                 </div>
             </div>
             <br>

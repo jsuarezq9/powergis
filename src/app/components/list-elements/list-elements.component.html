@@ -1,8 +1,8 @@
+<!-- outerclass - innerclass -->
 <div class="row m-1 border rounded">
-    <div class="col-2 col-offset-2 border-right outer-class" style="background-color:#E9ECF1;">
-        <div class="inner-class text-center"><input (click)="select(element, $event)" type="checkbox" [id]="element.name" aria-label=""></div>
+    <div class="custom-control custom-switch">
+        <input (click)="select(element, $event)" type="checkbox" [id]="element.name" class="custom-control-input">
+        <label class="custom-control-label inner-class textwrapping" [for]="element.name">Capa: {{ element | layerName | capitalize }}</label>
     </div>
-    <div class="col outer-class">
-        <label class="inner-class text-wrap">Capa: {{ element['name'] | layerName | uppercase }}</label>
-    </div>
+    <div class="progress-bar progress-bar-striped progress-bar-animated" id="{{element.name}}-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%; height: 5px; display: none;"></div>
 </div>

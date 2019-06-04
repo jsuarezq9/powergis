@@ -4,22 +4,26 @@
         <div class="mapbody">
             <app-body></app-body>
         </div>
-        <!-- <div>
+        <div>
             <app-header></app-header>
         </div>
         <div class="row">
             <div style="width: 6%">
                 <app-sidebar (activeModule)="changeState($event)"></app-sidebar>
             </div>
-            <div style="width: 33%" id="module1">
+            <div style="display: none; width: 33%" id="moduleBases">
                 <app-modulebase></app-modulebase>
             </div>
-            <div style="width: 33%" id="module2">
+            <div style="display: none; width: 33%" id="moduleHidrology">
                 <app-modulehidro></app-modulehidro>
             </div>
-        </div> -->
+            <div style="display: none; width: 33%" id="modulePrecipitation">
+                <app-moduleprecipitation></app-moduleprecipitation>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <!-- 
 <hr> DIEGO
