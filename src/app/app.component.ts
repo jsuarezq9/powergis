@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
         duration: 250
       }
     });
-    closer.onclick = function() {
+    closer.onclick = () => {
       overlay.setPosition(undefined);
       closer.blur();
       return false;
@@ -182,16 +182,16 @@ export class AppComponent implements OnInit {
     map.on('singleclick', (evt) => {
       //  content.innerHTML= '';
       this.features = [];
-      const coordinate = evt.coordinate;
-      const hdms = toStringHDMS(toLonLat(coordinate));
-      overlay.setPosition(coordinate);
       this.info = [];
+      const coordinate = evt.coordinate;
+      //const hdms = toStringHDMS(toLonLat(coordinate)); // para ser usado si se requiere desplegar las coordenadas
+      overlay.setPosition(coordinate);
       map.forEachFeatureAtPixel(evt.pixel, feature => {
         this.info.push({
           sensor: feature.values_.id_sensor,
           estacion: feature.values_.nombre_estacion,
-          fecha: feature.values_.fecha_hora,
-          valor: feature.values_.valor.toFixed(2),
+          fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+          valor: feature.values_.valor.toFixed(3),
           idestacion: feature.values_.id_estacion
         });
       });
@@ -200,17 +200,16 @@ export class AppComponent implements OnInit {
 
   initializeChart(estacion, sensor) {
   console.log('hi estacion:' + estacion + ' sensor:' + sensor);
-  this._timeseries.rawData(estacion, '2018-02-01', '2019-05-10', sensor)
+  this._timeseries.rawData(estacion, '2018-02-01', Date.now().toLocaleString(), sensor)
     .subscribe(res => {
       const data = res;
-      console.log(data);
-      let dataset = [];
-      dataset = data.map(res => {
-        return {
-          t: res.fecha_hora,
-          y: res.valor.toFixed(3)
-        };
+      const dataset = [];
+      data.map(element => {
+        dataset.push({
+          t: element.fecha_hora,
+          y: element.valor.toFixed(3)
       });
+    });
       console.log(dataset);
       const conf = {
         type: 'line',
