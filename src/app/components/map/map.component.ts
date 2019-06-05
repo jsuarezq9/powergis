@@ -88,9 +88,6 @@ export class MapComponent implements OnInit {
       this.map.addControl(new ScaleLine({
         target: document.getElementById('control-scale')
       }));
-      this.map.addControl(new ZoomSlider({
-        target: document.getElementById('control-zoomslider')
-      }));
 
     }
 

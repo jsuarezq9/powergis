@@ -14,6 +14,7 @@ import { ModuleprecipitationComponent } from './components/moduleprecipitation/m
 import { LayerNamePipe } from './pipes/layer-name.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
+import { ModulehidroPopupComponent } from './components/modulehidro-popup/modulehidro-popup.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
     ModulehidroComponent,
     ModuleprecipitationComponent,
     LayerNamePipe,
-    CapitalizePipe
+    CapitalizePipe,
+    ModulehidroPopupComponent
   ],
   imports: [
     BrowserModule,

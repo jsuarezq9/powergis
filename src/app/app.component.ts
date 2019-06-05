@@ -56,18 +56,22 @@ export class AppComponent {
 
   rotateCollapseButton(): void {
     // Asigno clases de rotación del botón en el ícono
-    const activeRotation = this.expandSidemenu ? 'rotate-0' : 'rotate-180';
-    const notActiveRotation = !this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const activeRotationIcon = this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const notActiveRotationIcon = !this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const activePositionIcon = this.expandSidemenu ? 'img-collapse-expanded' : 'img-collapse-collapsed';
+    const notActivePositionIcon = !this.expandSidemenu ? 'img-collapse-expanded' : 'img-collapse-collapsed';
     const icon = document.getElementById('arrow');
-    icon.classList.add(activeRotation);
-    icon.classList.remove(notActiveRotation);
+    icon.classList.add(activeRotationIcon);
+    icon.classList.add(activePositionIcon);
+    icon.classList.remove(notActiveRotationIcon);
+    icon.classList.remove(notActivePositionIcon);
 
     // Asigno clase de posición en el botón.
-    const activePosition = this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
-    const notActivePosition = !this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
+    const activePositionButton = this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
+    const notActivePositionButton = !this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
     const button = document.getElementById('buttonCollapse');
-    button.classList.add(activePosition);
-    button.classList.remove(notActivePosition);
+    button.classList.add(activePositionButton);
+    button.classList.remove(notActivePositionButton);
   }
 
   showCollapseButton(): void {

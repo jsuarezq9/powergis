@@ -1,0 +1,31 @@
+/* Popup posición */
+
+
+/* Cuando se ven últimos datos + serie de tiempo */
+
+.hidro-popup-expanded {
+    height: 60%;
+    width: 86%;
+    padding: 0%;
+    position: fixed;
+    margin: 0%;
+    padding: 0%;
+    right: 4%;
+    bottom: 0px;
+    background-color: blue;
+}
+
+
+/* Cuando se ven sólo últimos datos */
+
+.hidro-popup-small {
+    height: 60%;
+    width: 86%;
+    padding: 0%;
+    position: fixed;
+    margin: 0%;
+    padding: 0%;
+    right: 4%;
+    bottom: 0px;
+    background-color: blue;
+}

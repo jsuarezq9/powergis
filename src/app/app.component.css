@@ -52,6 +52,10 @@
     border: 0px;
 }
 
+.img-collapse-collapsed {
+    margin-left: 0px;
+}
+
 .img-collapse-expanded {
     margin-left: -10px;
 }
