@@ -67,32 +67,16 @@ export class AppComponent {
   }
 
   getState(show: any): void {
-    console.log(show);
     if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID) {
       // Viene de los botones
-      this.resetModules();
-      this.collapseSidemenu = true;
-      this.showCollapseButton();
-      console.log('collapseSidemenu por botones', this.collapseSidemenu);
-
-      this.getStateFromButtons(show);
-
     } else {
       // Viene de botón colapsar
-      this.resetModules();
-      this.collapseSidemenu = !this.collapseSidemenu;
-      this.rotateCollapseButton();
-      console.log('collapseSidemenu por botón collapse', this.collapseSidemenu);
-
-      this.getStateFromCollapseButton(show);
-
-      // Falta: viene de hamburguesa.
-
     }
-    this.changeState();
   }
 
   getStateFromButtons(show: any): void {
+    this.collapseSidemenu = true;
+    this.resetModules();
     if (show === this.BUTTON_BASES_ID) {
       this.moduleBases = !this.moduleBases;
     } else if (show === this.BUTTON_HIDROLOGY_ID) {
@@ -100,15 +84,22 @@ export class AppComponent {
     } else if (show === this.BUTTON_PRECIPITATION_ID) {
       this.modulePrecipitation = !this.modulePrecipitation;
     }
+    console.log(this.moduleBases);
+    this.changeState();
+    this.showCollapseButton();
   }
 
   getStateFromCollapseButton(show: any): void {
     // Para cambiarle el estilo display:none block
     // console.log(show.target.offsetParent.id); //buttonCollapseDiv
     // Para cambiarle la clase button-collapse-expanded a collapsed
-    // console.log(show.target.offsetParent.firstElementChild.id); //buttonCollapse
+    // console.log(show.target.offsetParent.firstElementChild.id); //buttonCollapseDiv
     // console.log('---------------------------');
 
+    this.collapseSidemenu = !this.collapseSidemenu;
+    console.log('collapseSidemenu después de negación', this.collapseSidemenu);
+    this.rotateCollapseButton();
+    this.resetModules();
     if (this.collapseSidemenu) {
       if (this.moduleMemory === this.MODULE_BASES_ID) {
         this.moduleBases = !this.moduleBases;
@@ -118,9 +109,12 @@ export class AppComponent {
         this.modulePrecipitation = !this.modulePrecipitation;
       }
     }
+    // console.log(this.moduleBases);
+    this.changeState();
   }
 
   changeState(): void {
+    console.log("changeState",this.moduleBases);
     if (this.moduleBases) {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_SHOW;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
@@ -133,7 +127,8 @@ export class AppComponent {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_SHOW;
-    } else {
+    }
+    else {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
