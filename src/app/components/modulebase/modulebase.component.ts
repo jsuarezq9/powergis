@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import { toStringHDMS } from 'ol/coordinate.js';
 
 @Component({
   selector: 'app-modulebase',
@@ -9,7 +10,10 @@ import { ComponentsInteractionService } from '../../services/interactions.servic
 })
 export class ModulebaseComponent implements OnInit {
 
+  @Output() collapsedModule = new EventEmitter();
+
   layers = [];
+  rotation: string;
 
   constructor(private geoservice: GeoserverService, private interaction: ComponentsInteractionService) {
     this.getBases();
@@ -55,5 +59,6 @@ export class ModulebaseComponent implements OnInit {
   handleError(type, error) {
     alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
   }
+
 
 }

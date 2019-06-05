@@ -1,4 +1,4 @@
-<div class="col offset-2">
+<div class="col-8 offset-1">
     <div class="row">
         <!-- cuadrado negro recogido -->
         <div class="bg-dark roundedBot" style="width: 100%">
@@ -7,13 +7,14 @@
                 <img class="img-fluid logo" style="width: 37%" src="../../../assets/enel-logo.png" alt="">
             </div>
             <nav class="container circleBot" style="padding-top: 5%; padding-bottom: 10%">
-                <button (click)="this.icon.classList.toggle('rotate'); collapseAll()" class="btn btn-block navbar-toggler" type="button" data-toggle="collapse" data-target="#dropbar" aria-controls="dropbar" aria-label="Toggle Map Dashboard">
+                <button (click)="collapseSidemenu=!collapseSidemenu; rotation = collapseSidemenu ? 'rotate-90' : 'rotate-0'; this.icon.classList.toggle(rotation); collapseAll()" class="btn btn-block navbar-toggler" type="button" data-toggle="collapse" data-target="#dropbar"
+                    aria-controls="dropbar" aria-label="Toggle Map Dashboard">
                     <img id="icon" #icon src="../../../assets/icons/PNGs/header/HamburguesaH.png" width="30%" alt="Asset Base Icon" id="bases">
                 </button>
             </nav>
             <br>
             <!-- barra negra -->
-            <div class="col bg-dark collapse multiple-collapse dropMenu shadow" id="dropbar">
+            <div class="col bg-dark collapse multiple-collapse dropMenu shadow-lg" id="dropbar">
                 <div class="menuHigh">
                     <div class="btn-group-vertical" style="height: 45%">
                         <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event);" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false" aria-controls="collapseExample"

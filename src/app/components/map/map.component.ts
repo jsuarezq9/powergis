@@ -71,7 +71,6 @@ export class MapComponent implements OnInit {
       // Recibir respuesta de servicio y determinar acción
       this.interaction.mapInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
-        console.log(type, layer);
         if (type && type === this.geoservice.BASE && layer.show) {
           this.addLayerBase(layer.name);
         } else if (type && (type === this.geoservice.TEMS || type === this.geoservice.DWHS) && layer.show) {
@@ -120,7 +119,8 @@ export class MapComponent implements OnInit {
           this.progressBar(name, false);
         });
         newLayer = new ImageLayer({
-          source: imageSource});
+          source: imageSource
+        });
       }
       this.saveLayer(name, newLayer);
     }
@@ -192,11 +192,16 @@ export class MapComponent implements OnInit {
         })
       });
       this.saveLayer(name, vector);
+      // Prueba
+      this.map.on('singleclick', (evt) => {
+        const coordinate = evt.coordinate;
+        const hdms = toStringHDMS(toLonLat(coordinate));
+        console.log(vector.getSource().getFeaturesAtCoordinate(coordinate));
+      });
+
     }
 
     progressBar(name: string, status: boolean): void {
-      console.log(name, status);
-      console.log(status ? 'block' : 'none');
       document.getElementById(`${name}-progress`).style.display = status ? 'block' : 'none';
     }
 
@@ -222,6 +227,9 @@ export class MapComponent implements OnInit {
         return null;
       }
     }
+
+
+
 
 
 //     const container = document.getElementById('popup');
@@ -291,53 +299,6 @@ export class MapComponent implements OnInit {
 //     });
 //     // agregar capa vector al mapa
 //     map.addLayer(vector);
-//     // creo segunda capa tipo vector
-
-//     const vectorSource2 = new VectorSource({
-//       format: new GeoJSON(),
-//       loader(extent, resolution, projection) {
-//         const proj = projection.getCode();
-//         const url = 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=WFS&' +
-//           'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&' +
-//           'outputFormat=application/json&srsname=' + proj + '&' +
-//           'bbox=' + extent.join(',') + ',' + proj;
-//         const xhr = new XMLHttpRequest();
-//         xhr.open('GET', url);
-//         const onError = function () {
-//           vectorSource2.removeLoadedExtent(extent);
-//         }
-//         xhr.onerror = onError;
-//         xhr.onload = function () {
-//           if (xhr.status == 200) {
-//             vectorSource2.addFeatures(
-//               vectorSource2.getFormat().readFeatures(xhr.responseText));
-//           } else {
-//             onError();
-//           }
-//         }
-//         xhr.send();
-//       },
-//       strategy: bboxStrategy
-//     });
-// // agrego la segunda fuente de datos a una capa vectorlayer
-//     const vector2 = new VectorLayer({
-//       source: vectorSource2,
-//       style: new Style({
-//         image: new Circle({
-//           radius: 7,
-//           fill: new Fill({
-//             color: 'rgba(0, 191, 255, 1.0)'
-//           }),
-//           stroke: new Stroke({
-//             color: 'rgba(0, 0, 255, 1.0)',
-//             width: 1
-//           })
-//         })
-//        })
-//     });
-
-//     // agrego la capa al mapa
-//     map.addLayer(vector2);
 
 //     map.on('singleclick', (evt) => {
 

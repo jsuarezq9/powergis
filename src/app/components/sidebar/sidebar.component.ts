@@ -20,7 +20,9 @@ export class SidebarComponent implements OnInit {
     buttonHidrology: this.WHITE,
     buttonPrecipitation: this.WHITE,
   };
-
+  collapseSidemenu = false;
+  rotation: string;
+  
   constructor(private geoserver: GeoserverService) {}
 
   ngOnInit() { }
