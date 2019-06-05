@@ -150,6 +150,22 @@ export class AppComponent implements OnInit {
       strategy: bboxStrategy
     });
 
+    function setStyle(feature) {
+      var style = new Style({
+        image: new Circle({
+          radius: 6,
+          stroke: new Stroke({
+            color: 'white',
+            width: 2
+          }),
+          fill: new Fill({
+            color: 'green'
+          })
+        })
+      });
+      return [style];
+    }
+
 
 
     // agrego la segunda fuente de datos a una capa vectorlayer
@@ -174,7 +190,7 @@ export class AppComponent implements OnInit {
     let select;
     const selectPointerMove = new Select({
       condition: pointerMove,
-      layer: vector2
+      layer: [vector2]
     });
     select = selectPointerMove;
 
@@ -187,6 +203,7 @@ export class AppComponent implements OnInit {
       //const hdms = toStringHDMS(toLonLat(coordinate)); // para ser usado si se requiere desplegar las coordenadas
       overlay.setPosition(coordinate);
       map.forEachFeatureAtPixel(evt.pixel, feature => {
+        if(feature.values_.nombre_estacion){
         this.info.push({
           sensor: feature.values_.id_sensor,
           estacion: feature.values_.nombre_estacion,
@@ -194,18 +211,20 @@ export class AppComponent implements OnInit {
           valor: feature.values_.valor.toFixed(3),
           idestacion: feature.values_.id_estacion
         });
+      }
       });
     });
   }
 
   initializeChart(estacion, sensor) {
   console.log('hi estacion:' + estacion + ' sensor:' + sensor);
-  this._timeseries.rawData(estacion, '2018-02-01', Date.now().toLocaleString(), sensor)
+  this._timeseries.rawData(estacion, '2019-02-01', '2019-06-05', sensor)
     .subscribe(res => {
       const data = res;
       const dataset = [];
       data.map(element => {
-        dataset.push({
+        dataset.push (
+          {
           t: element.fecha_hora,
           y: element.valor.toFixed(3)
       });
