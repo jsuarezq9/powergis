@@ -1,8 +1,8 @@
 <div id="map" class="map"></div>
 <div id="control-scale" class="control-scale"></div>
 <div id="control-zoom" class="control-zoom"></div>
-<div id="control-layers-reset" class="control-layers-reset">
-    <button class="control-layers-reset">
-        <img src="../../../assets/icons/PNGs/sidemenu/IconoCapaSeleccionada_NoActiva.png" alt="">
+<div id="control-layers-reset" class="border border-warning">
+    <button (click)="resetLayers();" class="control-layers-reset align-content-center" title="Limpiar mapa">
+        <i class="fas fa-spinner control-layers-icon"></i>
     </button>
 </div>

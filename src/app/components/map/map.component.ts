@@ -68,7 +68,7 @@ export class MapComponent implements OnInit {
         controls: []
       });
 
-      // Recibir respuesta de servicio y determinar acción
+      // Recibir respuesta de servicio de capas en cola y determinar acción
       this.interaction.mapInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
         if (type && type === this.geoservice.BASE && layer.show) {
@@ -77,9 +77,12 @@ export class MapComponent implements OnInit {
           this.addLayerWFS(type, layer.name);
         } else if (!layer.show) {
           this.removeLayer(layer.name);
+          console.log('---------- Remove layers org, layer', layer)
+          console.log('---------- Remove layers org, layer.name', layer.name)
         } else {
           alert('Something went Wrong!!');
         }
+        console.log(this.layers);
       });
 
       this.map.addControl(new Zoom({
@@ -190,13 +193,6 @@ export class MapComponent implements OnInit {
       });
       this.saveLayer(name, vector);
 
-      // Prueba
-      this.map.on('singleclick', (evt) => {
-        const coordinate = evt.coordinate;
-        const hdms = toStringHDMS(toLonLat(coordinate));
-        console.log(vector.getSource().getFeaturesAtCoordinate(coordinate));
-      });
-
     }
 
     progressBar(name: string, status: boolean): void {
@@ -212,7 +208,6 @@ export class MapComponent implements OnInit {
       this.map.removeLayer(this.layers[name]);
     }
 
-
     getLayerTypeFromHref(layer: any): string {
       const uri = `${layer.href}`;
       if (uri.search(this.geoservice.BASE) > 0) {
@@ -223,6 +218,19 @@ export class MapComponent implements OnInit {
         return this.geoservice.DWHS;
       } else {
         return null;
+      }
+    }
+
+    resetLayers() {
+      const length = Object.keys(this.layers).length;
+      const keys = Object.keys(this.layers);
+
+      for (let index = 0; index < length; index++) {
+        const element = keys[index];
+        console.log(element);
+        this.removeLayer(element);
+        // tslint:disable-next-line: no-string-literal
+        document.getElementById(`${element}`)['checked'] = false;
       }
     }
 

@@ -24,13 +24,41 @@
 }
 
 .control-layers-reset {
-    height: 25px;
-    width: 25px;
+    height: 28px;
+    width: 27px;
     bottom: 12%;
     position: fixed;
     left: auto;
-    right: 4%;
-    background-color: rgba(255, 69, 0, 0.2);
+    right: 1.6%;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    border: 1px solid white;
+    border-radius: 3px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 0.7);
+}
+
+.control-layers-reset:hover {
+    height: 28px;
+    width: 27px;
+    bottom: 12%;
+    position: fixed;
+    left: auto;
+    right: 1.6%;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    border: 1px solid white;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 1);
+}
+
+.control-layers-icon {
+    height: 15px;
+    width: 15px;
+    margin-left: -5px;
+    margin-top: -10px;
+    padding: 0%;
+    color: white;
 }
 
 
