@@ -15,7 +15,8 @@ export class ModulebaseComponent implements OnInit {
   layers = [];
   rotation: string;
 
-  constructor(private geoservice: GeoserverService, private interaction: ComponentsInteractionService) {
+  constructor(private geoservice: GeoserverService,
+              private interaction: ComponentsInteractionService) {
     this.getBases();
     this.getTems();
     this.getDWHS();

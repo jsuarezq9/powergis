@@ -150,7 +150,7 @@ export class MapComponent implements OnInit {
           const onError = () => {
             document.getElementById(`${name}-progress`).classList.add('bg-danger');
             vectorSource.removeLoadedExtent(extent);
-// tslint:disable-next-line: no-string-literal
+            // tslint:disable-next-line: no-string-literal
             document.getElementById(`${name}`)['checked'] = false;
             alert(`Error while requesting (${name} - ${type})`);
             // document.getElementById(`${name}-progress`).style.display = 'none';
@@ -192,6 +192,7 @@ export class MapComponent implements OnInit {
         })
       });
       this.saveLayer(name, vector);
+
       // Prueba
       this.map.on('singleclick', (evt) => {
         const coordinate = evt.coordinate;

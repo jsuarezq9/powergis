@@ -8,14 +8,14 @@
         </div>
         <div class="row container">
             <div class="col-1" style="width: 6%">
-                <app-sidebar (activeModule)="getStateFromButtons($event)"></app-sidebar>
+                <app-sidebar (activeModule)="getState($event)"></app-sidebar>
             </div>
             <div class="col-6">
                 <div class="container h-100">
                     <div class="row h-100">
                         <div class="col-11" style="display: none; width: 33%" id="moduleBases">
                             <div class="h-100 border border-danger">
-                                <app-modulebase (collapsedModule)="getStateFromModules($event);getState($event);"></app-modulebase>
+                                <app-modulebase></app-modulebase>
                             </div>
                         </div>
                         <div class="col" style="display: none; width: 33%" id="moduleHidrology">
@@ -29,8 +29,8 @@
                             </div>
                         </div>
                         <div id="buttonCollapseDiv" class="col-1" style="display: none;">
-                            <button id="buttonCollapse" (click)="rotateCollapseButton();getStateFromCollapseButton($event);getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
-                                <i id="arrow" class="fas fa-caret-left" style="color: #5B5B61;"></i>
+                            <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
+                                <img id="arrow" src="../assets/icons/PNGs/sidemenu/IconoColapsar.png" class="border img-collapse" width="70%">
                             </button>
                         </div>
                     </div>

@@ -18,8 +18,9 @@ export class AppComponent {
   // collapseBases: boolean;
   // collapseHidrology: boolean;
   // collapsePrecipitation: boolean;
-  moduleMemory: string;
-  collapseSidemenu = false;
+  moduleMemory = '';
+  expandSidebar = false;
+  expandSidemenu = false;
   BUTTON_COLLAPSE_ID = 'buttonCollapse';
   BUTTON_COLLAPSE_DIV_ID = 'buttonCollapseDiv';
 
@@ -38,7 +39,6 @@ export class AppComponent {
 
   constructor() {
     this.resetModules();
-    console.log('collapseSidemenu', this.collapseSidemenu);
   }
 
   resetModules(): void {
@@ -55,28 +55,85 @@ export class AppComponent {
   }
 
   rotateCollapseButton(): void {
-    let active = !this.collapseSidemenu ? 'rotate-180' : 'rotate-0';
-    let notActive = this.collapseSidemenu ? 'rotate-180' : 'rotate-0';
-    let button = document.getElementById('arrow');
-    button.classList.add(active);
-    button.classList.remove(notActive);
+    // Asigno clases de rotación del botón en el ícono
+    const activeRotation = this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const notActiveRotation = !this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const icon = document.getElementById('arrow');
+    icon.classList.add(activeRotation);
+    icon.classList.remove(notActiveRotation);
+
+    // Asigno clase de posición en el botón.
+    const activePosition = this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
+    const notActivePosition = !this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
+    const button = document.getElementById('buttonCollapse');
+    button.classList.add(activePosition);
+    button.classList.remove(notActivePosition);
   }
 
   showCollapseButton(): void {
     document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_SHOW;
   }
 
+  hideCollapseButton(): void {
+    document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_HIDE;
+  }
+
   getState(show: any): void {
     if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID) {
       // Viene de los botones
+      const EXPANDSIDEMENU_TEMP = this.expandSidemenu;
+      this.expandSidemenu = true;
+      this.resetModules();
+      this.getStateFromButtons(show);
+      // Si la variable está cambiando, roto el botón colapsar.
+      if (EXPANDSIDEMENU_TEMP !== this.expandSidemenu) {
+        this.rotateCollapseButton();
+      }
+      // Si es la primera vez, debo mostrarlo
+      if (this.moduleMemory === '') {
+        this.showCollapseButton();
+      }
+
+    // Viene de hamburguesa.
+    } else if (show.toString().includes('ExpandSidebar')) {
+      this.expandSidebar = !this.expandSidebar;
+      // Para colapsar
+      if (!this.expandSidebar) {
+        // Para colapsar cuando está cerrado el sidemenu
+        if (this.expandSidemenu) {
+          this.expandSidemenu = !this.expandSidemenu;
+          this.resetModules();
+          this.rotateCollapseButton();
+        }
+      // Para abrir
+      } else {
+        // Para abrir cuando está cerrado el sidemenu
+        if (!this.expandSidemenu) {
+          this.expandSidemenu = !this.expandSidemenu;
+          this.getStateFromCollapseButton(show);
+        }
+        this.rotateCollapseButton();
+      }
+
     } else {
       // Viene de botón colapsar
+      this.expandSidemenu = !this.expandSidemenu;
+      this.resetModules();
+      this.rotateCollapseButton();
+      this.getStateFromCollapseButton(show);
     }
+    this.changeState();
   }
 
+  // rotateIcon() {
+  //   this.expandSidebar = !this.expandSidebar;
+  //   this.rotation = this.expandSidebar ? 'rotate-90' : 'rotate-0';
+  //   const icon = document.getElementById('iconExpandSidebar');
+  //   icon.classList.toggle(this.rotation);
+  // }
+
+
   getStateFromButtons(show: any): void {
-    this.collapseSidemenu = true;
-    this.resetModules();
     if (show === this.BUTTON_BASES_ID) {
       this.moduleBases = !this.moduleBases;
     } else if (show === this.BUTTON_HIDROLOGY_ID) {
@@ -84,9 +141,6 @@ export class AppComponent {
     } else if (show === this.BUTTON_PRECIPITATION_ID) {
       this.modulePrecipitation = !this.modulePrecipitation;
     }
-    console.log(this.moduleBases);
-    this.changeState();
-    this.showCollapseButton();
   }
 
   getStateFromCollapseButton(show: any): void {
@@ -96,11 +150,7 @@ export class AppComponent {
     // console.log(show.target.offsetParent.firstElementChild.id); //buttonCollapseDiv
     // console.log('---------------------------');
 
-    this.collapseSidemenu = !this.collapseSidemenu;
-    console.log('collapseSidemenu después de negación', this.collapseSidemenu);
-    this.rotateCollapseButton();
-    this.resetModules();
-    if (this.collapseSidemenu) {
+    if (this.expandSidemenu) {
       if (this.moduleMemory === this.MODULE_BASES_ID) {
         this.moduleBases = !this.moduleBases;
       } else if (this.moduleMemory === this.MODULE_HIDROLOGY_ID) {
@@ -109,12 +159,9 @@ export class AppComponent {
         this.modulePrecipitation = !this.modulePrecipitation;
       }
     }
-    // console.log(this.moduleBases);
-    this.changeState();
   }
 
   changeState(): void {
-    console.log("changeState",this.moduleBases);
     if (this.moduleBases) {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_SHOW;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
@@ -127,8 +174,7 @@ export class AppComponent {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_SHOW;
-    }
-    else {
+    } else {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;

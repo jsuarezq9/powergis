@@ -20,26 +20,31 @@ export class SidebarComponent implements OnInit {
     buttonHidrology: this.WHITE,
     buttonPrecipitation: this.WHITE,
   };
-  collapseSidemenu = false;
+  expandSidebar = false;
   rotation: string;
-  
+
   constructor(private geoserver: GeoserverService) {}
 
   ngOnInit() { }
 
-  collapseAll() {
+  collapseAll(event: any) {
     const modules = document.getElementsByClassName('moduleFloat');
 // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < modules.length; index++) {
       const element = modules[index];
       element.classList.remove('show');
     }
+    this.activeModule.emit(event.target.id);
   }
 
   rotateIcon() {
+    this.expandSidebar = !this.expandSidebar;
+    this.rotation = this.expandSidebar ? 'rotate-90' : 'rotate-0';
+    const icon = document.getElementById('iconExpandSidebar');
+    icon.classList.toggle(this.rotation);
   }
 
-  borderActive(event) {
+  borderActive(event: any) {
     const modules = document.getElementsByClassName('activeButton');
     const buttons = document.getElementsByClassName('modulesButton');
     // Elimino todos los primary borders
