@@ -12,8 +12,6 @@ import OlView from 'ol/View';
 import { fromLonLat } from 'ol/proj';
 import lVector from 'ol/layer/Vector';
 
-import * as ol from 'ol/layer';
-
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
 import sVector from 'ol/source/Vector';
@@ -31,6 +29,8 @@ import { defaults, control, ZoomSlider, OverviewMap, Zoom, ScaleLine, extend } f
 import { Select } from 'ol/interaction';
 import { events } from 'ol/events';
 import { HttpClient } from 'selenium-webdriver/http';
+import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -47,10 +47,36 @@ export class MapComponent implements OnInit {
 
   layers = {};
 
+  features = [];
+  info = [];
+  columns = ['Sensor', 'Estación', 'Fecha', 'valor'];
+
+
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) { }
 
     ngOnInit() {
+
+      // POPUP
+      const container = document.getElementById('popup');
+      const content = document.getElementById('popup-content');
+      const closer = document.getElementById('popup-closer');
+      let overlay = new Overlay({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        },
+        position: undefined
+      });
+
+      closer.onclick = () => {
+        // overlay.setPosition(undefined);
+        closer.blur();
+        return false;
+      };
+
+
       this.source = new OlXYZ({
         url: 'http://tile.osm.org/{z}/{x}/{y}.png'
       });
@@ -64,8 +90,42 @@ export class MapComponent implements OnInit {
       this.map = new OlMap({
         target: 'map',
         layers: [this.layer],
+        overlays: [overlay],
         view: this.view,
         controls: []
+      });
+
+      // AÑADO CAPA ESTACIONES VM ULTIMO DATO
+      // tslint:disable-next-line: variable-name
+      const capaEstaciones_info = {
+        href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
+        name: 'vm_ultimo_dato_estacion',
+        show: true
+      };
+      const capaEstaciones = this.addLayerWFS(this.geoservice.DWHS, capaEstaciones_info.name);
+      let select: any;
+      const selectPointerMove = new Select({
+        condition: pointerMove,
+        layer: capaEstaciones
+      });
+      select = selectPointerMove;
+      this.map.addInteraction(select);
+      this.map.on('singleclick', (evt: any) => {
+        this.features = [];
+        this.info = [];
+        const coordinate = evt.coordinate;
+        overlay.setPosition(coordinate);
+        this.map.forEachFeatureAtPixel(evt.pixel, feature => {
+          this.info.push({
+            sensor: feature.values_.id_sensor,
+            estacion: feature.values_.nombre_estacion,
+            fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+            valor: feature.values_.valor.toFixed(3),
+            idestacion: feature.values_.id_estacion
+          });
+          console.log(coordinate);
+          console.log(this.info);
+        });
       });
 
       // Recibir respuesta de servicio de capas en cola y determinar acción
@@ -77,12 +137,9 @@ export class MapComponent implements OnInit {
           this.addLayerWFS(type, layer.name);
         } else if (!layer.show) {
           this.removeLayer(layer.name);
-          console.log('---------- Remove layers org, layer', layer)
-          console.log('---------- Remove layers org, layer.name', layer.name)
         } else {
           alert('Something went Wrong!!');
         }
-        console.log(this.layers);
       });
 
       this.map.addControl(new Zoom({
@@ -91,6 +148,7 @@ export class MapComponent implements OnInit {
       this.map.addControl(new ScaleLine({
         target: document.getElementById('control-scale')
       }));
+
 
     }
 
@@ -127,38 +185,42 @@ export class MapComponent implements OnInit {
 
     addLayerWFS(type: string, name: string) {
       let newLayer: any;
+      let vector: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
         newLayer = this.layers[name];
         this.saveLayer(name, newLayer);
+        let vector = 'Ñó';
       } else {
-        this.progressBar(name, true);
-        this.requestLayer(type, name);
+        // this.progressBar(name, true);
+        let vector = this.requestLayer(type, name);
       }
+      return vector;
     }
 
     requestLayer(type: string, name: string) {
+
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
         loader(extent, resolution, projection) {
           const proj = projection.getCode();
           const url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/${type === 'tem' ? 'wfs' : 'ows'}?service=WFS&
-            version=1.1.0&request=GetFeature&typename=${type}:${name}& +
-            outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
-            bbox=${extent.join(',')},${proj}`;
+          version=1.1.0&request=GetFeature&typename=${type}:${name}& +
+          outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
+          bbox=${extent.join(',')},${proj}`;
           const xhr = new XMLHttpRequest();
           xhr.open('GET', url);
           const onError = () => {
-            document.getElementById(`${name}-progress`).classList.add('bg-danger');
+            // document.getElementById(`${name}-progress`).classList.add('bg-danger');
             vectorSource.removeLoadedExtent(extent);
             // tslint:disable-next-line: no-string-literal
-            document.getElementById(`${name}`)['checked'] = false;
+            // document.getElementById(`${name}`)['checked'] = false;
             alert(`Error while requesting (${name} - ${type})`);
             // document.getElementById(`${name}-progress`).style.display = 'none';
           };
           xhr.onerror = onError;
           xhr.onload = () => {
             if (xhr.status === 200) {
-              document.getElementById(`${name}-progress`).style.display = 'none';
+              // document.getElementById(`${name}-progress`).style.display = 'none';
               vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
             } else {
               onError();
@@ -192,6 +254,7 @@ export class MapComponent implements OnInit {
         })
       });
       this.saveLayer(name, vector);
+      return vector;
 
     }
 
@@ -227,112 +290,10 @@ export class MapComponent implements OnInit {
 
       for (let index = 0; index < length; index++) {
         const element = keys[index];
-        console.log(element);
         this.removeLayer(element);
         // tslint:disable-next-line: no-string-literal
         document.getElementById(`${element}`)['checked'] = false;
       }
     }
 
-
-
-
-
-//     const container = document.getElementById('popup');
-//     const content = document.getElementById('popup-content');
-//     const closer = document.getElementById('popup-closer');
-    // const overlay = new Overlay({
-    //   element: container,
-    //   autoPan: true,
-    //   autoPanAnimation: {
-    //     duration: 250
-    //   }
-    // });
-    // closer.onclick = function() {
-    //   overlay.setPosition(undefined);
-    //   closer.blur();
-    //   return false;
-    // };
-//     const vectorSource = new VectorSource({
-//       format: new GeoJSON(),
-//       loader(extent, resolution, projection) {
-//         const proj = projection.getCode();
-//         const url = 'http://elaacgresf00.enelint.global:8080/geoserver/tem/wfs?service=WFS&' +
-//           'version=1.1.0&request=GetFeature&typename=tem:c020101_sin&' +
-//           'outputFormat=application/json&srsname=' + proj + '&' +
-//           'bbox=' + extent.join(',') + ',' + proj;
-//         const xhr = new XMLHttpRequest();
-//         xhr.open('GET', url);
-//         const onError = function () {
-//           vectorSource.removeLoadedExtent(extent);
-//         }
-//         xhr.onerror = onError;
-//         xhr.onload = function () {
-//           if (xhr.status == 200) {
-//             vectorSource.addFeatures(
-//               vectorSource.getFormat().readFeatures(xhr.responseText));
-//           } else {
-//             onError();
-//           }
-//         }
-//         xhr.send();
-//       },
-//       strategy: bboxStrategy
-//     });
-
-//     const vector = new VectorLayer({
-//       source: vectorSource,
-//       style: new Style({
-//         /*
-//         image: new Circle({
-//           radius: 7,
-//           fill: new Fill({
-//             color: 'rgba(0, 191, 255, 1.0)'
-//           }),
-//           stroke: new Stroke({
-//             color: 'rgba(0, 0, 255, 1.0)',
-//             width: 1
-//           })
-//         })*/
-//         fill: new Fill({
-//           color: 'rgba(120, 191, 255, 0.6)'
-//         }),
-//         stroke: new Stroke({
-//           color: 'rgba(0, 0, 255, 0.8)',
-//           width: 2
-//         })
-//       })
-//     });
-//     // agregar capa vector al mapa
-//     map.addLayer(vector);
-
-//     map.on('singleclick', (evt) => {
-
-//       const coordinate = evt.coordinate;
-//       const hdms = toStringHDMS(toLonLat(coordinate));
-
-//       console.log(vector.getSource().getFeaturesAtCoordinate(coordinate));
-
-//       content.innerHTML = '<p>Current coordinates are :</p><code>' + hdms +
-//         '</code>';
-//       overlay.setPosition(coordinate);
-//       const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-//         // you can add a condition on layer to restrict the listener
-//         layer = [vector, vector2];
-//         return feature;
-//       });
-//       if (feature) {
-//         // here you can add you code to display the coordinates or whatever you want to do
-//         console.log(feature);
-//         content.innerHTML = '<p>nombre :<code>' + feature.values_.nombre +
-//           '</code></p> <p>Area: <code>' + feature.values_.shape_area +
-//           '</code></p>' +
-//           '</code></p> <p>Nombre Estación: <code>' + feature.values_.nombre_estacion +
-//           '</code></p>' +
-//           '</code></p> <p>Nombre Sensor: <code>' + feature.values_.nombre_sensor +
-//           '</code>' + ' valor: ' + feature.values_.valor + ' ' + feature.values_.unidad + '</p>';
-//       }
-//     });
-  // }
-
-}
+  }

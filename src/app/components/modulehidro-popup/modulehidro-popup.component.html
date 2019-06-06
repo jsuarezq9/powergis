@@ -1,3 +1,22 @@
-<div class="border border-warning hidro-popup" style="display: none">
-    <h1>Popup</h1>
+<div id="popup" class="ol-popup">
+    <a id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"> Hola soy el popup
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th *ngFor="let column of columns">{{column}}</th>
+                </tr>
+                <tr *ngFor="let item of info">
+                    <td>{{ item.estacion}}</td>
+                    <td>{{item.sensor}}</td>
+                    <td>{{item.fecha }}</td>
+                    <td>{{item.valor}}</td>
+                    <td><button mat-button color="primary" (click)="initializeChart(item.idestacion,item.sensor)">datos</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div id='weekly-graph'></div> -->
+
+    </div>
+    <!-- <canvas id="canvas">chart</canvas> -->
 </div>
