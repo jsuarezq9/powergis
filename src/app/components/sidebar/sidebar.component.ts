@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
+import { ComponentsInteractionService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,10 +23,18 @@ export class SidebarComponent implements OnInit {
   };
   expandSidebar = false;
   rotation: string;
+  layerEstaciones: any;
 
-  constructor(private geoserver: GeoserverService) {}
+  constructor(private geoserver: GeoserverService,
+              private interaction: ComponentsInteractionService) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.layerEstaciones = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
+      name: 'vm_ultimo_dato_estacion',
+      edit: false
+    };
+  }
 
   collapseAll(event: any) {
     const modules = document.getElementsByClassName('moduleFloat');
@@ -70,6 +79,18 @@ export class SidebarComponent implements OnInit {
       element.classList.remove('activeButton');
     }
     this.activeModule.emit(event.target.offsetParent.id);
+  }
+
+  addEstacionesHidro() {
+    this.interaction.setLayer(this.layerEstaciones, true, true);
+  }
+
+  addEstacionesPrecipitation() {
+    this.interaction.setLayer(this.layerEstaciones, true, true);
+  }
+
+  removeEstaciones() {
+    this.interaction.setLayer(this.layerEstaciones, false, false);
   }
 
 }

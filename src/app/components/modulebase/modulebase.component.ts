@@ -26,7 +26,7 @@ export class ModulebaseComponent implements OnInit {
   }
 
   selectLayer(event: any): void {
-    this.interaction.setLayer(event.layer, event.e.target.checked);
+    this.interaction.setLayer(event.layer, event.e.target.checked, true);
   }
 
   getBases() {

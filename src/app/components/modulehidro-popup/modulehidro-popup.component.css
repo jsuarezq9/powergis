@@ -1,10 +1,7 @@
-/* Popup posición */
-
-
 /* Cuando se ven últimos datos + serie de tiempo */
 
 .hidro-popup-expanded {
-    height: 60%;
+    height: 40%;
     width: 86%;
     padding: 0%;
     position: fixed;
@@ -29,3 +26,255 @@
     bottom: 0px;
     background-color: blue;
 }
+
+
+/* -------------- Popup -------------- */
+
+.popup {
+    position: relative;
+    display: inline-block;
+    /* cursor: pointer; Es la manito */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* The actual popup */
+
+.popuptext {
+    visibility: hidden;
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -180px;
+    margin-bottom: 10px;
+    width: 360px;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+.popupheader {
+    background: #2F86EA;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    border-radius: 17px 17px 0px 0px;
+}
+
+.popupheadertext {
+    /* font-weight: bold; */
+    font-size: 15px;
+    /* line-height: 53px; */
+    /* display: flex; */
+    /* align-items: center; */
+    text-align: left;
+    color: white;
+}
+
+.popupbodytext {
+    background-color: #fff;
+}
+
+.popupbodytext:hover {
+    background-color: #EDEDED;
+}
+
+.popupbodytext:active {
+    background-color: black;
+}
+
+.popupbodytext::selection {
+    background-color: black;
+}
+
+.popupbodytext-sensor {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: left;
+    color: #5F5F5F;
+    vertical-align: bottom;
+}
+
+.popupbodytext-value {
+    font-weight: 900;
+    font-size: 20px;
+    text-align: right;
+    color: #5F5F5F;
+    vertical-align: bottom;
+}
+
+.popupbodytext-units {
+    font-weight: bold;
+    font-size: 10px;
+    text-align: left;
+    color: #5F5F5F;
+    vertical-align: bottom;
+}
+
+.popupbodytext-date {
+    font-size: 10px;
+    text-align: center;
+    color: #5F5F5F;
+    vertical-align: bottom;
+}
+
+
+/* Popup arrow */
+
+.popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+
+/* Toggle this class - hide and show the popup */
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+
+/* -----------Tooltip-------------- */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* cursor: pointer; Es la manito */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* The actual tooltip */
+
+.tooltiptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    margin-bottom: 5px
+}
+
+
+/* tooltip arrow */
+
+.tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+
+/* Toggle this class - hide and show the tooltip */
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+
+/* Add animation (fade in) */
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* .ol-container {
+    width: 100%;
+    height: 100%;
+}
+
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 50px;
+    left: 50px;
+    width: 280px;
+    height: 280px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+
+.ol-popup-closer:after {
+    content: "✖";
+} */

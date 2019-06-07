@@ -16,18 +16,18 @@
             <div class="col bg-dark collapse multiple-collapse dropMenu shadow-lg" id="dropbar">
                 <div class="menuHigh">
                     <div class="btn-group-vertical" style="height: 45%">
-                        <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event);" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false" aria-controls="collapseExample"
-                            #buttonBases>
+                        <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event); removeEstaciones()" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false"
+                            aria-controls="collapseExample" #buttonBases>
                             <img src="../../../assets/icons/PNGs/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
                         </button>
-                        <button (click)="collapse=!collapse; this.buttonHidrology.classList.add('activeButton'); borderActive($event);" id="buttonHidrology" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleHidrologyTarget" aria-expanded="false"
-                            aria-controls="collapseExample" #buttonHidrology>
+                        <button (click)="collapse=!collapse; this.buttonHidrology.classList.add('activeButton'); borderActive($event); addEstacionesHidro();" id="buttonHidrology" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleHidrologyTarget"
+                            aria-expanded="false" aria-controls="collapseExample" #buttonHidrology>
                             <img src="../../../assets/icons/PNGs/sidebar/MonitoreoHidrometeorologico-{{image.buttonHidrology}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Modulo Hidrlogía</div>
                         </button>
-                        <button (click)="collapse=!collapse; this.buttonPrecipitation.classList.add('activeButton'); borderActive($event);" id="buttonPrecipitation" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse" data-target="#modulePrecipitationTarget"
-                            aria-expanded="false" aria-controls="collapseExample" #buttonPrecipitation>
+                        <button (click)="collapse=!collapse; this.buttonPrecipitation.classList.add('activeButton'); borderActive($event);addEstacionesPrecipitation()" id="buttonPrecipitation" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse"
+                            data-target="#modulePrecipitationTarget" aria-expanded="false" aria-controls="collapseExample" #buttonPrecipitation>
                             <img src="../../../assets/icons/PNGs/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
                         </button>

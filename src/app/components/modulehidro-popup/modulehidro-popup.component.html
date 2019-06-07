@@ -1,22 +1,77 @@
-<div id="popup" class="ol-popup">
-    <a id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"> Hola soy el popup
-        <table class="table table-striped">
-            <tbody>
-                <tr>
-                    <th *ngFor="let column of columns">{{column}}</th>
-                </tr>
-                <tr *ngFor="let item of info">
-                    <td>{{ item.estacion}}</td>
-                    <td>{{item.sensor}}</td>
-                    <td>{{item.fecha }}</td>
-                    <td>{{item.valor}}</td>
-                    <td><button mat-button color="primary" (click)="initializeChart(item.idestacion,item.sensor)">datos</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- <div id='weekly-graph'></div> -->
+<!-- <div id="popup" class="container row ol-popup">
+    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+            Popover on top
+        </button>
+    <p>This <a href="#" role="button" class="btn btn-secondary popover-test" title="Popover title" data-content="Popover body content is set in this attribute.">button</a> triggers a popover on click.</p>
+    <div class="col">
+        Datos generales
+    </div>
+    <div class="w-100"></div>
+    <div class="col border border-danger">
+        <div id="popup-closer" class="ol-popup-closer"></div>
+        CLOSER
+        <span class="glyphicon glyphicon-remove right" id="popup-closer">APARECE</span>
+    </div>
+    <div class="w-100"></div>
+    <div class="col border border-success">
+        <div class="container" id="popup-content">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th *ngFor="let column of cols">{{column}}</th>
+                    </tr>
+                    <tr *ngFor="let item of info">
+                        <td>{{item.estacion}}</td>
+                        <td>{{item.sensor}}</td>
+                        <td>{{item.fecha }}</td>
+                        <td>{{item.valor}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
-    <!-- <canvas id="canvas">chart</canvas> -->
+</div> -->
+
+
+
+<div class="popup popuptext" id="myPopup">
+    <div class="container">
+        <div class="row">
+            <div class="col popupheader">
+                <div class="row justify-content-center popupheadertext">
+                    <div class="col-md-auto" style="text-align: left;"><strong>EMGESA</strong></div>
+                    <div class="col" style="text-align: center"><small>Quimbo-Betania 0000037009</small></div>
+                    <div class="col-md-auto" style="text-align: right"><small>29 Mayo</small></div>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col p-1 border border-warning">
+                <table class="table">
+                    <!-- <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Fecha</th>
+                        </tr>
+                    </thead> -->
+                    <tbody>
+                        <tr (click)="decirHola()" class="popupbodytext">
+                            <td class="popupbodytext-sensor">Afluencia</td>
+                            <td class="popupbodytext-value">102.12</td>
+                            <td class="popupbodytext-units">[m<sup>3</sup>/s]</td>
+                            <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
+                        </tr>
+                        <tr *ngFor="let item of info">
+                            <td class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
+                            <td class="popupbodytext-value">{{item.valor}}</td>
+                            <td class="popupbodytext-units">{{item.unidadSensor}}</td>
+                            <td class="popupbodytext-date">{{item.fecha}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
