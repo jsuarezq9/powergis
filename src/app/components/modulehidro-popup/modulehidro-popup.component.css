@@ -1,31 +1,60 @@
-/* Cuando se ven últimos datos + serie de tiempo */
+/* Últimos datos + serie de tiempo */
 
 .hidro-popup-expanded {
-    height: 40%;
-    width: 86%;
+    height: 100%;
+    width: 100%;
     padding: 0%;
     position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: blue;
     margin: 0%;
     padding: 0%;
-    right: 4%;
-    bottom: 0px;
-    background-color: blue;
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 
-/* Cuando se ven sólo últimos datos */
+/* 
+tbody {
+    overflow-y: auto;
+    height: 10px;
+} */
 
-.hidro-popup-small {
-    height: 60%;
-    width: 86%;
-    padding: 0%;
-    position: fixed;
-    margin: 0%;
-    padding: 0%;
-    right: 4%;
-    bottom: 0px;
-    background-color: blue;
-}
+
+/* .table-fixed {
+    width: 100%;
+    background-color: #f3f3f3;
+    tbody {
+        height: 200px;
+        overflow-y: auto;
+        width: 100%;
+    }
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
+        display: block;
+    }
+    tbody {
+        td {
+            float: left;
+        }
+    }
+    thead {
+        tr {
+            th {
+                float: left;
+                background-color: #f39c12;
+                border-color: #e67e22;
+            }
+        }
+    }
+} */
 
 
 /* -------------- Popup -------------- */
@@ -59,6 +88,18 @@
     box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
 }
 
+.popuptext-expanded {
+    /* visibility: hidden; */
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 0px 0px 0px 20px;
+    margin-bottom: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+}
+
 .popupheader {
     background: #2F86EA;
     padding-top: 5px;
@@ -79,6 +120,7 @@
 
 .popupbodytext {
     background-color: #fff;
+    color: #5F5F5F;
 }
 
 .popupbodytext:hover {
@@ -86,26 +128,26 @@
 }
 
 .popupbodytext:active {
-    background-color: black;
+    background-color: rgba(47, 134, 234, 0.493);
+    color: white;
 }
 
-.popupbodytext::selection {
-    background-color: black;
+.popupbodytext-selected {
+    background-color: #EDEDED;
+    color: #2F86EA;
 }
 
 .popupbodytext-sensor {
     font-weight: bold;
     font-size: 13px;
     text-align: left;
-    color: #5F5F5F;
     vertical-align: bottom;
 }
 
 .popupbodytext-value {
-    font-weight: 900;
+    font-weight: bold;
     font-size: 20px;
     text-align: right;
-    color: #5F5F5F;
     vertical-align: bottom;
 }
 
@@ -113,14 +155,13 @@
     font-weight: bold;
     font-size: 10px;
     text-align: left;
-    color: #5F5F5F;
     vertical-align: bottom;
+    /* border-bottom: 10px solid red; */
 }
 
 .popupbodytext-date {
     font-size: 10px;
     text-align: center;
-    color: #5F5F5F;
     vertical-align: bottom;
 }
 
@@ -145,6 +186,24 @@
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
+}
+
+.popupexpandedtext {
+    /* visibility: hidden; */
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 0px 20px 20px 00px;
+    z-index: 1;
+    /* margin-left: -180px; */
+    margin-bottom: 0px;
+    width: 1000px;
+    height: 430px;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    left: 33.4%;
+    bottom: 0px;
+    align-content: flex-start
 }
 
 

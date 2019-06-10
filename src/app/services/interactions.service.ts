@@ -18,9 +18,10 @@ export class ComponentsInteractionService {
     this.mapInteraction.next(layer);
   }
 
-  setPopover(info: any): void {
+  setPopup(info: any, show: boolean): void {
     const popover = {
-      info
+      info,
+      show
     };
     this.popupInteraction.next(popover);
   }

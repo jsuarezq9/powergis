@@ -103,7 +103,7 @@ export class MapComponent implements OnInit {
         let coord: any;
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
-        this.popup.classList.toggle('show');
+        this.initializePopup();
         this.map.forEachFeatureAtPixel(evt.pixel, feature => {
           coord = evt.pixel;
           this.info.push({
@@ -118,7 +118,7 @@ export class MapComponent implements OnInit {
           console.log(feature);
           console.log(this.info);
         });
-        this.createPopover();
+        this.createPopup();
       });
       this.map.addOverlay(overlay);
       // TOOLTIP
@@ -235,11 +235,15 @@ export class MapComponent implements OnInit {
           const onError = () => {
             vectorSource.removeLoadedExtent(extent);
             alert(`Error while requesting (${name} - ${type})`);
+            console.log(exists, `${name}-progress`);
             if (exists) {
               document.getElementById(`${name}-progress`).classList.add('bg-danger');
-              // tslint:disable-next-line: no-string-literal
-              document.getElementById(`${name}`)['checked'] = false;
-              document.getElementById(`${name}-progress`).style.display = 'none';
+              document.getElementById(`${name}-progress`).style.display = 'block';
+              setTimeout(() => {
+                document.getElementById(`${name}-progress`).style.display = 'none';
+                // tslint:disable-next-line: no-string-literal
+                document.getElementById(`${name}`)['checked'] = false;
+              }, 1000);
             }
           };
           xhr.onerror = onError;
@@ -325,8 +329,29 @@ export class MapComponent implements OnInit {
       }
     }
 
-    createPopover() {
-      this.interaction.setPopover(this.info);
+    createPopup() {
+      this.interaction.setPopup(this.info, true);
+    }
+
+    initializePopup() {
+      // Muestro el popup
+      this.popup.classList.toggle('show');
+
+      // Escondo el popupExpanded y el popupModule
+      const popupExpanded = document.getElementById('myPopupExpandedContainer');
+      popupExpanded.style.display = 'none';
+      const popupModule = document.getElementById('moduleHidroPopup');
+      popupModule.style.display = 'none';
+
+      // Reinicio la selección de sensor del popup
+      const rows = document.getElementsByClassName('popupbodytext-selected');
+      console.log(rows);
+      // tslint:disable-next-line: prefer-for-of
+      for (let index = 0; index < rows.length; index++) {
+        rows[index].classList.add('popupbodytext');
+        rows[index].classList.remove('popupbodytext-selected');
+      }
+      console.log(rows);
     }
 
     createTooltip() {

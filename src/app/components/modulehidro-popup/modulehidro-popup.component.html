@@ -1,77 +1,91 @@
-<!-- <div id="popup" class="container row ol-popup">
-    <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-            Popover on top
-        </button>
-    <p>This <a href="#" role="button" class="btn btn-secondary popover-test" title="Popover title" data-content="Popover body content is set in this attribute.">button</a> triggers a popover on click.</p>
-    <div class="col">
-        Datos generales
-    </div>
-    <div class="w-100"></div>
-    <div class="col border border-danger">
-        <div id="popup-closer" class="ol-popup-closer"></div>
-        CLOSER
-        <span class="glyphicon glyphicon-remove right" id="popup-closer">APARECE</span>
-    </div>
-    <div class="w-100"></div>
-    <div class="col border border-success">
-        <div class="container" id="popup-content">
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <th *ngFor="let column of cols">{{column}}</th>
-                    </tr>
-                    <tr *ngFor="let item of info">
-                        <td>{{item.estacion}}</td>
-                        <td>{{item.sensor}}</td>
-                        <td>{{item.fecha }}</td>
-                        <td>{{item.valor}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-</div> -->
-
-
-
+<!-- POPUP -->
 <div class="popup popuptext" id="myPopup">
-    <div class="container">
+    <div class="container" style="width: 360px;">
         <div class="row">
             <div class="col popupheader">
                 <div class="row justify-content-center popupheadertext">
-                    <div class="col-md-auto" style="text-align: left;"><strong>EMGESA</strong></div>
-                    <div class="col" style="text-align: center"><small>Quimbo-Betania 0000037009</small></div>
-                    <div class="col-md-auto" style="text-align: right"><small>29 Mayo</small></div>
+                    <div class="col-md-auto" style="text-align: left;"><strong>{{this.company | uppercase}}</strong></div>
+                    <div class="col" style="text-align: center"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
+                    <div class="col-md-auto" style="text-align: right"><small>{{this.date | date:'fullDate'}}</small></div>
                 </div>
             </div>
             <div class="w-100"></div>
-            <div class="col p-1 border border-warning">
-                <table class="table">
-                    <!-- <thead>
-                        <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Unidad</th>
-                            <th scope="col">Fecha</th>
-                        </tr>
-                    </thead> -->
-                    <tbody>
-                        <tr (click)="decirHola()" class="popupbodytext">
-                            <td class="popupbodytext-sensor">Afluencia</td>
+            <div class="col p-1">
+                <table class="table" id="table">
+                    <thead class="" style="color: #5F5F5F">
+                        <th>Sensor</th>
+                        <th colspan="2">Último dato</th>
+                        <th>Fecha</th>
+                    </thead>
+                    <tbody id="tbody">
+                        <tr (click)="getBigPopup();changeSelection($event)" class="popupbodytext pointer collapseditem" id="pruebiña">
+                            <td class="popupbodytext-sensor">Afluencia*</td>
                             <td class="popupbodytext-value">102.12</td>
-                            <td class="popupbodytext-units">[m<sup>3</sup>/s]</td>
+                            <td class="popupbodytext-units">[m3/s]</td>
                             <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
                         </tr>
-                        <tr *ngFor="let item of info">
-                            <td class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
-                            <td class="popupbodytext-value">{{item.valor}}</td>
-                            <td class="popupbodytext-units">{{item.unidadSensor}}</td>
-                            <td class="popupbodytext-date">{{item.fecha}}</td>
+                        <tr (click)="getBigPopup();changeSelection($event)" class="popupbodytext pointer collapseditem" *ngFor="let item of info" id="{{item.nombreSensor}}">
+                            <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
+                            <td id="valor" class="popupbodytext-value">{{item.valor}}</td>
+                            <td id="unidadSensor" class="popupbodytext-units">{{item.unidadSensor}}</td>
+                            <td id="fecha" class="popupbodytext-date">{{item.fecha}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- POPUP EXPANDED (myPopupExpanded + myTimeSeries) style="display: none" -->
+<div class="row h-100" style="margin: 0;display: none;" id="myPopupExpandedContainer">
+    <div class="col popupheader">
+        <div class="row justify-content-center popupheadertext">
+            <div class="col-md-auto" style="text-align: left;"><strong>{{this.company | uppercase}}</strong></div>
+            <div class="col" style="text-align: right"><small>Quimbo-Betania 0000037009</small></div>
+            <div class="col" style="text-align: left"><small>Afluencia [m3/s]</small></div>
+            <div class="col-md-auto" style="text-align: right"><small>29 Mayo</small></div>
+            <div class="col-md-auto pointer" style="text-align: left" (click)="closeBigPopup()"><strong>X</strong></div>
+        </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-md-auto border border-info h-100" style="padding: 0;">
+        <!-- myPopupExpanded -->
+        <div class="popuptext-expanded" id="myPopupExpanded">
+            <div class="container h-100">
+                <div class="row h-100">
+                    <div class="col p-1 h-100">
+                        <table class="table">
+                            <thead class="" style="color: #5F5F5F">
+                                <th>Sensor</th>
+                                <th colspan="2">Último dato</th>
+                                <th>Fecha</th>
+                            </thead>
+                            <tbody class="border border-danger">
+                                <tr (click)="changeSelection($event)" class="popupbodytext pointer expandeditem" id="pruebiña-expanded">
+                                    <td class="popupbodytext-sensor">Afluencia</td>
+                                    <td class="popupbodytext-value">102.12</td>
+                                    <td class="popupbodytext-units">[m3/s]</td>
+                                    <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
+                                </tr>
+                                <tr (click)="changeSelection($event)" class="popupbodytext pointer expandeditem" *ngFor="let item of info" id="{{item.nombreSensor}}-expanded">
+                                    <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
+                                    <td id="valor" class="popupbodytext-value">{{item.valor}}</td>
+                                    <td id="unidadSensor" class="popupbodytext-units">{{item.unidadSensor}}</td>
+                                    <td id="fecha" class="popupbodytext-date">{{item.fecha}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col" style="padding: 0;">
+        <!-- myTimeSeries -->
+        <div class="popuptext-expanded" id="myTimeSeries">
+            HOLA2
+        </div>
+
     </div>
 </div>
