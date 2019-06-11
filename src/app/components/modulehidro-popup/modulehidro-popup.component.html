@@ -6,7 +6,7 @@
                 <div class="row justify-content-center popupheadertext">
                     <div class="col-md-auto" style="text-align: left;"><strong>{{this.company | uppercase}}</strong></div>
                     <div class="col" style="text-align: center"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
-                    <div class="col-md-auto" style="text-align: right"><small>{{this.date | date:'fullDate'}}</small></div>
+                    <div class="col-md-auto" style="text-align: right"><small>{{this.date}}</small></div>
                 </div>
             </div>
             <div class="w-100"></div>
@@ -25,7 +25,7 @@
                             <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
                         </tr>
                         <tr (click)="getBigPopup();changeSelection($event)" class="popupbodytext pointer collapseditem" *ngFor="let item of info" id="{{item.nombreSensor}}">
-                            <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
+                            <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor}}</td>
                             <td id="valor" class="popupbodytext-value">{{item.valor}}</td>
                             <td id="unidadSensor" class="popupbodytext-units">{{item.unidadSensor}}</td>
                             <td id="fecha" class="popupbodytext-date">{{item.fecha}}</td>

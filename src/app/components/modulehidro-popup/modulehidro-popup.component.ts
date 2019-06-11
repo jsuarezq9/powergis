@@ -9,7 +9,6 @@ import { ComponentsInteractionService } from '../../services/interactions.servic
 export class ModulehidroPopupComponent implements OnInit {
 
   info: any;
-  showPopup = true;
   company: any;
   stationName: any;
   stationId: any;
@@ -19,14 +18,40 @@ export class ModulehidroPopupComponent implements OnInit {
   ngOnInit() {
     // Recibir respuesta de servicio de interacción y determinar acción
     this.interaction.popupInteraction.subscribe((popup: any) => {
-      this.info = popup.info;
-      this.showPopup = popup.show;
-      this.company = this.info[0].nombreEntidad;
-      this.stationName = this.info[0].nombreEstacion;
-      this.stationId = this.info[0].idEstacion;
-      this.date = this.info[0].fecha;
-      console.log('This info', this.info);
-      console.log('This company', this.company, this.stationName, this.stationId);
+      // this.info = popup;
+      if (popup.length > 0) {
+        const array = [];
+        this.company = popup[0].nombreEntidad;
+        this.stationName = popup[0].nombreEstacion;
+        this.stationId = popup[0].idEstacion;
+        this.date = popup[0].fecha;
+        let estacion: string;
+        estacion = popup[0].idEstacion;
+        console.log('Estación seleccionada: ', estacion);
+        // tslint:disable-next-line: prefer-for-of
+        for (let index = 0; index < popup.length; index++) {
+          const item = popup[index];
+          // Si cumple con la estación seleccionada, 
+          if (item.idEstacion === estacion) {
+            console.log('Cumple con la estación seleccionada', item);
+            // Si cumple que no se repita el sensor,
+            const rep = array.filter(feature => feature.idSensor === item.idSensor);
+            console.log('Se repite?', rep, item);
+            if (rep.length === 0) {
+              // Push en el array
+              array.push(item);
+            } else {
+              console.log('Ya existe');
+            }
+          }
+        }
+        this.info = array;
+        console.log('This info', array);
+      } else {
+        console.log('No information granted for this pop up info:', this.info);
+      }
+    }, (error) => {
+      alert(`Error on interaction PopUp ${error.message}`);
     });
   }
 
@@ -35,7 +60,6 @@ export class ModulehidroPopupComponent implements OnInit {
     // Escondo el popup
     const popup = document.getElementById('myPopup');
     popup.classList.remove('show');
-    this.showPopup = false;
 
     // Muestro el popupExpanded
     const popupExpanded = document.getElementById('myPopupExpandedContainer');
@@ -50,8 +74,6 @@ export class ModulehidroPopupComponent implements OnInit {
     popupExpanded.style.display = 'none';
     const popupModule = document.getElementById('moduleHidroPopup');
     popupModule.style.display = 'none';
-    // Recupero el popup
-    this.showPopup = true;
   }
 
   changeSelection(event: any) {

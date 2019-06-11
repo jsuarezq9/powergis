@@ -98,29 +98,35 @@ export class MapComponent implements OnInit {
 
       // POPUP
       this.map.on('singleclick', (evt: any) => {
-        this.features = [];
-        this.info = [];
+        const features = [];
+        const info = [];
         let coord: any;
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
         this.initializePopup();
-        this.map.forEachFeatureAtPixel(evt.pixel, feature => {
+        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
           coord = evt.pixel;
-          this.info.push({
+          const item = {
             nombreEntidad: feature.values_.nombre_entidad,
-            nombreEstacion: feature.values_.nombre_estacion,
             idEstacion: feature.values_.id_estacion,
+            nombreEstacion: feature.values_.nombre_estacion,
+            idSensor: feature.values_.id_sensor,
             nombreSensor: feature.values_.nombre_sensor,
             unidadSensor: feature.values_.unidad,
             fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
             valor: feature.values_.valor.toFixed(3)
-          });
-          console.log(feature);
-          console.log(this.info);
+          };
+          info.push(item);
         });
-        this.createPopup();
+        if (info.length > 0) {
+          this.createPopup(info);
+          this.map.addOverlay(overlay);
+        } else {
+          this.createPopup(info);
+          console.log('No es un feature valido');
+        }
       });
-      this.map.addOverlay(overlay);
+
       // TOOLTIP
       // this.map.on('pointermove', (evt: any) => {
       //   this.features = [];
@@ -329,8 +335,8 @@ export class MapComponent implements OnInit {
       }
     }
 
-    createPopup() {
-      this.interaction.setPopup(this.info, true);
+    createPopup(info) {
+      this.interaction.setPopup(info);
     }
 
     initializePopup() {

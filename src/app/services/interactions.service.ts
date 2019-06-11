@@ -18,12 +18,8 @@ export class ComponentsInteractionService {
     this.mapInteraction.next(layer);
   }
 
-  setPopup(info: any, show: boolean): void {
-    const popover = {
-      info,
-      show
-    };
-    this.popupInteraction.next(popover);
+  setPopup(info: any): void {
+    this.popupInteraction.next(info);
   }
 
   setTooltip(info: any): void {
