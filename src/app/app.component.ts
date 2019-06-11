@@ -188,7 +188,6 @@ export class AppComponent implements OnInit {
         if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
           return styles.hidroInactiva;
         } else {
-          console.log('hi cambio')
           return styles.hidroActiva;
         }
       }
