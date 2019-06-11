@@ -18,7 +18,6 @@ export class ModulehidroPopupComponent implements OnInit {
   ngOnInit() {
     // Recibir respuesta de servicio de interacción y determinar acción
     this.interaction.popupInteraction.subscribe((popup: any) => {
-      // this.info = popup;
       if (popup.length > 0) {
         const array = [];
         this.company = popup[0].nombreEntidad;
@@ -31,17 +30,10 @@ export class ModulehidroPopupComponent implements OnInit {
         // tslint:disable-next-line: prefer-for-of
         for (let index = 0; index < popup.length; index++) {
           const item = popup[index];
-          // Si cumple con la estación seleccionada, 
           if (item.idEstacion === estacion) {
-            console.log('Cumple con la estación seleccionada', item);
-            // Si cumple que no se repita el sensor,
             const rep = array.filter(feature => feature.idSensor === item.idSensor);
-            console.log('Se repite?', rep, item);
             if (rep.length === 0) {
-              // Push en el array
               array.push(item);
-            } else {
-              console.log('Ya existe');
             }
           }
         }

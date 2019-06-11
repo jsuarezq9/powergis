@@ -31,6 +31,7 @@ import { events } from 'ol/events';
 import { HttpClient } from 'selenium-webdriver/http';
 import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
 import { map } from 'rxjs/operators';
+import { layer } from 'openlayers';
 
 @Component({
   selector: 'app-map',
@@ -51,6 +52,15 @@ export class MapComponent implements OnInit {
   features = [];
   info = [];
   popup: any;
+
+  styles = {
+    hidroEmgesaActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png',  scale: 0.25 })}),
+    hidroEmgesaInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png',   scale: 0.25 })}),
+    hidroActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png',   scale: 0.25 })}),
+    hidroInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png',   scale: 0.25 })}),
+    Default : new Style({image: new Circle({radius: 4, fill: new Fill({color: 'rgba(120, 191, 255, 0.6)', }),
+     stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)', width: 2})})})
+  };
 
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) { }
@@ -74,6 +84,7 @@ export class MapComponent implements OnInit {
       });
 
       // AÑADO CAPA ESTACIONES VM ULTIMO DATO
+
       // tslint:disable-next-line: variable-name
       const capaEstaciones_info = {
         href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
@@ -105,18 +116,21 @@ export class MapComponent implements OnInit {
         overlay.setPosition(coordinate);
         this.initializePopup();
         this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-          coord = evt.pixel;
-          const item = {
-            nombreEntidad: feature.values_.nombre_entidad,
-            idEstacion: feature.values_.id_estacion,
-            nombreEstacion: feature.values_.nombre_estacion,
-            idSensor: feature.values_.id_sensor,
-            nombreSensor: feature.values_.nombre_sensor,
-            unidadSensor: feature.values_.unidad,
-            fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-            valor: feature.values_.valor.toFixed(3)
-          };
-          info.push(item);
+          console.log('entró', feature.id_.split('.fid', 1)[0]);
+          if ( feature.id_.split('.fid', 1)[0] === 'vm_ultimo_dato_estacion') {
+            coord = evt.pixel;
+            const item = {
+              nombreEntidad: feature.values_.nombre_entidad,
+              idEstacion: feature.values_.id_estacion,
+              nombreEstacion: feature.values_.nombre_estacion,
+              idSensor: feature.values_.id_sensor,
+              nombreSensor: feature.values_.nombre_sensor,
+              unidadSensor: feature.values_.unidad,
+              fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+              valor: feature.values_.valor.toFixed(3)
+            };
+            info.push(item);
+          }
         });
         if (info.length > 0) {
           this.createPopup(info);
@@ -196,9 +210,9 @@ export class MapComponent implements OnInit {
             HEIGHT: 500,
             BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
             SRS: 'EPSG:4686',
-            LAYERS: `base:${name}`
+            LAYERS: `base:${name}`,
+            TRANSPARENT: true
           },
-          opacity: (0.5),
           ration: 1
         });
         imageSource.on('imageloadend', () => {
@@ -208,7 +222,9 @@ export class MapComponent implements OnInit {
           source: imageSource
         });
       }
+      newLayer.setOpacity(0.3);
       this.saveLayer(name, newLayer);
+      console.log('------ Opacidad: ', newLayer.getOpacity());
     }
 
     addLayerWFS(type: string, name: string, edit: boolean) {
