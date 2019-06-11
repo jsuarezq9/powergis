@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TimeSeriesService } from './timeseries.service';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -7,16 +7,16 @@ import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
 import Select from 'ol/interaction/Select.js';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
-import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
+import { Icon, Style, Stroke, Circle, Fill, Text } from 'ol/style';
 import Overlay from 'ol/Overlay';
-import { toStringHDMS } from 'ol/coordinate.js';
-import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy, all } from 'ol/loadingstrategy.js';
 import { TimeSeriesService } from './timeseries.service';
 import Chart from 'chart.js/dist/Chart.js';
+import Feature from 'ol/Feature';
 import 'rxjs/add/operator/map';
-
+import * as moment from 'moment';
+import { style } from 'openlayers';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -43,16 +43,29 @@ export class AppComponent implements OnInit {
     const container = document.getElementById('popup');
     const content = document.getElementById('popup-content');
     const closer = document.getElementById('popup-closer');
+    const hooverContainer = document.getElementById('popup-hoover');
+    const now = moment();
+    now.format('YYYY-MM-DD hh:mm:ss');
+
 
     const overlay = new Overlay({
       element: container,
-      autoPan: true,
+      autoPan: false,
+      autoPanAnimation: {
+        duration: 250
+      }
+    });
+    const hoover = new Overlay({
+      element: hooverContainer,
+      autoPan: false,
       autoPanAnimation: {
         duration: 250
       }
     });
     closer.onclick = () => {
       overlay.setPosition(undefined);
+      this.features = [];
+      this.info = [];
       closer.blur();
       return false;
     };
@@ -60,11 +73,8 @@ export class AppComponent implements OnInit {
       source: new OSM()
     });
     const map = new Map({
-      // controls: [new Zoom(), new ZoomSlider(),
-      //   new OverviewMap()
-      // ],
       layers: [base],
-      overlays: [overlay],
+      overlays: [overlay, hoover],
       target: 'map',
       view: new View({
         center: fromLonLat([-74.063644, 3.924335]),
@@ -117,6 +127,7 @@ export class AppComponent implements OnInit {
       })
     });
     // agregar capa vector al mapa
+
     map.addLayer(vector);
     // creo segunda capa tipo vector
 
@@ -126,7 +137,7 @@ export class AppComponent implements OnInit {
         const proj = projection.getCode();
         const url = 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=WFS&' +
           'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&' +
-          'CQL_FILTER=id_sensor%20not%20ilike%20%271%25%27%20and%20id_sensor%3C%3E%279000%27&'+
+          'CQL_FILTER=id_sensor%20not%20ilike%20%271%25%27%20and%20id_sensor%3C%3E%279000%27&' +
           'outputFormat=application/json&srsname=' + proj;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
@@ -150,105 +161,132 @@ export class AppComponent implements OnInit {
       strategy: bboxStrategy
     });
 
-    function setStyle(feature) {
-      var style = new Style({
+    const styles = {
+      hidroEmgesaActiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png', scale: 0.25 }) }),
+      hidroEmgesaInactiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png', scale: 0.25 }) }),
+      hidroActiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png', scale: 0.25 }) }),
+      hidroInactiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png' , scale: 0.25 }) }),
+      Default: new Style({
         image: new Circle({
-          radius: 6,
-          stroke: new Stroke({
-            color: 'white',
-            width: 2
-          }),
-          fill: new Fill({
-            color: 'green'
-          })
+          radius: 4, fill: new Fill({ color: 'rgba(120, 191, 255, 0.6)', }),
+          stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
         })
-      });
-      return [style];
-    }
+      })
+    };
+
+
+
+    const setStyle = (feature) => {
+      if (feature.get('nombre_entidad') === 'EMGESA') {
+        if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
+          return styles.hidroEmgesaInactiva;
+        } else {
+
+          return styles.hidroEmgesaActiva;
+        }
+      } else {
+        if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
+          return styles.hidroInactiva;
+        } else {
+          console.log('hi cambio')
+          return styles.hidroActiva;
+        }
+      }
+    };
+
+
 
 
 
     // agrego la segunda fuente de datos a una capa vectorlayer
     const vector2 = new VectorLayer({
       source: vectorSource2,
-      style: new Style({
-        image: new Circle({
-          radius: 5,
-          fill: new Fill({
-            color: 'rgba(0, 191, 255, 1.0)'
-          }),
-          stroke: new Stroke({
-            color: 'rgba(0, 0, 255, 1.0)',
-            width: 1
-          })
-        })
-      }),
-      renderMode: 'vector'
+      renderMode: 'vector',
+      style: setStyle
     });
+
     // agrego la capa al mapa
     map.addLayer(vector2);
-    let select;
+
     const selectPointerMove = new Select({
       condition: pointerMove,
       layer: [vector2]
     });
-    select = selectPointerMove;
 
-    map.addInteraction(select);
-    map.on('singleclick', (evt) => {
-      //  content.innerHTML= '';
+    map.addInteraction(selectPointerMove);
+    map.on('singleclick', evt => {
       this.features = [];
       this.info = [];
       const coordinate = evt.coordinate;
-      //const hdms = toStringHDMS(toLonLat(coordinate)); // para ser usado si se requiere desplegar las coordenadas
       overlay.setPosition(coordinate);
-      map.forEachFeatureAtPixel(evt.pixel, feature => {
-        if(feature.values_.nombre_estacion){
-        this.info.push({
-          sensor: feature.values_.id_sensor,
-          estacion: feature.values_.nombre_estacion,
-          fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-          valor: feature.values_.valor.toFixed(3),
-          idestacion: feature.values_.id_estacion
-        });
-      }
+      map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+            this.info.push({
+            sensor: feature.get('id_sensor'),
+            estacion: feature.get('nombre_estacion'),
+            fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+            valor: feature.get('valor'),
+            idestacion: feature.get('id_estacion')
+          });
+
+      }, {
+          layerFiltter: (layer) => {
+          return layer.get('layer_name') === 'vector2';
+        }
+
       });
+    });
+
+    let feature_onHover = Feature;
+    map.on('pointermove', (evt) => {
+      feature_onHover = map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+
+        return feature;
+      });
+      if (feature_onHover) {
+        hoover.setPosition(evt.coordinate);
+        if (feature_onHover.get('nombre')) {
+          hooverContainer.innerHTML = feature_onHover.getProperties().nombre;
+          hooverContainer.style.display = 'block';
+        } else if (feature_onHover.get('nombre_estacion')) {
+          hooverContainer.innerHTML = feature_onHover.get('nombre_estacion');
+          hooverContainer.style.display = 'block';
+        }
+
+      } else {
+        hooverContainer.style.display = 'none';
+      }
     });
   }
-
   initializeChart(estacion, sensor) {
-  console.log('hi estacion:' + estacion + ' sensor:' + sensor);
-  this._timeseries.rawData(estacion, '2019-02-01', '2019-06-05', sensor)
-    .subscribe(res => {
-      const data = res;
-      const dataset = [];
-      data.map(element => {
-        dataset.push (
-          {
-          t: element.fecha_hora,
-          y: element.valor.toFixed(3)
-      });
-    });
-      console.log(dataset);
-      const conf = {
-        type: 'line',
-        data: {
-          datasets: [{
-            label: 'Scatter Dataset',
-            data: dataset
-          }]
-        },
-        options: {
-          scales: {
-            xAxes: [{
-              type: 'time',
-              position: 'bottom'
+    this._timeseries.rawData(estacion, '2019-02-01', '2019-06-05', sensor)
+      .subscribe(res => {
+        const data = res;
+        const dataset = [];
+        data.map(element => {
+          dataset.push(
+            {
+              t: element.fecha_hora,
+              y: element.valor.toFixed(3)
+            });
+        });
+        const conf = {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: 'Scatter Dataset',
+              data: dataset
             }]
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                type: 'time',
+                position: 'bottom'
+              }]
+            }
           }
-        }
-      };
-      console.log(conf);
-      this.chart = new Chart('canvas', conf);
-    });
-}
+        };
+        this.chart = new Chart('canvas', conf);
+      });
+  }
 }
