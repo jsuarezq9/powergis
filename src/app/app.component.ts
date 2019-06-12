@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
   chart = [];
   features = [];
   info = [];
-  columns = ['Sensor', 'Estación', 'Fecha', 'valor'];
+  columns = ['Estación','Sensor', 'Fecha', 'valor'];
+  precipitation = this._timeseries.aggregatedPrecipitation('2019-05-12', '2019-06-12');
 
   constructor(private _timeseries: TimeSeriesService) { }
 
@@ -46,6 +47,11 @@ export class AppComponent implements OnInit {
     const hooverContainer = document.getElementById('popup-hoover');
     const now = moment();
     now.format('YYYY-MM-DD hh:mm:ss');
+    this.precipitation.subscribe(res => {
+      const data = res;
+      console.log(data.get('id_estacion'));
+
+    });
 
 
     const overlay = new Overlay({
@@ -288,4 +294,5 @@ export class AppComponent implements OnInit {
         this.chart = new Chart('canvas', conf);
       });
   }
+
 }

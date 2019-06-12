@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY29uc3VsdGFfZXh0ZXJuYSIsImVtYWlsIjoibG9zcG9sbG9zaGVybWFub3NAbWFpbC5jb20iLCJleHAiOjE1NjE4NTI4MDB9.uQBIH44x2LFL__8QAJiYcRSIK_aTlWU3qKCrM8Klbn0'
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiZ2VzdG9yX2ludGVybm8iLCJlbWFpbCI6ImFuZHJlcy52ZWxhc2NvQGVuZWwuY29tIiwiZXhwIjoxNTc3MTQ1NjAwfQ.57g7-Xu2R8OBWHODxHsQ9y3twsICBPg2uf7-oc1twT0'
   })
 };
 
@@ -43,6 +43,12 @@ export class TimeSeriesService {
     const urlBase = 'http://slaawgresf00.enelint.global/dwh/t101101_datos?';
     const args = 'id_estacion=eq.' + idEstacion + '&fecha_hora=gte.' + fechaIncio + '&fecha_hora=lte.' + fechaFin;
     return this._http.get<any>(urlBase + args, httpOptions)
-    .map(res => res) ;
+    .map(res => res)
   }
+  aggregatedPrecipitation(fechaIncio, fechaFin) {
+    const urlBase = 'http://elaacgresf00.enelint.global/e1011/rpc/get_precipitacion_estaciones?';
+    const args = 'fecha_inicio=' + fechaIncio + '&fecha_fin=' + fechaFin;
+    return this._http.get<any>(urlBase + args, httpOptions).map(res => res)
+  }
+
 }
