@@ -15,7 +15,11 @@ import { LayerNamePipe } from './pipes/layer-name.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { ModulehidroPopupComponent } from './components/modulehidro-popup/modulehidro-popup.component';
+import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeseries/modulehidro-timeseries.component';
 
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+import { PlotlyModule } from 'angular-plotly.js';
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -30,11 +34,13 @@ import { ModulehidroPopupComponent } from './components/modulehidro-popup/module
     ModuleprecipitationComponent,
     LayerNamePipe,
     CapitalizePipe,
-    ModulehidroPopupComponent
+    ModulehidroPopupComponent,
+    ModulehidroTimeseriesComponent
   ],
   imports: [
     BrowserModule,
     // AppRoutingModule,
+    PlotlyModule,
     HttpClientModule,
     GoogleChartsModule
   ],

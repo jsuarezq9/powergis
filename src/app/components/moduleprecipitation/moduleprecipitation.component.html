@@ -1,4 +1,4 @@
-<div class="col-12 modules-outer shadow">
+<div class="col-12 modules-outer-precipitation shadow">
     <div class="animated fadeIn moduleFloat dropToolMenu border border-white" style="min-height: 100%; max-height: 100%">
         <!-- Búsqueda y añadir capas -->
         <div class="container mt-3" style="width: 95%;">
@@ -24,5 +24,20 @@
             </div>
         </div>
 
+    </div>
+</div>
+<div class="control-zoom btn-group dropleft">
+    <button class="control-zoom align-content-center dropdown-toggle" title="Seleccionar zona" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="far fa-compass control-zoom-icon"></i>
+    </button>
+    <div class="dropdown-menu mr-3 overflow-auto" style="max-height: 150px; margin-top: -50px">
+        <h6 class="dropdown-header">Zona:</h6>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item pointer" (click)="viewColombia()" id="viewColombia">Colombia</a>
+        <a class="dropdown-item pointer" (click)="viewEmgesa()" id="viewEmgesa">Emgesa</a>
+        <a class="dropdown-item pointer" (click)="viewQuimbo()" id="viewQuimbo">Quimbo</a>
+        <a class="dropdown-item pointer" (click)="viewBetania()" id="viewBetania">Betania</a>
+        <a class="dropdown-item pointer" (click)="viewRioBogota()" id="viewRioBogota">Río Bogotá</a>
+        <a class="dropdown-item pointer" (click)="viewGuavio()" id="viewGuavio">Guavio</a>
     </div>
 </div>

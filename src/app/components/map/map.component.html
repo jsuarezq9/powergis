@@ -6,3 +6,8 @@
         <i class="fas fa-spinner control-layers-icon"></i>
     </button>
 </div>
+<div id="myTooltip" class="tooltip tooltiptext">
+    <div *ngFor="let item of tooltipvalue">
+        {{item.titulo | uppercase}}: {{item.nombre | uppercase}}
+    </div>
+</div>

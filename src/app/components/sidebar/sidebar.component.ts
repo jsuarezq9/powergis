@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
 
+import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -24,6 +26,44 @@ export class SidebarComponent implements OnInit {
   expandSidebar = false;
   rotation: string;
   layerEstaciones: any;
+  public a;
+
+  // Estilos
+  stylesHidro = {
+    hidroEmgesaActiva:  new Style({
+      image: new Icon({ src: '../../../assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.25, anchor: [0.5, 1] })}),
+    hidroEmgesaInactiva:  new Style({
+      image: new Icon({ src: '../../../assets/icons/estaciones/IconoEstacionEmgesaInactiva.png',   scale: 0.25, anchor: [0.5, 1] })}),
+    hidroActiva:  new Style({
+      image: new Icon({ src: '../../../assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.55, anchor: [0.5, 1] })}),
+    hidroInactiva:  new Style({
+      image: new Icon({ src: '../../../assets/icons/estaciones/IconoEstacionOtrosInactiva.png',   scale: 0.55, anchor: [0.5, 1] })}),
+    Default : new Style({image: new Circle({
+      radius: 30,
+      fill: new Fill({color: 'rgba(120, 191, 255, 0.6)'}),
+      stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)',
+      width: 2})})})
+  };
+
+  selectedStylesHidro = {
+    hidroSelected:  new Style({
+      image: new Icon({ src: '../../../assets/icons/estaciones/IconoSeleccionado.png', scale: 0.75, anchor: [0.5, 1] })}),
+    Default : new Style({image: new Circle({
+      radius: 20,
+      fill: new Fill({color: 'rgba(120, 191, 255, 0.6)'}),
+      stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)',
+      width: 2})})})
+  };
+
+  // stylesPrecipitation = {
+  //   hidroEmgesaActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png',  scale: 0.25 })}),
+  //   hidroEmgesaInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png',   scale: 0.25 })}),
+  //   hidroActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png',   scale: 0.25 })}),
+  //   hidroInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png',   scale: 0.25 })}),
+  //   Default : new Style({image: new Circle({radius: 4, fill: new Fill({color: 'rgba(120, 191, 255, 0.6)', }),
+  //    stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)', width: 2})})})
+  // };
+
 
   constructor(private geoserver: GeoserverService,
               private interaction: ComponentsInteractionService) {}
@@ -34,6 +74,11 @@ export class SidebarComponent implements OnInit {
       name: 'vm_ultimo_dato_estacion',
       edit: false
     };
+    // setTimeout(() => {
+    //   console.log('Me inicialicé');
+    //   this.addEstacionesHidro();
+    //   console.log('Me inicialicé');
+    // }, 1000);
   }
 
   collapseAll(event: any) {
@@ -65,7 +110,7 @@ export class SidebarComponent implements OnInit {
       this.image[element.id] = this.WHITE;
     }
     // Se activan bordes al activo
-// tslint:disable-next-line: prefer-for-of
+    // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < modules.length; index++) {
       const element = modules[index];
       element.classList.add('btn-outline-primary');
@@ -73,7 +118,7 @@ export class SidebarComponent implements OnInit {
       this.image[element.id] = this.BLUE;
     }
     // Se reinicia el activeButton
-// tslint:disable-next-line: prefer-for-of
+    // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < buttons.length; index++) {
       const element = buttons[index];
       element.classList.remove('activeButton');
@@ -81,12 +126,15 @@ export class SidebarComponent implements OnInit {
     this.activeModule.emit(event.target.offsetParent.id);
   }
 
-  addEstacionesHidro() {
-    this.interaction.setLayer(this.layerEstaciones, true, true);
+  public addEstacionesHidro() {
+    console.log('1. SIDEBAR');
+    this.removeEstaciones();
+    this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }
 
   addEstacionesPrecipitation() {
-    this.interaction.setLayer(this.layerEstaciones, true, true);
+    this.removeEstaciones();
+    this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }
 
   removeEstaciones() {

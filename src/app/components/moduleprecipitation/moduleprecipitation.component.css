@@ -44,3 +44,52 @@
     padding-right: 0;
     padding-left: 0;
 }
+
+.control-zoom {
+    height: 28px;
+    width: 26px;
+    bottom: 17%;
+    position: fixed;
+    left: auto;
+    right: 1.8%;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 5px solid red; */
+    border: none;
+    border-radius: 2px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 0.7);
+}
+
+.control-zoom:hover {
+    height: 28px;
+    width: 26px;
+    bottom: 17%;
+    position: fixed;
+    left: auto;
+    right: 1.8%;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 5px solid red; */
+    border: none;
+    border-radius: 2px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 1);
+}
+
+.control-zoom-icon {
+    height: 15px;
+    width: 15px;
+    margin-left: -5px;
+    margin-top: -10px;
+    padding: 0%;
+    color: white;
+}
+
+.active {
+    color: white!important;
+}
+
+.dropleft .dropdown-toggle::before {
+    content: none!important;
+}

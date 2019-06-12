@@ -5,11 +5,25 @@ body {
     overflow-y: hidden;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 
 /* Módulos */
 
-.modules-outer {
-    height: 84%;
+.modules-outer-base {
+    height: 64%;
+    margin-top: 15%;
+}
+
+.modules-outer-hidro {
+    height: 64%;
+    margin-top: 15%;
+}
+
+.modules-outer-precipitation {
+    height: 64%;
     margin-top: 15%;
 }
 

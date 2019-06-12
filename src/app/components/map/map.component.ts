@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 // OL
 import OlMap from 'ol/Map';
@@ -33,6 +34,8 @@ import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
 import { map } from 'rxjs/operators';
 import { layer } from 'openlayers';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -49,18 +52,12 @@ export class MapComponent implements OnInit {
 
   layers = {};
 
+  popup: any;
   features = [];
   info = [];
-  popup: any;
+  tooltip: any;
+  tooltipvalue = [];
 
-  styles = {
-    hidroEmgesaActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png',  scale: 0.25 })}),
-    hidroEmgesaInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png',   scale: 0.25 })}),
-    hidroActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png',   scale: 0.25 })}),
-    hidroInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png',   scale: 0.25 })}),
-    Default : new Style({image: new Circle({radius: 4, fill: new Fill({color: 'rgba(120, 191, 255, 0.6)', }),
-     stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)', width: 2})})})
-  };
 
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) { }
@@ -83,93 +80,10 @@ export class MapComponent implements OnInit {
         controls: []
       });
 
-      // AÑADO CAPA ESTACIONES VM ULTIMO DATO
-
-      // tslint:disable-next-line: variable-name
-      const capaEstaciones_info = {
-        href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
-        name: 'vm_ultimo_dato_estacion',
-        show: true
-      };
-      const capaEstaciones = this.addLayerWFS(this.geoservice.DWHS, capaEstaciones_info.name, false);
-      let select: any;
-      const selectPointerMove = new Select({
-        condition: pointerMove,
-        layer: capaEstaciones
-      });
-      select = selectPointerMove;
-      this.map.addInteraction(select);
-
-      // OVERLAY
-      this.popup = document.getElementById('myPopup');
-      const overlay = new Overlay({
-        element: this.popup,
-        autoPan: true
-      });
-
-      // POPUP
-      this.map.on('singleclick', (evt: any) => {
-        const features = [];
-        const info = [];
-        let coord: any;
-        const coordinate = evt.coordinate;
-        overlay.setPosition(coordinate);
-        this.initializePopup();
-        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-          console.log('entró', feature.id_.split('.fid', 1)[0]);
-          if ( feature.id_.split('.fid', 1)[0] === 'vm_ultimo_dato_estacion') {
-            coord = evt.pixel;
-            const item = {
-              nombreEntidad: feature.values_.nombre_entidad,
-              idEstacion: feature.values_.id_estacion,
-              nombreEstacion: feature.values_.nombre_estacion,
-              idSensor: feature.values_.id_sensor,
-              nombreSensor: feature.values_.nombre_sensor,
-              unidadSensor: feature.values_.unidad,
-              fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-              valor: feature.values_.valor.toFixed(3)
-            };
-            info.push(item);
-          }
-        });
-        if (info.length > 0) {
-          this.createPopup(info);
-          this.map.addOverlay(overlay);
-        } else {
-          this.createPopup(info);
-          console.log('No es un feature valido');
-        }
-      });
-
-      // TOOLTIP
-      // this.map.on('pointermove', (evt: any) => {
-      //   this.features = [];
-      //   this.info = [];
-      //   let coord: any;
-      //   const coordinate = evt.coordinate;
-      //   overlay.setPosition(coordinate);
-      //   popup.classList.toggle('show');
-      //   this.map.forEachFeatureAtPixel(evt.pixel, feature => {
-      //     coord = evt.pixel;
-      //     this.info.push({
-      //       sensor: feature.values_.id_sensor,
-      //       estacion: feature.values_.nombre_estacion,
-      //       fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-      //       valor: feature.values_.valor.toFixed(3),
-      //       idestacion: feature.values_.id_estacion
-      //     });
-      //     console.log(coordinate);
-      //     console.log(this.info);
-      //   });
-      //   this.createTooltip();
-      // });
-      // this.map.addOverlay(overlay);
-
-      // Recibir respuesta de servicio de capas en cola y determinar acción
+      // SUSCRIPCIONES
+      // 1. Gestión de capas
       this.interaction.mapInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
-        console.log(layer);
-        // Si se debe mostrar
         if (layer.show) {
           if (type && type === this.geoservice.BASE) {
             this.addLayerWMS(layer.name, layer.edit);
@@ -178,10 +92,31 @@ export class MapComponent implements OnInit {
           } else {
             alert('Something went Wrong!!');
           }
-        // Si no se debe mostrar
         } else {
           this.removeLayer(layer.name);
         }
+      });
+
+      // 2. Mostrar capa estaciones en módulos 2 y 3
+      this.interaction.stationsInteraction.subscribe((layer: any) => {
+        console.log('3. MAP SUSCRIBE STATIONSINTERACTION');
+        const type = this.getLayerTypeFromHref(layer);
+        const layerStations = this.addStationsWFS(type, layer.name, layer.style);
+        let select: any;
+        const selectPointerMove = new Select({
+          condition: pointerMove,
+          style: layer.selectedstyle.hidroSelected,
+          layer: layerStations
+        });
+        select = selectPointerMove;
+        this.map.addInteraction(select);
+      });
+
+      // 3. Cambio a view del mapa base
+      this.interaction.mapviewInteraction.subscribe((info: any) => {
+        console.log(this.map.getView());
+        this.map.getView().setCenter(fromLonLat(info.coordinates));
+        this.map.getView().setZoom(info.zoom);
       });
 
       this.map.addControl(new Zoom({
@@ -191,8 +126,12 @@ export class MapComponent implements OnInit {
         target: document.getElementById('control-scale')
       }));
 
+      this.addPopup();
+      this.addTooltip();
 
     }
+
+
 
     addLayerWMS(name: string, edit: boolean) {
       this.progressBar(name, true, edit);
@@ -229,7 +168,6 @@ export class MapComponent implements OnInit {
 
     addLayerWFS(type: string, name: string, edit: boolean) {
       let newLayer: any;
-      // tslint:disable-next-line: prefer-const
       let vector: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
         newLayer = this.layers[name];
@@ -239,6 +177,13 @@ export class MapComponent implements OnInit {
         this.progressBar(name, true, edit);
         vector = this.requestLayer(type, name, edit);
       }
+      return vector;
+    }
+
+    addStationsWFS(type: string, name: string, styleIn: any) {
+      console.log('4. MAP addstationWFS');
+      let vector: any;
+      vector = this.requestStationsLayer(type, name, styleIn);
       return vector;
     }
 
@@ -288,7 +233,7 @@ export class MapComponent implements OnInit {
         source: vectorSource,
         style: new Style({
           image: new Circle({
-            radius: 2,
+            radius: 5,
             fill: new Fill({
               color: 'rgba(0, 191, 255, 1.0)'
             }),
@@ -307,6 +252,67 @@ export class MapComponent implements OnInit {
         })
       });
       this.saveLayer(name, vector);
+      return vector;
+
+    }
+
+    requestStationsLayer(type: string, name: string, styleIn: any) {
+      console.log('5. MAP requestStationsLayer');
+
+      const vectorSource = new VectorSource({
+        format: new GeoJSON(),
+        loader(extent, resolution, projection) {
+          const proj = projection.getCode();
+          const url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/${type === 'tem' ? 'wfs' : 'ows'}?service=WFS&
+          version=1.1.0&request=GetFeature&typename=${type}:${name}& +
+          outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
+          bbox=${extent.join(',')},${proj}`;
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', url);
+          const onError = () => {
+            vectorSource.removeLoadedExtent(extent);
+          };
+          xhr.onerror = onError;
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
+            } else {
+              onError();
+            }
+          };
+          xhr.send();
+        },
+        strategy: bboxStrategy
+      });
+
+      const now = moment();
+      now.format('YYY-MM-DD hh:mm:ss');
+      console.log(now);
+      const setStyle = (feature) => {
+        if (feature.get('nombre_entidad') === 'EMGESA' ) {
+            if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
+              console.log('Emgesa inactiva -----------', styleIn.hidroEmgesaInactiva);
+              return styleIn.hidroEmgesaInactiva;
+            } else {
+              console.log('Emgesa activa ************', styleIn.hidroEmgesaActiva);
+              return styleIn.hidroEmgesaActiva;
+            }
+        } else {
+          if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
+            return styleIn.hidroInactiva;
+          } else {
+            return styleIn.hidroActiva;
+          }
+        }
+      };
+
+      const vector = new lVector({
+        source: vectorSource,
+        // style: styleIn
+        style: setStyle
+      });
+      this.saveLayer(name, vector);
+
       return vector;
 
     }
@@ -351,6 +357,51 @@ export class MapComponent implements OnInit {
       }
     }
 
+    addPopup() {
+      // OVERLAY
+      this.popup = document.getElementById('myPopup');
+      const overlay = new Overlay({
+        element: this.popup,
+        autoPan: true
+      });
+
+      // POPUP
+      this.map.on('singleclick', (evt: any) => {
+        const features = [];
+        const info = [];
+        let coord: any;
+        const coordinate = evt.coordinate;
+        overlay.setPosition(coordinate);
+        this.initializePopup();
+        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          // console.log('entró', feature.id_.split('.fid', 1)[0]);
+          if ( feature.id_.split('.fid', 1)[0] === 'vm_ultimo_dato_estacion') {
+            coord = evt.pixel;
+            const item = {
+              nombreEntidad: feature.values_.nombre_entidad,
+              idEstacion: feature.values_.id_estacion,
+              nombreEstacion: feature.values_.nombre_estacion,
+              idSensor: feature.values_.id_sensor,
+              nombreSensor: feature.values_.nombre_sensor,
+              unidadSensor: feature.values_.unidad,
+              fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+              valor: feature.values_.valor.toFixed(3)
+            };
+            info.push(item);
+          }
+          console.log(feature);
+        });
+        if (info.length > 0) {
+          this.createPopup(info);
+          this.map.addOverlay(overlay);
+        } else {
+          this.createPopup(info);
+          // console.log('No es un feature valido');
+        }
+      });
+
+    }
+
     createPopup(info) {
       this.interaction.setPopup(info);
     }
@@ -367,7 +418,7 @@ export class MapComponent implements OnInit {
 
       // Reinicio la selección de sensor del popup
       const rows = document.getElementsByClassName('popupbodytext-selected');
-      console.log(rows);
+      // console.log(rows);
       // tslint:disable-next-line: prefer-for-of
       for (let index = 0; index < rows.length; index++) {
         rows[index].classList.add('popupbodytext');
@@ -376,8 +427,50 @@ export class MapComponent implements OnInit {
       console.log(rows);
     }
 
-    createTooltip() {
-      this.interaction.setTooltip(this.info);
-    }
+    addTooltip() {
+      // OVERLAY
+      this.tooltip = document.getElementById('myTooltip');
+      const overlay = new Overlay({
+        element: this.tooltip,
+        autoPan: true
+      });
 
+      // TOOLTIP
+      this.map.on('pointermove', (evt: any) => {
+        const infos = [];
+        let info: any;
+        let coord: any;
+        const coordinate = evt.coordinate;
+        overlay.setPosition(coordinate);
+        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          coord = evt.pixel;
+          const keys = Object.keys(feature.values_);
+          for (let index = 0; index < keys.length; index++) {
+            const key = keys[index];
+            const feat = feature.values_[key];
+            if (key.includes('serie_meno') || key.includes('nombre') ) {
+              const item = {
+                titulo: feature.id_.split('.', 1)[0],
+                nombre: feature.values_[key],
+              };
+              info = item;
+              infos.push(item);
+            }
+          }
+          // console.log('1 feature', feature);
+          // console.log('2 infos', infos);
+          // console.log('3 info', info);
+        });
+        if (info !== undefined) {
+          this.tooltip.classList.add('show');
+          this.map.addOverlay(overlay);
+          this.tooltipvalue = infos;
+        } else {
+          // this.createTooltip(info);
+          this.tooltip.classList.remove('show');
+          // console.log('No es un feature valido');
+          this.tooltipvalue = [];
+        }
+      });
+    }
   }

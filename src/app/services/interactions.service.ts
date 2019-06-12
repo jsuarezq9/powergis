@@ -7,8 +7,11 @@ import { Subject } from 'rxjs';
 export class ComponentsInteractionService {
 
   public mapInteraction: Subject<any> = new Subject();
+  public mapviewInteraction: Subject<any> = new Subject();
+  public stationsInteraction: Subject<any> = new Subject();
   public popupInteraction: Subject<any> = new Subject();
   public tooltipInteraction: Subject<any> = new Subject();
+  public timeSeriesInteraction: Subject<any> = new Subject();
 
   constructor() {}
 
@@ -16,6 +19,23 @@ export class ComponentsInteractionService {
     layer.show = show;
     layer.edit = edit;
     this.mapInteraction.next(layer);
+  }
+
+  setView(coordinates: any, zoom: any): void {
+    console.log('zona 1 en interaction');
+    const all = {
+      coordinates,
+      zoom
+    };
+    console.log(all);
+    this.mapviewInteraction.next(all);
+  }
+
+  setStationsLayer(layer: any, styleIn: any, selectedStyleIn): void {
+    console.log('2. INTERACTIONS');
+    layer.style = styleIn;
+    layer.selectedstyle = selectedStyleIn;
+    this.stationsInteraction.next(layer);
   }
 
   setPopup(info: any): void {
@@ -27,6 +47,10 @@ export class ComponentsInteractionService {
       info
     };
     this.tooltipInteraction.next(tooltip);
+  }
+
+  setSensor(sensor: object): void {
+    this.timeSeriesInteraction.next(sensor);
   }
 
 }

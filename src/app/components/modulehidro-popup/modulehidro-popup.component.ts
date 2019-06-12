@@ -40,6 +40,7 @@ export class ModulehidroPopupComponent implements OnInit {
         this.info = array;
         console.log('This info', array);
       } else {
+        this.info = [];
         console.log('No information granted for this pop up info:', this.info);
       }
     }, (error) => {
