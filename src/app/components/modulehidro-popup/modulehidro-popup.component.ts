@@ -77,14 +77,12 @@ export class ModulehidroPopupComponent implements OnInit {
       const element = expandedItems[index];
       element.classList.remove('popupbodytext-selected');
       element.classList.add('popupbodytext');
-      console.log('1. Arreglo items de popup expanded:', index, element);
     }
     const collapsedItems = document.getElementsByClassName('collapseditem');
     for (let index = 0; index < collapsedItems.length; index++) {
       const element = collapsedItems[index];
       element.classList.remove('popupbodytext-selected');
       element.classList.add('popupbodytext');
-      console.log('1. Arreglo items de popup collapsed:', index, element);
     }
 
     // Asigno clase selección según de dónde provenga selección (popup o popupExpanded)
@@ -102,6 +100,10 @@ export class ModulehidroPopupComponent implements OnInit {
       selectionExpanded.classList.add('popupbodytext-selected');
       selectionExpanded.classList.remove('popupbodytext');
     }
+  }
+
+  displayDataSensor(item: any) {
+    this.interaction.setSensor(item);
   }
 
 }

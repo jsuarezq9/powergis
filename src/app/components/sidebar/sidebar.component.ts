@@ -127,7 +127,6 @@ export class SidebarComponent implements OnInit {
   }
 
   public addEstacionesHidro() {
-    console.log('1. SIDEBAR');
     this.removeEstaciones();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }

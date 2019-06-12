@@ -22,17 +22,14 @@ export class ComponentsInteractionService {
   }
 
   setView(coordinates: any, zoom: any): void {
-    console.log('zona 1 en interaction');
     const all = {
       coordinates,
       zoom
     };
-    console.log(all);
     this.mapviewInteraction.next(all);
   }
 
-  setStationsLayer(layer: any, styleIn: any, selectedStyleIn): void {
-    console.log('2. INTERACTIONS');
+  setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): void {
     layer.style = styleIn;
     layer.selectedstyle = selectedStyleIn;
     this.stationsInteraction.next(layer);

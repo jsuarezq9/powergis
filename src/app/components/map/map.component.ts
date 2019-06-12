@@ -99,7 +99,6 @@ export class MapComponent implements OnInit {
 
       // 2. Mostrar capa estaciones en módulos 2 y 3
       this.interaction.stationsInteraction.subscribe((layer: any) => {
-        console.log('3. MAP SUSCRIBE STATIONSINTERACTION');
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
         let select: any;
@@ -181,7 +180,6 @@ export class MapComponent implements OnInit {
     }
 
     addStationsWFS(type: string, name: string, styleIn: any) {
-      console.log('4. MAP addstationWFS');
       let vector: any;
       vector = this.requestStationsLayer(type, name, styleIn);
       return vector;
@@ -257,7 +255,6 @@ export class MapComponent implements OnInit {
     }
 
     requestStationsLayer(type: string, name: string, styleIn: any) {
-      console.log('5. MAP requestStationsLayer');
 
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
@@ -287,14 +284,14 @@ export class MapComponent implements OnInit {
 
       const now = moment();
       now.format('YYY-MM-DD hh:mm:ss');
-      console.log(now);
+      // console.log(now);
       const setStyle = (feature) => {
         if (feature.get('nombre_entidad') === 'EMGESA' ) {
             if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
-              console.log('Emgesa inactiva -----------', styleIn.hidroEmgesaInactiva);
+              // console.log('Emgesa inactiva -----------', styleIn.hidroEmgesaInactiva);
               return styleIn.hidroEmgesaInactiva;
             } else {
-              console.log('Emgesa activa ************', styleIn.hidroEmgesaActiva);
+              // console.log('Emgesa activa ************', styleIn.hidroEmgesaActiva);
               return styleIn.hidroEmgesaActiva;
             }
         } else {
@@ -389,14 +386,12 @@ export class MapComponent implements OnInit {
             };
             info.push(item);
           }
-          console.log(feature);
         });
         if (info.length > 0) {
           this.createPopup(info);
           this.map.addOverlay(overlay);
         } else {
           this.createPopup(info);
-          // console.log('No es un feature valido');
         }
       });
 

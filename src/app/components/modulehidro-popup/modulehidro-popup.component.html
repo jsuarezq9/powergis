@@ -24,7 +24,7 @@
                             <td class="popupbodytext-units">[m3/s]</td>
                             <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
                         </tr>
-                        <tr (click)="getBigPopup();changeSelection($event)" class="popupbodytext pointer collapseditem" *ngFor="let item of info" id="{{item.nombreSensor}}">
+                        <tr (click)="getBigPopup();changeSelection($event);displayDataSensor(item)" class="popupbodytext pointer collapseditem" *ngFor="let item of info" id="{{item.nombreSensor}}">
                             <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor}}</td>
                             <td id="valor" class="popupbodytext-value">{{item.valor}}</td>
                             <td id="unidadSensor" class="popupbodytext-units">{{item.unidadSensor}}</td>
@@ -68,7 +68,7 @@
                                     <td class="popupbodytext-units">[m3/s]</td>
                                     <td class="popupbodytext-date">11:43:24 am<br>03.05.2019</td>
                                 </tr>
-                                <tr (click)="changeSelection($event)" class="popupbodytext pointer expandeditem" *ngFor="let item of info" id="{{item.nombreSensor}}-expanded">
+                                <tr (click)="changeSelection($event);displayDataSensor(item)" class="popupbodytext pointer expandeditem" *ngFor="let item of info" id="{{item.nombreSensor}}-expanded">
                                     <td id="nombreSensor" class="popupbodytext-sensor">{{item.nombreSensor || titlecase}}</td>
                                     <td id="valor" class="popupbodytext-value">{{item.valor}}</td>
                                     <td id="unidadSensor" class="popupbodytext-units">{{item.unidadSensor}}</td>
@@ -84,7 +84,7 @@
     <div class="col" style="padding: 0;">
         <!-- myTimeSeries -->
         <div class="popuptext-expanded" id="myTimeSeries">
-            <app-timeseries></app-timeseries>
+            <app-modulehidro-timeseries></app-modulehidro-timeseries>
         </div>
 
     </div>

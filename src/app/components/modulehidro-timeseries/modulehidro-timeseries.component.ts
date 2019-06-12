@@ -99,6 +99,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     const today = moment().format('YYYY-MM-DD HH:mm:ss');
     this.interaction.timeSeriesInteraction.subscribe(sensor => {
       this.selectedSensor = sensor;
+      console.log('Info en Modulehidro timeseries', sensor)
       this.renderTimeSeries(initial, today, sensor.idEstacion, sensor.idSensor);
     });
   }
