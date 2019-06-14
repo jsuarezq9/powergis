@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import { GoogleChartsModule } from 'angular-google-charts';
-import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { MapComponent } from './components/map/map.component';
 import { ListElementsComponent } from './components/list-elements/list-elements.component';
@@ -43,7 +41,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     PlotlyModule,
     CommonModule,
     HttpClientModule,
-    GoogleChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
