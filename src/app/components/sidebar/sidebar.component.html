@@ -4,11 +4,11 @@
         <div class="bg-dark roundedBot" style="width: 100%">
             <!-- círculo azul -->
             <div class="logo-bg p-2">
-                <img class="img-fluid logo" style="width: 45%" src="../assets/enel-logo.png" alt="">
+                <img class="img-fluid logo" style="width: 45%" src="./assets/enel-logo.png" alt="">
             </div>
             <nav class="container circleBot" style="padding-top: 5%; padding-bottom: 10%">
                 <button id="buttonExpandSidebar" (click)="rotateIcon(); collapseAll($event)" class="btn btn-block navbar-toggler" type="button" data-toggle="collapse" data-target="#dropbar" aria-controls="dropbar" aria-label="Toggle Map Dashboard">
-                    <img id="iconExpandSidebar" src="../assets/icons/header/HamburguesaH.png" width="50%" alt="Asset Base Icon">
+                    <img id="iconExpandSidebar" src="./assets/icons/header/HamburguesaH.png" width="50%" alt="Asset Base Icon">
                 </button>
             </nav>
             <br>
@@ -18,17 +18,17 @@
                     <div class="btn-group-vertical" style="height: 45%">
                         <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event); removeEstaciones()" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false"
                             aria-controls="collapseExample" #buttonBases>
-                            <img src="../assets/icons/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
+                            <img src="./assets/icons/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
                         </button>
                         <button (click)="collapse=!collapse; this.buttonHidrology.classList.add('activeButton'); borderActive($event); addEstacionesHidro();" id="buttonHidrology" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleHidrologyTarget"
                             aria-expanded="false" aria-controls="collapseExample" #buttonHidrology>
-                            <img src="../assets/icons/sidebar/MonitoreoHidrometeorologico-{{image.buttonHidrology}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
+                            <img src="./assets/icons/sidebar/MonitoreoHidrometeorologico-{{image.buttonHidrology}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Modulo Hidrlogía</div>
                         </button>
                         <button (click)="collapse=!collapse; this.buttonPrecipitation.classList.add('activeButton'); borderActive($event);addEstacionesPrecipitation()" id="buttonPrecipitation" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse"
                             data-target="#modulePrecipitationTarget" aria-expanded="false" aria-controls="collapseExample" #buttonPrecipitation>
-                            <img src="../assets/icons/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
+                            <img src="./assets/icons/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Información Base</div>
                         </button>
                     </div>

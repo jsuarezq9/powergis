@@ -13,7 +13,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/ng2-host-demo",
+                        "outputPath": "dist/powergis",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -52,8 +52,8 @@
                             "buildOptimizer": true,
                             "budgets": [{
                                 "type": "initial",
-                                "maximumWarning": "2mb",
-                                "maximumError": "5mb"
+                                "maximumWarning": "6mb",
+                                "maximumError": "8mb"
                             }]
                         }
                     }
