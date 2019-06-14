@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {CommonModule} from '@angular/common';
+// import {CommonModule} from '@angular/common';
 import { AppComponent } from './app.component';
 import { MapComponent } from './components/map/map.component';
 import { ListElementsComponent } from './components/list-elements/list-elements.component';
@@ -39,7 +39,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
   imports: [
     BrowserModule,
     PlotlyModule,
-    CommonModule,
+    // CommonModule,
     HttpClientModule,
   ],
   providers: [],

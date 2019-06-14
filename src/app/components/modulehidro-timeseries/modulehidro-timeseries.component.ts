@@ -7,8 +7,7 @@ import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-modulehidro-timeseries',
   templateUrl: './modulehidro-timeseries.component.html',
-  styleUrls: ['./modulehidro-timeseries.component.css'],
-  template: '<plotly-plot [data]="graph.data" [layout]="graph.layout"></plotly-plot>'
+  styleUrls: ['./modulehidro-timeseries.component.css']
 })
 
 export class ModulehidroTimeseriesComponent implements OnInit {
@@ -80,7 +79,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     private dwhService: DatawarehouseService,
     private interaction: ComponentsInteractionService
   ) {
-    console.log('Initialize')
+    console.log('Initialize');
     this.data = {};
     this.actualYear = (new Date()).getFullYear();
     this.firstDateYear = new Date('1/1/' + this.actualYear);
