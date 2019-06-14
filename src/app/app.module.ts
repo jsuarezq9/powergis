@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {CommonModule} from '@angular/common';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
@@ -39,8 +40,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
   ],
   imports: [
     BrowserModule,
-    // AppRoutingModule,
     PlotlyModule,
+    CommonModule,
     HttpClientModule,
     GoogleChartsModule
   ],

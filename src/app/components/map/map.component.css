@@ -76,7 +76,9 @@
     
     .tooltiptext {
         visibility: hidden;
-        width: 160px;
+        width: 260px;
+        max-width: 360px;
+        max-height: 250px;
         background-color: #555;
         color: #fff;
         text-align: center;
@@ -87,19 +89,19 @@
         bottom: 125%;
         left: 50%;
         margin-left: -80px;
+        box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
     }
     /* Popup arrow */
-    
-    .tooltiptext::after {
+    /* .tooltiptext::after {
         content: "";
         position: absolute;
         top: 100%;
         left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
+        margin-left: -10px;
+        border-width: 10px;
         border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
+        border-color: red transparent transparent transparent;
+    } */
     /* Toggle this class - hide and show the popup */
     
     .show {

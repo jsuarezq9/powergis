@@ -30,7 +30,7 @@
         "ng2-charts": "^2.2.4",
         "ol": "^5.3.3",
         "plotly": "^1.0.6",
-        "plotly.js": "^1.48.2",
+        "plotly.js": "^1.48.3",
         "popper.js": "^1.15.0",
         "query-string": "^6.5.0",
         "rxjs": "~6.3.3",

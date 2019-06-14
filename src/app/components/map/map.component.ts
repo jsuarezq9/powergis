@@ -127,7 +127,6 @@ export class MapComponent implements OnInit {
 
       this.addPopup();
       this.addTooltip();
-
     }
 
 
@@ -431,39 +430,44 @@ export class MapComponent implements OnInit {
       });
 
       // TOOLTIP
+      // this.map.on('singleclick', (evt: any) => {
       this.map.on('pointermove', (evt: any) => {
-        const infos = [];
-        let info: any;
-        let coord: any;
+        let infoArray = [];
         const coordinate = evt.coordinate;
+        const pixel = this.map.getPixelFromCoordinate(coordinate);
         overlay.setPosition(coordinate);
-        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-          coord = evt.pixel;
+        this.map.forEachFeatureAtPixel(pixel, (feature) => {
+          const layerName = feature.id_.split('.', 1)[0];
           const keys = Object.keys(feature.values_);
           for (let index = 0; index < keys.length; index++) {
             const key = keys[index];
-            const feat = feature.values_[key];
             if (key.includes('serie_meno') || key.includes('nombre') ) {
               const item = {
-                titulo: feature.id_.split('.', 1)[0],
-                nombre: feature.values_[key],
+                title: layerName,
+                'key': key,
+                value: feature.values_[key],
               };
-              info = item;
-              infos.push(item);
+              if (infoArray.length > 0) {
+                for (let i = 0; i < infoArray.length; i++) {
+                  if (infoArray[i].title === item.title) {
+                    infoArray[i] = item;
+                  } else {
+                    infoArray.push(item);
+                  }
+                }
+              } else {
+                infoArray.push(item);
+              }
             }
           }
-          // console.log('1 feature', feature);
-          // console.log('2 infos', infos);
-          // console.log('3 info', info);
         });
-        if (info !== undefined) {
+        if (infoArray.length > 0) {
           this.tooltip.classList.add('show');
           this.map.addOverlay(overlay);
-          this.tooltipvalue = infos;
+          this.tooltipvalue = infoArray;
+          // console.log('Mostré el tooltip', infoArray)
         } else {
-          // this.createTooltip(info);
           this.tooltip.classList.remove('show');
-          // console.log('No es un feature valido');
           this.tooltipvalue = [];
         }
       });

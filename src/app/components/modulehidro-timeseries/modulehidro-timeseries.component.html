@@ -1,3 +1,10 @@
-<div class="bg-light" style="width:100px; height:100px">
-    <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
+<div class="row">
+    <div class="col-3 form-group">
+        <br><br> Fecha ini: <input type="date" name="fecha_inicio" id="fechaInicio">
+        <hr> Fecha fin: <input type="date" name="fecha_inicio" id="fechaFin"> <br><br>
+        <button type="button" class="btn btn-success" id="recargar" (click)="refreshData()">Consultar Fechas</button>
+    </div>
+    <div class="col-9 bg-light">
+        <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
+    </div>
 </div>
