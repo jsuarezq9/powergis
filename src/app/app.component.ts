@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { latLng, tileLayer } from 'leaflet';
+import { not } from '@angular/compiler/src/output/output_ast';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,9 +15,6 @@ export class AppComponent {
   modulePrecipitation: boolean;
 
   // Booleanos del estado de los botones de colapsar de cada módulo
-  // collapseBases: boolean;
-  // collapseHidrology: boolean;
-  // collapsePrecipitation: boolean;
   moduleMemory = '';
   expandSidebar = false;
   expandSidemenu = false;
@@ -80,22 +80,25 @@ export class AppComponent {
   }
 
   getState(show: any): void {
+    // Si viene de los botones
     if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID) {
-      // Viene de los botones
       const EXPANDSIDEMENU_TEMP = this.expandSidemenu;
       this.expandSidemenu = true;
       this.resetModules();
       this.getStateFromButtons(show);
+      // Si es la primera vez, debo mostrar el botón colapsar.
+      if (this.moduleMemory === '') {
+        this.showCollapseButton();
+      }
       // Si la variable está cambiando, roto el botón colapsar.
       if (EXPANDSIDEMENU_TEMP !== this.expandSidemenu) {
         this.rotateCollapseButton();
       }
-      // Si es la primera vez, debo mostrarlo
-      if (this.moduleMemory === '') {
-        this.showCollapseButton();
-      }
+      // Muestro el div "sidemenu"
+      const displaySidemenu = this.expandSidemenu ? 'flex' : 'none';
+      document.getElementById('sidemenu').style.display = displaySidemenu;
 
-    // Viene de hamburguesa.
+    // Si viene de hamburguesa
     } else if (show.toString().includes('ExpandSidebar')) {
       this.expandSidebar = !this.expandSidebar;
       // Para colapsar
@@ -126,14 +129,6 @@ export class AppComponent {
     this.changeState();
   }
 
-  // rotateIcon() {
-  //   this.expandSidebar = !this.expandSidebar;
-  //   this.rotation = this.expandSidebar ? 'rotate-90' : 'rotate-0';
-  //   const icon = document.getElementById('iconExpandSidebar');
-  //   icon.classList.toggle(this.rotation);
-  // }
-
-
   getStateFromButtons(show: any): void {
     if (show === this.BUTTON_BASES_ID) {
       this.moduleBases = !this.moduleBases;
@@ -145,12 +140,6 @@ export class AppComponent {
   }
 
   getStateFromCollapseButton(show: any): void {
-    // Para cambiarle el estilo display:none block
-    // console.log(show.target.offsetParent.id); //buttonCollapseDiv
-    // Para cambiarle la clase button-collapse-expanded a collapsed
-    // console.log(show.target.offsetParent.firstElementChild.id); //buttonCollapseDiv
-    // console.log('---------------------------');
-
     if (this.expandSidemenu) {
       if (this.moduleMemory === this.MODULE_BASES_ID) {
         this.moduleBases = !this.moduleBases;
