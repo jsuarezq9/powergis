@@ -70,9 +70,9 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.layerEstaciones = {
-      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
-      name: 'vm_ultimo_dato_estacion',
-      edit: false
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
+      name: 'vm_estaciones_vsg',
+      edit: false,
     };
   }
 
@@ -124,11 +124,11 @@ export class SidebarComponent implements OnInit {
   public addEstacionesHidro() {
     this.removeEstaciones();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
-    setTimeout(() => {
-      // this.removeEstaciones();
-      this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
-      console.log('Esperando..');
-    }, 10000);
+    // setTimeout(() => {
+    //   // this.removeEstaciones();
+    //   this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
+    //   console.log('Esperando..');
+    // }, 10000);
   }
 
   addEstacionesPrecipitation() {

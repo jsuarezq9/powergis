@@ -47,6 +47,7 @@ export class ModulebaseComponent implements OnInit {
 
   getDWHS() {
     this.geoservice.getLayers(this.geoservice.DWHS).subscribe((dwhs) => {
+      console.log(dwhs);
       this.concatLayers(dwhs);
     }, (error) => {
       this.handleError(this.geoservice.DWHS, error);

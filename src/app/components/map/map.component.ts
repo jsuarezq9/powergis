@@ -109,6 +109,7 @@ export class MapComponent implements OnInit {
         });
         select = selectPointerMove;
         this.map.addInteraction(select);
+        this.addPopup();
       });
 
       // 3. Cambio a view del mapa base
@@ -125,24 +126,24 @@ export class MapComponent implements OnInit {
         target: document.getElementById('control-scale')
       }));
 
-      this.addPopup();
+      // this.addPopup();
       // this.addTooltip();
 
       // Añado capa nueva estaciones
-      const layerEstaciones1 = {
-        href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
-        name: 'vm_ultimo_dato_estacion',
-        edit: false
-      };
-      const capaEstaciones1 = this.addLayerWFS(this.geoservice.DWHS, layerEstaciones1.name, false);
-      this.map.on('singleclick', (evt: any) => {
-        const features = [];
-        const info = [];
-        const pixel = evt.pixel;
-        this.map.forEachFeatureAtPixel(pixel, (feature) => {
-          console.log('Feature: ', feature);
-        });
-      });
+      // const layerEstaciones1 = {
+      //   href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
+      //   name: 'vm_estaciones_vsg',
+      //   edit: false,
+      // };
+      // const capaEstaciones1 = this.addLayerWFS(this.geoservice.DWHS, layerEstaciones1.name, false);
+      // this.map.on('singleclick', (evt: any) => {
+      //   const features = [];
+      //   const info = [];
+      //   const pixel = evt.pixel;
+      //   this.map.forEachFeatureAtPixel(pixel, (feature) => {
+      //     console.log('Feature: ', feature);
+      //   });
+      // });
     }
 
 
@@ -297,20 +298,18 @@ export class MapComponent implements OnInit {
         strategy: bboxStrategy
       });
 
-      const now = moment();
-      now.format('YYY-MM-DD hh:mm:ss');
-      // console.log(now);
       const setStyle = (feature) => {
         if (feature.get('nombre_entidad') === 'EMGESA' ) {
-            if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
-              // console.log('Emgesa inactiva -----------', styleIn.hidroEmgesaInactiva);
-              return styleIn.hidroEmgesaInactiva;
-            } else {
-              // console.log('Emgesa activa ************', styleIn.hidroEmgesaActiva);
-              return styleIn.hidroEmgesaActiva;
-            }
+          console.log(feature.get('estado_estacion'));
+          if (feature.get('estado_estacion') === 'Activa') {
+            // console.log('Emgesa inactiva -----------', styleIn.hidroEmgesaInactiva);
+            return styleIn.hidroEmgesaInactiva;
+          } else {
+            // console.log('Emgesa activa ************', styleIn.hidroEmgesaActiva);
+            return styleIn.hidroEmgesaActiva;
+          }
         } else {
-          if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
+          if (feature.get('estado_estacion') === 'Activa') {
             return styleIn.hidroInactiva;
           } else {
             return styleIn.hidroActiva;
@@ -379,27 +378,34 @@ export class MapComponent implements OnInit {
 
       // POPUP
       this.map.on('singleclick', (evt: any) => {
+        console.log('Entra a popup');
         const features = [];
         const info = [];
         let coord: any;
         const coordinate = evt.coordinate;
-        overlay.setPosition(coordinate);
-        this.initializePopup();
-        this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+        console.log('Entra a popup2');
+        this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           // console.log('entró', feature.id_.split('.fid', 1)[0]);
-          if ( feature.id_.split('.fid', 1)[0] === 'vm_ultimo_dato_estacion') {
+          console.log('for each feature at pixel!!!');
+          if ( feature.id_.split('.fid', 1)[0] === 'vm_estaciones_vsg') {
+            console.log('Es la capa de estaciones');
+            overlay.setPosition(coordinate);
+            this.initializePopup();
             coord = evt.pixel;
             const item = {
               nombreEntidad: feature.values_.nombre_entidad,
               idEstacion: feature.values_.id_estacion,
               nombreEstacion: feature.values_.nombre_estacion,
-              idSensor: feature.values_.id_sensor,
-              nombreSensor: feature.values_.nombre_sensor,
-              unidadSensor: feature.values_.unidad,
-              fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-              valor: feature.values_.valor.toFixed(3)
+              estadoEstacion: feature.values_.estado_estacion
+              // idSensor: feature.values_.id_sensor,
+              // nombreSensor: feature.values_.nombre_sensor,
+              // unidadSensor: feature.values_.unidad,
+              // fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+              // valor: feature.values_.valor.toFixed(3)
             };
             info.push(item);
+          } else {
+            console.log('No es la capa de estaciones');
           }
         });
         if (info.length > 0) {
@@ -428,13 +434,11 @@ export class MapComponent implements OnInit {
 
       // Reinicio la selección de sensor del popup
       const rows = document.getElementsByClassName('popupbodytext-selected');
-      // console.log(rows);
       // tslint:disable-next-line: prefer-for-of
       for (let index = 0; index < rows.length; index++) {
         rows[index].classList.add('popupbodytext');
         rows[index].classList.remove('popupbodytext-selected');
       }
-      console.log(rows);
     }
 
     addTooltip() {
@@ -448,7 +452,7 @@ export class MapComponent implements OnInit {
       // TOOLTIP
       // this.map.on('singleclick', (evt: any) => {
       this.map.on('pointermove', (evt: any) => {
-        let infoArray = [];
+        const infoArray = [];
         const coordinate = evt.coordinate;
         const pixel = this.map.getPixelFromCoordinate(coordinate);
         overlay.setPosition(coordinate);
@@ -460,7 +464,7 @@ export class MapComponent implements OnInit {
             if (key.includes('serie_meno') || key.includes('nombre') ) {
               const item = {
                 title: layerName,
-                'key': key,
+                key: key,
                 value: feature.values_[key],
               };
               if (infoArray.length > 0) {
