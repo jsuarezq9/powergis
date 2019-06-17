@@ -13,18 +13,18 @@ body {
 /* Módulos */
 
 .modules-outer-base {
-    height: 64%;
-    margin-top: 15%;
+    /* height: 64%; */
+    margin-top: 65px;
 }
 
 .modules-outer-hidro {
-    height: 64%;
-    margin-top: 15%;
+    /* height: 64%; */
+    margin-top: 65px;
 }
 
 .modules-outer-precipitation {
-    height: 64%;
-    margin-top: 15%;
+    /* height: 64%; */
+    margin-top: 65px;
 }
 
 

@@ -18,7 +18,8 @@ import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeser
 
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
-PlotlyModule.plotlyjs = PlotlyJS;
+import { PlotlyViaWindowModule  } from 'angular-plotly.js';
+// PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
   ],
   imports: [
     BrowserModule,
-    PlotlyModule,
+    PlotlyViaWindowModule,
     // CommonModule,
     HttpClientModule,
   ],

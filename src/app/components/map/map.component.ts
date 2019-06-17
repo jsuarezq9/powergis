@@ -126,7 +126,23 @@ export class MapComponent implements OnInit {
       }));
 
       this.addPopup();
-      this.addTooltip();
+      // this.addTooltip();
+
+      // Añado capa nueva estaciones
+      const layerEstaciones1 = {
+        href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
+        name: 'vm_ultimo_dato_estacion',
+        edit: false
+      };
+      const capaEstaciones1 = this.addLayerWFS(this.geoservice.DWHS, layerEstaciones1.name, false);
+      this.map.on('singleclick', (evt: any) => {
+        const features = [];
+        const info = [];
+        const pixel = evt.pixel;
+        this.map.forEachFeatureAtPixel(pixel, (feature) => {
+          console.log('Feature: ', feature);
+        });
+      });
     }
 
 
@@ -159,7 +175,7 @@ export class MapComponent implements OnInit {
           source: imageSource
         });
       }
-      newLayer.setOpacity(0.3);
+      newLayer.setOpacity(1);
       this.saveLayer(name, newLayer);
       console.log('------ Opacidad: ', newLayer.getOpacity());
     }

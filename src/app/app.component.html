@@ -7,11 +7,11 @@
             <app-header></app-header>
         </div>
         <div class="row container">
-            <div class="col-1" style="width: 6%">
+            <div class="col-1" style="width: 100%">
                 <app-sidebar (activeModule)="getState($event)"></app-sidebar>
             </div>
             <!--  Esconder desde aquí, no deja interactuar con el mapa  -->
-            <div class="col-6 modules-outer border border-warning" id="sidemenu" style="display: none;">
+            <div class="col-5" id="sidemenu" style="display: none; height:fit-content;">
                 <div class="container h-100">
                     <div class="row h-100">
                         <div class="col" style="display: none; width: 33%" id="moduleBases">
@@ -29,14 +29,14 @@
                                 <app-moduleprecipitation></app-moduleprecipitation>
                             </div>
                         </div>
-                        <div id="buttonCollapseDiv" class="col-1" style="display: none;">
-                            <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
-                                <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
-                            </button>
-                        </div>
                     </div>
 
                 </div>
+            </div>
+            <div id="buttonCollapseDiv" style="display: none;">
+                <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
+                    <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
+                </button>
             </div>
         </div>
         <div>

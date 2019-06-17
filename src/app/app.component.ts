@@ -63,12 +63,6 @@ export class AppComponent {
     icon.classList.remove(notActiveRotationIcon);
     icon.classList.remove(notActivePositionIcon);
 
-    // Asigno clase de posición en el botón.
-    const activePositionButton = this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
-    const notActivePositionButton = !this.expandSidemenu ? 'button-collapse-expanded' : 'button-collapse-collapsed';
-    const button = document.getElementById('buttonCollapse');
-    button.classList.add(activePositionButton);
-    button.classList.remove(notActivePositionButton);
   }
 
   showCollapseButton(): void {
@@ -94,9 +88,6 @@ export class AppComponent {
       if (EXPANDSIDEMENU_TEMP !== this.expandSidemenu) {
         this.rotateCollapseButton();
       }
-      // Muestro el div "sidemenu"
-      const displaySidemenu = this.expandSidemenu ? 'flex' : 'none';
-      document.getElementById('sidemenu').style.display = displaySidemenu;
 
     // Si viene de hamburguesa
     } else if (show.toString().includes('ExpandSidebar')) {
@@ -113,7 +104,6 @@ export class AppComponent {
       } else {
         // Para abrir cuando está cerrado el sidemenu
         if (!this.expandSidemenu) {
-          this.expandSidemenu = !this.expandSidemenu;
           this.getStateFromCollapseButton(show);
         }
         this.rotateCollapseButton();
@@ -127,6 +117,9 @@ export class AppComponent {
       this.getStateFromCollapseButton(show);
     }
     this.changeState();
+    // Muestro o escondo el div "sidemenu"
+    const displaySidemenu = this.expandSidemenu ? 'flex' : 'none';
+    document.getElementById('sidemenu').style.display = displaySidemenu;
   }
 
   getStateFromButtons(show: any): void {
