@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import { DatawarehouseService } from '../../services/datawarehouse.service';
 
 @Component({
   selector: 'app-modulehidro-popup',
@@ -8,44 +9,35 @@ import { ComponentsInteractionService } from '../../services/interactions.servic
 })
 export class ModulehidroPopupComponent implements OnInit {
 
-  info: any;
-  company: any;
+  info: any[];
+  stationCompany: any;
   stationName: any;
   stationId: any;
+  stationState: any;
   date: Date;
 
-  constructor(private interaction: ComponentsInteractionService) { }
+  constructor(private interaction: ComponentsInteractionService,
+              private dwhService: DatawarehouseService) { }
   ngOnInit() {
-    // Recibir respuesta de servicio de interacción y determinar acción
+    // Recibir respuesta de servicio de interacción de la capa estaciones y determinar acción
     this.interaction.popupInteraction.subscribe((popup: any) => {
-      if (popup.length > 0) {
-        const array = [];
-        this.company = popup[0].nombreEntidad;
-        this.stationName = popup[0].nombreEstacion;
-        this.stationId = popup[0].idEstacion;
-        this.date = popup[0].fecha;
-        let estacion: string;
-        estacion = popup[0].idEstacion;
-        console.log('Estación seleccionada: ', estacion);
-        // tslint:disable-next-line: prefer-for-of
-        for (let index = 0; index < popup.length; index++) {
-          const item = popup[index];
-          if (item.idEstacion === estacion) {
-            const rep = array.filter(feature => feature.idSensor === item.idSensor);
-            if (rep.length === 0) {
-              array.push(item);
-            }
-          }
-        }
-        this.info = array;
-        console.log('This info', array);
-      } else {
-        this.info = [];
-        console.log('No information granted for this pop up info:', this.info);
-      }
+      this.stationCompany = popup.nombreEntidad;
+      this.stationName = popup.nombreEstacion;
+      this.stationId = popup.idEstacion;
+      this.stationState = popup.estadoEstacion;
+      console.log('Estación seleccionada: ', this.stationId);
+
+      // Preguntar y recibir respuesta de servicio de dwh de la estación seleccionada y determinar acción
+      this.dwhService.getSensorsLastInfoByStation(this.stationId).subscribe((data: any) => {
+        console.log('DATA dwh', data);
+        this.info = data;
+        this.date = this.info[0].fecha;
     }, (error) => {
       alert(`Error on interaction PopUp ${error.message}`);
     });
+
+    });
+
   }
 
   getBigPopup() {

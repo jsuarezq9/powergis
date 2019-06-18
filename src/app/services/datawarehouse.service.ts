@@ -13,7 +13,8 @@ export class DatawarehouseService {
   contentType = environment.APP_JSON;
   context = 'e1011';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getSensorByStation(startDate: string, endDate: string, idStation: string, idSensor: string) {
     console.log('Servicio!!!', startDate, endDate, idStation, idSensor);
@@ -30,7 +31,7 @@ export class DatawarehouseService {
       let id;
       const total = [];
       const fecha = [];
-// tslint:disable-next-line: prefer-for-of
+      // tslint:disable-next-line: prefer-for-of
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
         id = element.id_sensor;
@@ -43,6 +44,32 @@ export class DatawarehouseService {
           fecha
         }
       };
+    }));
+  }
+
+  getSensorsLastInfoByStation(idStation: string) {
+    let headers = new HttpHeaders();
+    headers = headers.append('Authorization', `Bearer ${this.token}`);
+    headers = headers.append('content-type', this.contentType);
+    let params = new HttpParams();
+    params = params.append('id_estacion', `eq.${idStation}`);
+    return this.http.get(`${this.host}/${this.context}/vm_ultimo_dato_estacion`, { headers, params})
+    .pipe( map((data: any[]) => {
+      const info = [];
+      // tslint:disable-next-line: prefer-for-of
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const item = {
+          idEstacion: element.id_estacion,
+          idSensor: element.id_sensor,
+          nombreSensor: element.nombre_sensor,
+          unidadSensor: element.unidad,
+          fecha: new Date(element.fecha_hora).toLocaleString('es-CO'),
+          valor: element.valor.toFixed(3)
+        };
+        info.push(item);
+      }
+      return info;
     }));
   }
 }
