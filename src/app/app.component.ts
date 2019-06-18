@@ -16,7 +16,8 @@ import Chart from 'chart.js/dist/Chart.js';
 import Feature from 'ol/Feature';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment';
-import { style } from 'openlayers';
+import { style, ObjectEvent } from 'openlayers';
+import * as jsonPath from 'jsonpath/jsonpath';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -31,13 +32,22 @@ export class AppComponent implements OnInit {
   chart = [];
   features = [];
   info = [];
-  columns = ['Estación','Sensor', 'Fecha', 'valor'];
-  precipitation = this._timeseries.aggregatedPrecipitation('2019-05-12', '2019-06-12');
+  colors =['#FF9900','#FFCC00','#FFEA00','#97E31C','#0EF192','#00F2FF',
+    '#00B3FF','#3B7BC4','#9933FF','#7030A0'];
+  columns = ['Estación', 'Sensor', 'Fecha', 'valor'];
+  precipitation= {};
+  date_inicio : string;
+  date_final : string;
 
   constructor(private _timeseries: TimeSeriesService) { }
 
   ngOnInit() {
-    this.initilizeMap();
+
+    this.getAggregatedData('2019-06-01 05:00', '2019-06-08 07:00');
+    const now = moment();
+    now.format('YYYY-MM-DD hh:mm:ss');
+    console.log(now);
+    // this.initilizeMap();
   }
 
   initilizeMap() {
@@ -47,11 +57,6 @@ export class AppComponent implements OnInit {
     const hooverContainer = document.getElementById('popup-hoover');
     const now = moment();
     now.format('YYYY-MM-DD hh:mm:ss');
-    this.precipitation.subscribe(res => {
-      const data = res;
-      console.log(data.get('id_estacion'));
-
-    });
 
 
     const overlay = new Overlay({
@@ -142,8 +147,8 @@ export class AppComponent implements OnInit {
       loader(extent, resolution, projection) {
         const proj = projection.getCode();
         const url = 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=WFS&' +
-          'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&' +
-          'CQL_FILTER=id_sensor%20not%20ilike%20%271%25%27%20and%20id_sensor%3C%3E%279000%27&' +
+          'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&'+
+          'CQL_FILTER=id_sensor=%270240%27&' +
           'outputFormat=application/json&srsname=' + proj;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
@@ -168,13 +173,9 @@ export class AppComponent implements OnInit {
     });
 
     const styles = {
-      hidroEmgesaActiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png', scale: 0.25 }) }),
-      hidroEmgesaInactiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png', scale: 0.25 }) }),
-      hidroActiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png', scale: 0.25 }) }),
-      hidroInactiva: new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png' , scale: 0.25 }) }),
       Default: new Style({
         image: new Circle({
-          radius: 4, fill: new Fill({ color: 'rgba(120, 191, 255, 0.6)', }),
+          radius: 4, fill: new Fill({ color: 'rgba(120, 191, 255, 0.6)' }),
           stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
         })
       })
@@ -183,20 +184,23 @@ export class AppComponent implements OnInit {
 
 
     const setStyle = (feature) => {
-      if (feature.get('nombre_entidad') === 'EMGESA') {
-        if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
-          return styles.hidroEmgesaInactiva;
-        } else {
 
-          return styles.hidroEmgesaActiva;
-        }
-      } else {
-        if (moment(feature.get('fecha_hora'), 'YYYY-MM-DD hh:mm:ss') < now.subtract(1, 'hours')) {
-          return styles.hidroInactiva;
-        } else {
-          return styles.hidroActiva;
-        }
-      }
+     const precipitacion = jsonPath.query(this.precipitation,'$.data[?(@.id_estacion=="'+feature.get('id_estacion')+'" )]')[0].precipitacion;
+     const color_rgb= jsonPath.query(this.precipitation,'$.data[?(@.id_estacion=="'+feature.get('id_estacion')+'" )]')[0].color_rgb;
+     const colorarray= color_rgb.split(',');
+     const colorR=colorarray[0];
+     const colorG=colorarray[1];
+     const colorB=colorarray[2];
+
+     const styles = {
+      Default: new Style({
+        image: new Circle({
+          radius: 5, fill: new Fill({ color: 'rgba('+colorR+','+colorG+','+colorB+', 1)' }),
+          stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
+        })
+      })
+    };
+      return styles.Default
     };
 
 
@@ -225,20 +229,20 @@ export class AppComponent implements OnInit {
       const coordinate = evt.coordinate;
       overlay.setPosition(coordinate);
       map.forEachFeatureAtPixel(evt.pixel, (feature) => {
-            this.info.push({
-            sensor: feature.get('id_sensor'),
-            estacion: feature.get('nombre_estacion'),
-            fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-            valor: feature.get('valor'),
-            idestacion: feature.get('id_estacion')
-          });
+        this.info.push({
+          sensor: feature.get('id_sensor'),
+          estacion: feature.get('nombre_estacion'),
+          fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
+          valor: feature.get('valor'),
+          idestacion: feature.get('id_estacion')
+        });
 
       }, {
           layerFiltter: (layer) => {
-          return layer.get('layer_name') === 'vector2';
-        }
+            return layer.get('layer_name') === 'vector2';
+          }
 
-      });
+        });
     });
 
     let feature_onHover = Feature;
@@ -292,6 +296,14 @@ export class AppComponent implements OnInit {
           }
         };
         this.chart = new Chart('canvas', conf);
+      });
+  }
+  getAggregatedData(fechaInicio, fechaFin) {
+    this._timeseries.aggregatedPrecipitation(fechaInicio, fechaFin)
+      .subscribe(res => {
+         const data = res;
+         this.precipitation = {"data": data};
+         this.initilizeMap();
       });
   }
 

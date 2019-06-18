@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -43,12 +43,16 @@ export class TimeSeriesService {
     const urlBase = 'http://slaawgresf00.enelint.global/dwh/t101101_datos?';
     const args = 'id_estacion=eq.' + idEstacion + '&fecha_hora=gte.' + fechaIncio + '&fecha_hora=lte.' + fechaFin;
     return this._http.get<any>(urlBase + args, httpOptions)
-    .map(res => res)
+    .map(res => res);
   }
   aggregatedPrecipitation(fechaIncio, fechaFin) {
-    const urlBase = 'http://elaacgresf00.enelint.global/e1011/rpc/get_precipitacion_estaciones?';
-    const args = 'fecha_inicio=' + fechaIncio + '&fecha_fin=' + fechaFin;
-    return this._http.get<any>(urlBase + args, httpOptions).map(res => res)
+    console.log(fechaIncio);
+    console.log(fechaFin);
+    const urlBase = 'http://elaacgresf00.enelint.global/e1011/rpc/get_precipitacion_estaciones_color?';
+    const body = { fecha_inicio :  fechaIncio,
+            fecha_fin : fechaFin};
+    return  this._http.post(urlBase, JSON.stringify(body) , httpOptions)
+    .map((res: Response ) =>res)
   }
 
 }
