@@ -8,6 +8,10 @@
 </div>
 <div id="myTooltip" class="tooltip tooltiptext overflow-auto">
     <div *ngFor="let item of tooltipvalue" class="ml-1 mr-1">
-        <strong>{{item.title | uppercase}}</strong> {{item.key}}: {{item.value | uppercase}}
+        <strong>{{item[0].name}}</strong>
+        <div *ngFor="let item2 of item[0].properties">
+            <small>{{item2.key}}: {{item2.value}}</small>
+        </div>
+        <hr class="m-0">
     </div>
 </div>

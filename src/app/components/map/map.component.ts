@@ -30,7 +30,6 @@ import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import { defaults, control, ZoomSlider, OverviewMap, Zoom, ScaleLine, extend } from 'ol/control';
 import { Select } from 'ol/interaction';
 import { events } from 'ol/events';
-import { HttpClient } from 'selenium-webdriver/http';
 import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
 import { map } from 'rxjs/operators';
 import { layer, Tile } from 'openlayers';
@@ -38,6 +37,7 @@ import { layer, Tile } from 'openlayers';
 import * as moment from 'moment';
 import WMSGetFeatureInfo from 'ol/format/WMSGetFeatureInfo';
 import View from 'ol/View';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-map',
@@ -54,16 +54,19 @@ export class MapComponent implements OnInit {
   view: OlView;
 
   layers = {};
+  layersInfo = {};
 
   popup: any;
   features = [];
   info = [];
   tooltip: any;
   tooltipvalue = [];
-
+  loadingTooltip: boolean;
+  prueba: string;
 
   constructor(private geoservice: GeoserverService,
-              private interaction: ComponentsInteractionService) { }
+              private interaction: ComponentsInteractionService,
+              private http: HttpClient) { }
 
     ngOnInit() {
       this.source = new OlXYZ({
@@ -79,21 +82,31 @@ export class MapComponent implements OnInit {
       this.map = new OlMap({
         target: 'map',
         layers: [this.layer],
+        // span: true,
         view: this.view,
         controls: []
       });
+
+      this.tooltip = document.getElementById('myTooltip');
+      const overlay = new Overlay({
+        element: this.tooltip,
+        autoPan: true
+      });
+      this.map.addOverlay(overlay);
 
       // SUSCRIPCIONES
       // 1. Gestión de capas
       this.interaction.mapInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
+        this.removeTooltip();
         if (layer.show) {
-          if (type && type === this.geoservice.BASE) {
-            this.addLayerWMS(layer.name, layer.edit);
+          if (type && type === this.geoservice.BASE || type === this.geoservice.TEMS) {
+            const properties = '';
+            this.addLayerTileWMS(layer.name, layer.edit, layer.show, overlay);
+            this.prepareWMSData(type, layer.name, properties);
             // Guardar en wfs también para extraer features. Input opcional de addLayerWFS deben ser los atributos
             // Si no hay atributos, que traiga todo. (postman)
-            // this.addLayerWFS(type, layer.name, layer.edit);
-          } else if (type && (type === this.geoservice.TEMS || type === this.geoservice.DWHS)) {
+          } else if (type && type === this.geoservice.DWHS) {
             this.addLayerWFS(type, layer.name, layer.edit);
           } else {
             alert('Something went Wrong!!');
@@ -131,8 +144,6 @@ export class MapComponent implements OnInit {
         target: document.getElementById('control-scale')
       }));
 
-      // this.addTooltip();
-      // console.log('agregó el tooltip')
 
     }
 
@@ -142,10 +153,10 @@ export class MapComponent implements OnInit {
       this.progressBar(name, true, edit);
       let newLayer: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
-        newLayer = this.layers[name];
+        newLayer = this.layers[name].layer;
         this.progressBar(name, false, edit);
       } else {
-        const imageSource = new TileWMS({
+        const imageSource = new ImageWMS({
           url: 'http://10.154.80.177:8080/geoserver/base/wms',
           serverType: 'geoserver',
           params: {
@@ -166,16 +177,17 @@ export class MapComponent implements OnInit {
           source: imageSource
         });
       }
-      newLayer.setOpacity(1);
+      newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
       // console.log('------ Opacidad: ', newLayer.getOpacity());
     }
 
-    addLayerTileWMS(name: string, edit: boolean) {
+    addLayerTileWMS(name: string, edit: boolean, show: boolean, overlay: any) {
+      this.tooltipvalue = [];
       this.progressBar(name, true, edit);
       let newLayer: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
-        newLayer = this.layers[name];
+        newLayer = this.layers[name].layer;
         this.progressBar(name, false, edit);
       } else {
         const imageSource = new TileWMS({
@@ -199,35 +211,55 @@ export class MapComponent implements OnInit {
       }
       newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
+      this.eventTooltip(newLayer, overlay);
+    }
 
-      this.map.on('singleclick', (evt: any) => {
-        console.log('Entra a popup WMS');
+    eventTooltip(newLayer: any, overlay: any) {
 
-        const raster = this.map.hasFeatureAtPixel(evt.pixel, (layer) => {
-          // console.log('WMS 1', raster, layer);
-          // return raster;
+      this.map.on('click', (evt: any) => {
+        this.removeTooltip();
+        const coordinate = evt.coordinate;
+        overlay.setPosition(coordinate);
+
+        this.tooltipvalue = [];
+        const viewProjection = this.map.getView().getProjection();
+        const viewResolution = this.map.getView().getResolution();
+        const url = newLayer.values_.source.getGetFeatureInfoUrl(
+          evt.coordinate, viewResolution, viewProjection, {'INFO_FORMAT': 'application/json'});
+        this.http.get(url).subscribe( (data: any) => {
+          // Si responde algo que no es vacío,
+          if (data.features.length > 0) {
+            const layerNameAtPixel =  data.features[0].id.split('.', 1)[0];
+            if (this.layers[layerNameAtPixel].show) {
+            const layerIdAtPixel =  data.features[0].id;
+            const loadId = setInterval(() => this.manageInterval(layerNameAtPixel, layerIdAtPixel, loadId), 1000);
+          }
+          } else {
+            this.removeTooltip();
+          }
+
         });
-        console.log('WMS has feature at pixel', raster);
-
-        // this.map.forEachLayerAtPixel(evt.pixel, (data, error) => {
-        //   if (error) {
-        //     console.log(error);
-        //   } else {
-        //     console.log(data);
-        //   }
-        // });
-
-        // const a = new WMSGetFeatureInfo(newLayer.source);
-        // console.log('WMS 3', a);
-
       });
+    }
+
+    addInfoWFS(type: string, name: string, attributes ?) {
+      let newLayer: any;
+      let vector: any;
+      if (this.layers[name] && this.layers[name] !== undefined) {
+        newLayer = this.layers[name].layer;
+        // this.saveLayer(name, newLayer);
+        vector = '';
+      } else {
+        vector = this.requestLayer(type, name, false);
+      }
+      return vector;
     }
 
     addLayerWFS(type: string, name: string, edit: boolean) {
       let newLayer: any;
       let vector: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
-        newLayer = this.layers[name];
+        newLayer = this.layers[name].layer;
         this.saveLayer(name, newLayer);
         vector = 'Ñó';
       } else {
@@ -373,12 +405,18 @@ export class MapComponent implements OnInit {
     }
 
     saveLayer(name: string, layer: any) {
-      this.layers[name] = layer;
+      this.layers[name] = {
+        layer,
+        show: true
+      };
       this.map.addLayer(layer);
     }
 
     removeLayer(name: string) {
-      this.map.removeLayer(this.layers[name]);
+      if (this.layers[name]) {
+        this.layers[name].show = false;
+        this.map.removeLayer(this.layers[name].layer);
+      }
     }
 
     getLayerTypeFromHref(layer: any): string {
@@ -416,14 +454,12 @@ export class MapComponent implements OnInit {
 
       // POPUP
       this.map.on('singleclick', (evt: any) => {
-        console.log('Entra a popup');
         const info = [];
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
         this.initializePopup();
         this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           if ( feature.id_.split('.fid', 1)[0] === 'vm_estaciones_vsg') {
-            console.log('Es la capa de estaciones');
             const item = {
               nombreEntidad: feature.values_.nombre_entidad,
               idEstacion: feature.values_.id_estacion,
@@ -435,7 +471,6 @@ export class MapComponent implements OnInit {
             console.log('No es la capa de estaciones');
           }
         });
-        console.log(info[0]);
         if (info.length > 0) {
           this.map.addOverlay(overlay);
           this.createPopup(info[0]);
@@ -467,55 +502,62 @@ export class MapComponent implements OnInit {
       }
     }
 
-    addTooltip() {
-      this.tooltip = document.getElementById('myTooltip');
-      const overlay = new Overlay({
-        element: this.tooltip,
-        autoPan: true
-      });
+    prepareWMSData(type: string, name: string, properties: string) {
+      this.geoservice.getInfo(type, name, properties).subscribe( (data: any) => {
+        this.layersInfo[name] = data.features;
+      }, ((error: any) => {
+        this.layersInfo[name] = error.ok;
+      }));
+    }
 
-      // TOOLTIP
-      // this.map.on('singleclick', (evt: any) => {
-      this.map.on('pointermove', (evt: any) => {
-        const infoArray = [];
-        const coordinate = evt.coordinate;
-        const pixel = this.map.getPixelFromCoordinate(coordinate);
-        overlay.setPosition(coordinate);
-        this.map.forEachFeatureAtPixel(pixel, (feature) => {
-          console.log('Tooltip: ', feature);
-          const layerName = feature.id_.split('.', 1)[0];
-          const keys = Object.keys(feature.values_);
-          // tslint:disable-next-line: prefer-for-of
-          for (let index = 0; index < keys.length; index++) {
-            const key = keys[index];
-            if (key.includes('serie_meno') || key.includes('nombre') ) {
-              const item = {
-                title: layerName,
-                key: key,
-                value: feature.values_[key],
-              };
-              if (infoArray.length > 0) {
-                for (let i = 0; i < infoArray.length; i++) {
-                  if (infoArray[i].title === item.title) {
-                    infoArray[i] = item;
-                  } else {
-                    infoArray.push(item);
-                  }
-                }
-              } else {
-                infoArray.push(item);
-              }
+    manageInterval(layerName, layerId, intervalId) {
+      // Si aún no hay información,
+      if (this.layersInfo[layerName] === undefined) {
+        this.loadingTooltip = true;
+        // Si ya hay,
+      } else {
+        // Y si es diferente de "false"
+        if (this.layersInfo[layerName]) {
+          this.loadingTooltip = false;
+          const filter = this.layersInfo[layerName].filter((feature: any) => feature.id === layerId);
+          if (filter.length > 0) {
+            const filter2 = this.tooltipvalue.filter((feature: any) => feature[0].id.split('.', 1)[0] === layerName);
+            if (filter[0].properties !== undefined && filter[0].properties.length === undefined) {
+              filter[0].properties = this.setTooltipProperties(filter[0]);
             }
+            filter[0].name = layerName;
+            // Si el nombre de la capa ya existe, la reemplazo
+            if (filter2.length !== 0) {
+              const index = this.tooltipvalue.indexOf(filter2[0]);
+              this.tooltipvalue[index] = filter;
+            // Si el nombre de la capa no existe, la agrego
+            } else {
+              this.tooltipvalue.push(filter);
+            }
+            this.addTooltip();
           }
-        });
-        if (infoArray.length > 0) {
-          this.tooltip.classList.add('show');
-          this.map.addOverlay(overlay);
-          this.tooltipvalue = infoArray;
-        } else {
-          this.tooltip.classList.remove('show');
-          this.tooltipvalue = [];
         }
-      });
+        clearInterval(intervalId);
+      }
+    }
+
+    setTooltipProperties(filter): any[] {
+      const properties = [];
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < Object.keys(filter.properties).length; i++) {
+        properties.push({
+          key: Object.keys(filter.properties)[i],
+          value: filter.properties[Object.keys(filter.properties)[i]]
+        });
+      }
+      return properties;
+    }
+
+    addTooltip() {
+      this.tooltip.classList.add('show');
+    }
+
+    removeTooltip() {
+      this.tooltip.classList.remove('show');
     }
   }

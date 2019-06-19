@@ -20,6 +20,7 @@ export class ModulebaseComponent implements OnInit {
     this.getBases();
     this.getTems();
     this.getDWHS();
+    this.getNames();
   }
 
   ngOnInit() {
@@ -47,7 +48,6 @@ export class ModulebaseComponent implements OnInit {
 
   getDWHS() {
     this.geoservice.getLayers(this.geoservice.DWHS).subscribe((dwhs) => {
-      console.log(dwhs);
       this.concatLayers(dwhs);
     }, (error) => {
       this.handleError(this.geoservice.DWHS, error);
@@ -60,6 +60,10 @@ export class ModulebaseComponent implements OnInit {
 
   handleError(type, error) {
     alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
+  }
+
+  getNames() {
+    console.log('getnames', this.layers)
   }
 
 

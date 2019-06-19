@@ -79,7 +79,6 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     private dwhService: DatawarehouseService,
     private interaction: ComponentsInteractionService
   ) {
-    console.log('Initialize');
     this.data = {};
     this.actualYear = (new Date()).getFullYear();
     this.firstDateYear = new Date('1/1/' + this.actualYear);
