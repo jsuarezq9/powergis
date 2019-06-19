@@ -32,8 +32,6 @@ export class AppComponent implements OnInit {
   chart = [];
   features = [];
   info = [];
-  colors =['#FF9900','#FFCC00','#FFEA00','#97E31C','#0EF192','#00F2FF',
-    '#00B3FF','#3B7BC4','#9933FF','#7030A0'];
   columns = ['Estación', 'Sensor', 'Fecha', 'valor'];
   precipitation= {};
   date_inicio : string;
@@ -43,7 +41,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getAggregatedData('2019-06-01 05:00', '2019-06-08 07:00');
+    this.getAggregatedData('2019-03-01 05:00', '2019-06-08 07:00');
     const now = moment();
     now.format('YYYY-MM-DD hh:mm:ss');
     console.log(now);
@@ -257,7 +255,14 @@ export class AppComponent implements OnInit {
           hooverContainer.innerHTML = feature_onHover.getProperties().nombre;
           hooverContainer.style.display = 'block';
         } else if (feature_onHover.get('nombre_estacion')) {
-          hooverContainer.innerHTML = feature_onHover.get('nombre_estacion');
+          hooverContainer.innerHTML = feature_onHover.get('nombre_estacion')+
+          '<p>Precipitación:'+
+          jsonPath.query(this.precipitation,'$.data[?(@.id_estacion=="'+feature_onHover.get('id_estacion')+'" )]')[0].precipitacion
+          .toFixed(3)+
+          '</p><p>Datos Analizados: '+
+          jsonPath.query(this.precipitation,'$.data[?(@.id_estacion=="'+feature_onHover.get('id_estacion')+'" )]')[0].cuenta+
+          '</p>'+
+          jsonPath.query(this.precipitation,'$.data[?(@.id_estacion=="'+feature_onHover.get('id_estacion')+'" )]')[0].color_rgb;
           hooverContainer.style.display = 'block';
         }
 
