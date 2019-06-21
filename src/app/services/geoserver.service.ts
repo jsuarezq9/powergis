@@ -41,6 +41,17 @@ export class GeoserverService {
     return this.http.get(`${this.host}:${this.port}${this.uriInfo}/${source}/wfs`, { headers, params });
   }
 
+  getLayersName(source: string, name: string) {
+    const headers = new HttpHeaders({
+      Authorization: this.authBasic,
+      'content-type': this.APPJSON
+    });
+    return this.http.get(`${this.host}:${this.port}${this.uriWorkSpace}/${source}/layers/${name}`, { headers })
+    .pipe( map ((response: any) => {
+      return response.layer.attribution.title ? response.layer : null;
+  }));
+  }
+
   getLayers(source: string) {
     const headers = new HttpHeaders({
       Authorization: this.authBasic,

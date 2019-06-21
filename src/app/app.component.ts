@@ -36,6 +36,7 @@ export class AppComponent {
 
   constructor() {
     this.resetModules();
+    
   }
 
   resetModules(): void {

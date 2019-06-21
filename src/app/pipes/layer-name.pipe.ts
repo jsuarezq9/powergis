@@ -11,23 +11,13 @@ export class LayerNamePipe implements PipeTransform {
   TEMS = 'tem';
 
   transform(value: any, args?: any): any {
-    let name: any[] ;
-    name = value.name.split('_');
-    name = name.slice(1, name.length);
-    const type = this.getLayerTypeFromHref(value.href);
-    return `${name.join(' ')} (${type})`;
-  }
-
-  getLayerTypeFromHref(layer: any): string {
-    const uri = `${layer}`;
-    if (uri.search(this.BASE) > 0) {
-      return this.BASE;
-    } else if (uri.search(this.TEMS) > 0) {
-      return this.TEMS;
-    } else if (uri.search(this.DWH)) {
-      return this.DWH;
+    if (value.title) {
+      return `${value.title}`;
     } else {
-      return null;
+      let name: any[] ;
+      name = value.name.split('_');
+      name = name.slice(1, name.length);
+      return `${name}`;
     }
   }
 

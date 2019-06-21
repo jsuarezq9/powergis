@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
 import { toStringHDMS } from 'ol/coordinate.js';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-modulebase',
@@ -20,7 +21,6 @@ export class ModulebaseComponent implements OnInit {
     this.getBases();
     this.getTems();
     this.getDWHS();
-    this.getNames();
   }
 
   ngOnInit() {
@@ -30,25 +30,27 @@ export class ModulebaseComponent implements OnInit {
     this.interaction.setLayer(event.layer, event.e.target.checked, true);
   }
 
-  getBases() {
+  async getBases() {
     this.geoservice.getLayers(this.geoservice.BASE).subscribe((bases: any) => {
-      this.concatLayers(bases);
+      this.getLayersTitles(bases, this.geoservice.BASE);
     }, (error) => {
       this.handleError(this.geoservice.BASE, error);
     });
   }
 
   getTems() {
-    this.geoservice.getLayers(this.geoservice.TEMS).subscribe((tems: any) => {
-      this.concatLayers(tems);
+    const source = this.geoservice.TEMS;
+    this.geoservice.getLayers(this.geoservice.TEMS).subscribe(async (tems: any) => {
+      this.getLayersTitles(tems, source);
     }, (error) => {
       this.handleError(this.geoservice.TEMS, error);
     });
   }
 
   getDWHS() {
-    this.geoservice.getLayers(this.geoservice.DWHS).subscribe((dwhs) => {
-      this.concatLayers(dwhs);
+    const source = this.geoservice.DWHS;
+    this.geoservice.getLayers(this.geoservice.DWHS).subscribe(async (dwhs: any) => {
+      this.getLayersTitles(dwhs, source);
     }, (error) => {
       this.handleError(this.geoservice.DWHS, error);
     });
@@ -62,9 +64,29 @@ export class ModulebaseComponent implements OnInit {
     alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
   }
 
-  getNames() {
-    console.log('getnames', this.layers)
-  }
+  async getLayersTitles(layers: any[], source: string) {
+    const promises = [];
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < layers.length; i++ ) {
+      promises.push(this.geoservice.getLayersName(source, layers[i].name));
+    }
+    forkJoin(promises).subscribe((responses: any) => {
+      console.log('FORK\n', responses);
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < responses.length; i++) {
+        const element = responses[i];
+        if (element) {
+          console.log('****´', element.attribution.title);
+          const newLayer = layers.filter(layer => element.name === layer.name)[0];
+          if (newLayer && newLayer !== undefined && layers.indexOf(newLayer) > 0) {
+            const j = layers.indexOf(newLayer);
+            layers[j].title = element.attribution.title;
+          }
+        }
+      }
+      this.concatLayers(layers);
+    });
 
+  }
 
 }

@@ -96,7 +96,8 @@ export class MapComponent implements OnInit {
 
       // SUSCRIPCIONES
       // 1. Gestión de capas
-      this.interaction.mapInteraction.subscribe((layer: any) => {
+      // tslint:disable-next-line: no-shadowed-variable
+      this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
         this.removeTooltip();
         if (layer.show) {
@@ -117,6 +118,7 @@ export class MapComponent implements OnInit {
       });
 
       // 2. Mostrar capa estaciones en módulos 2 y 3
+// tslint:disable-next-line: no-shadowed-variable
       this.interaction.stationsInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
@@ -225,7 +227,7 @@ export class MapComponent implements OnInit {
         const viewProjection = this.map.getView().getProjection();
         const viewResolution = this.map.getView().getResolution();
         const url = newLayer.values_.source.getGetFeatureInfoUrl(
-          evt.coordinate, viewResolution, viewProjection, {'INFO_FORMAT': 'application/json'});
+          evt.coordinate, viewResolution, viewProjection, {INFO_FORMAT: 'application/json'});
         this.http.get(url).subscribe( (data: any) => {
           // Si responde algo que no es vacío,
           if (data.features.length > 0) {
@@ -404,6 +406,7 @@ export class MapComponent implements OnInit {
       }
     }
 
+// tslint:disable-next-line: no-shadowed-variable
     saveLayer(name: string, layer: any) {
       this.layers[name] = {
         layer,
@@ -419,6 +422,7 @@ export class MapComponent implements OnInit {
       }
     }
 
+// tslint:disable-next-line: no-shadowed-variable
     getLayerTypeFromHref(layer: any): string {
       const uri = `${layer.href}`;
       if (uri.search(this.geoservice.BASE) > 0) {
