@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import 'rxjs/add/operator/map';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { map} from 'rxjs/operators';
+import { observable, Observable } from 'rxjs';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiZ2VzdG9yX2ludGVybm8iLCJlbWFpbCI6ImFuZHJlcy52ZWxhc2NvQGVuZWwuY29tIiwiZXhwIjoxNTc3MTQ1NjAwfQ.57g7-Xu2R8OBWHODxHsQ9y3twsICBPg2uf7-oc1twT0'
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiZ2VzdG9yX2ludGVybm8iLCJlbWFpbCI6ImFuZHJlcy52ZWxhc2NvQGVuZWwuY29tIiwiZXhwIjoxNTc3MTQ1NjAwfQ.57g7-Xu2R8OBWHODxHsQ9y3twsICBPg2uf7-oc1twT0'
   })
 };
 
@@ -46,13 +47,15 @@ export class TimeSeriesService {
     .map(res => res);
   }
   aggregatedPrecipitation(fechaIncio, fechaFin) {
-    console.log(fechaIncio);
-    console.log(fechaFin);
     const urlBase = 'http://elaacgresf00.enelint.global/e1011/rpc/get_precipitacion_estaciones_color?';
     const body = { fecha_inicio :  fechaIncio,
             fecha_fin : fechaFin};
     return  this._http.post(urlBase, JSON.stringify(body) , httpOptions)
-    .map((res: Response ) =>res)
+    .map((res: Response ) => {
+      const data = res;
+      console.log(data);
+      return data;
+    });
   }
 
 }

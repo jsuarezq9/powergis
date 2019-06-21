@@ -13,9 +13,10 @@
 <router-outlet></router-outlet>
 <div><input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value" ><input type="datetime-local" [value]="date_final"
   (input)="date_final=$event.target.value">
-  <h1>{{date_inicio}}</h1>
-  <h1>{{date_final}}</h1>
   <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
+<p>
+  <button  *ngFor="let item of rasters" (click)='addRaster(item)'>{{item}}</button>
+  </p>
 </div>
 
 <div id="map" class="map"></div>
