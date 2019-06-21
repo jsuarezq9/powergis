@@ -23,22 +23,28 @@ export class GeoserverService {
     // this.getInfo(this.DWHS, 'vm_ultimo_dato_estacion', 'id_estacion,nombre_estacion');
   }
 
-  getInfo(source: string, layer: any, properties: string) {
+  getInfo(layer: any) {
     // http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=
     // WFS&version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&
     // PROPERTYNAME=id_estacion,nombre_estacion&outputFormat=application/json
+    // VIEW
+    // http://elaacgresf00.enelint.global:8080/geoserver/info/ows?service=
+    // WFS&version=1.0.0&request=GetFeature&typeName=info%3Ac010101_nal_col_view&
+    // maxFeatures=5000&outputFormat=application%2Fjson
+    const source = 'info';
     const headers = new HttpHeaders({
       Authorization: this.authBasic,
       'content-type': this.APPJSON
     });
     let params = new HttpParams();
     params = params.append('service', `WFS`);
-    params = params.append('version', `1.1.0`);
+    params = params.append('version', `1.0.0`);
     params = params.append('request', `GetFeature`);
     params = params.append('typename', `${source}:${layer}`);
-    params = params.append('PROPERTYNAME', `${properties}`);
+    // params = params.append('PROPERTYNAME', `${properties}`);
     params = params.append('outputFormat', this.APPJSON);
-    return this.http.get(`${this.host}:${this.port}${this.uriInfo}/${source}/wfs`, { headers, params });
+
+    return this.http.get(`${this.host}:${this.port}${this.uriInfo}/${source}/ows`, { headers, params });
   }
 
   getLayersName(source: string, name: string) {

@@ -102,11 +102,8 @@ export class MapComponent implements OnInit {
         this.removeTooltip();
         if (layer.show) {
           if (type && type === this.geoservice.BASE || type === this.geoservice.TEMS) {
-            const properties = '';
             this.addLayerTileWMS(layer.name, layer.edit, layer.show, overlay);
-            this.prepareWMSData(type, layer.name, properties);
-            // Guardar en wfs también para extraer features. Input opcional de addLayerWFS deben ser los atributos
-            // Si no hay atributos, que traiga todo. (postman)
+            this.prepareWMSData(layer.name);
           } else if (type && type === this.geoservice.DWHS) {
             this.addLayerWFS(type, layer.name, layer.edit);
           } else {
@@ -219,6 +216,9 @@ export class MapComponent implements OnInit {
     eventTooltip(newLayer: any, overlay: any) {
 
       this.map.on('click', (evt: any) => {
+        console.log('ONCLICK');
+        console.log(this.layersInfo);
+
         this.removeTooltip();
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
@@ -229,6 +229,7 @@ export class MapComponent implements OnInit {
         const url = newLayer.values_.source.getGetFeatureInfoUrl(
           evt.coordinate, viewResolution, viewProjection, {INFO_FORMAT: 'application/json'});
         this.http.get(url).subscribe( (data: any) => {
+          console.log(data);
           // Si responde algo que no es vacío,
           if (data.features.length > 0) {
             const layerNameAtPixel =  data.features[0].id.split('.', 1)[0];
@@ -506,8 +507,9 @@ export class MapComponent implements OnInit {
       }
     }
 
-    prepareWMSData(type: string, name: string, properties: string) {
-      this.geoservice.getInfo(type, name, properties).subscribe( (data: any) => {
+    prepareWMSData(name: string) {
+      const nameView = `${name}_view`;
+      this.geoservice.getInfo(nameView).subscribe( (data: any) => {
         this.layersInfo[name] = data.features;
       }, ((error: any) => {
         this.layersInfo[name] = error.ok;

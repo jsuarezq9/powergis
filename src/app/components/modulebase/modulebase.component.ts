@@ -20,7 +20,7 @@ export class ModulebaseComponent implements OnInit {
               private interaction: ComponentsInteractionService) {
     this.getBases();
     this.getTems();
-    this.getDWHS();
+    // this.getDWHS();
   }
 
   ngOnInit() {
@@ -71,12 +71,12 @@ export class ModulebaseComponent implements OnInit {
       promises.push(this.geoservice.getLayersName(source, layers[i].name));
     }
     forkJoin(promises).subscribe((responses: any) => {
-      console.log('FORK\n', responses);
+      // console.log('FORK\n', responses);
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < responses.length; i++) {
         const element = responses[i];
         if (element) {
-          console.log('****´', element.attribution.title);
+          // console.log('****´', element.attribution.title);
           const newLayer = layers.filter(layer => element.name === layer.name)[0];
           if (newLayer && newLayer !== undefined && layers.indexOf(newLayer) > 0) {
             const j = layers.indexOf(newLayer);

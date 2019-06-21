@@ -17,7 +17,11 @@ export class LayerNamePipe implements PipeTransform {
       let name: any[] ;
       name = value.name.split('_');
       name = name.slice(1, name.length);
-      return `${name}`;
+      let finalName = '';
+      name.forEach(element => {
+        finalName += `${element} `;
+      });
+      return `${finalName}`;
     }
   }
 
