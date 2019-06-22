@@ -459,10 +459,10 @@ export class MapComponent implements OnInit {
 
       // POPUP
       this.map.on('singleclick', (evt: any) => {
+        console.log('click');
         const info = [];
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
-        this.initializePopup();
         this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           if ( feature.id_.split('.fid', 1)[0] === 'vm_estaciones_vsg') {
             const item = {
@@ -478,8 +478,13 @@ export class MapComponent implements OnInit {
         });
         if (info.length > 0) {
           this.map.addOverlay(overlay);
-          this.createPopup(info[0]);
+          if (!this.popup.classList.contains('show')) {
+            this.popup.classList.add('show');
+          }
+        } else {
+          this.popup.classList.remove('show');
         }
+        this.createPopup(info[0]);
       });
 
     }

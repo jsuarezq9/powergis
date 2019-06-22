@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ComponentsInteractionService } from '../../services/interactions.service';
 import { DatawarehouseService } from '../../services/datawarehouse.service';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-modulehidro-popup',
   templateUrl: './modulehidro-popup.component.html',
@@ -10,31 +12,57 @@ import { DatawarehouseService } from '../../services/datawarehouse.service';
 export class ModulehidroPopupComponent implements OnInit {
 
   info: any[];
+  showInfo: boolean;
   stationCompany: any;
   stationName: any;
   stationId: any;
   stationState: any;
-  date: Date;
+  date: string;
+  popup: any;
+  selectedSensor: any;
+
+  months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   constructor(private interaction: ComponentsInteractionService,
               private dwhService: DatawarehouseService) { }
-  ngOnInit() {
+    ngOnInit() {
+    this.popup = document.getElementById('myPopup');
+    this.stationCompany = '';
+    this.stationName = '';
+    this.stationId = '';
+    this.stationState = '';
+    this.showInfo = true;
+    this.selectedSensor = {};
     // Recibir respuesta de servicio de interacción de la capa estaciones y determinar acción
     this.interaction.popupInteraction.subscribe((popup: any) => {
-      this.stationCompany = popup.nombreEntidad;
-      this.stationName = popup.nombreEstacion;
-      this.stationId = popup.idEstacion;
-      this.stationState = popup.estadoEstacion;
-      console.log('Estación seleccionada: ', this.stationId);
+      console.log('Recibe: ', popup);
+      if ( popup !== undefined) {
+        this.initializePopup();
+        this.stationCompany = popup.nombreEntidad;
+        this.stationName = popup.nombreEstacion;
+        this.stationId = popup.idEstacion;
+        this.stationState = popup.estadoEstacion;
+        console.log('Estación seleccionada: ', this.stationId);
 
-      // Preguntar y recibir respuesta de servicio de dwh de la estación seleccionada y determinar acción
-      this.dwhService.getSensorsLastInfoByStation(this.stationId).subscribe((data: any) => {
-        console.log('DATA dwh', data);
-        this.info = data;
-        this.date = this.info[0].fecha;
-    }, (error) => {
-      alert(`Error on interaction PopUp ${error.message}`);
-    });
+        // Preguntar y recibir respuesta de servicio de dwh de la estación seleccionada y determinar acción
+        this.dwhService.getSensorsLastInfoByStation(this.stationId).subscribe((data: any) => {
+          console.log('DATA dwh', data);
+          if (data.length > 0) {
+            this.showInfo = true;
+            this.info = data;
+            this.date = this.info[0].fecha;
+            const formatDates = this.date.valueOf().toString().split(',')[0].split('/');
+            this.date = `${formatDates[0]} ${this.months[Number(formatDates[1]) - 1]}`;
+          } else {
+            console.log('NO hay datos de la estación seleccionada');
+            this.showInfo = false;
+            this.info = [];
+            this.date = undefined;
+          }
+        }, (error) => {
+          alert(`Error on interaction PopUp ${error.message}`);
+        });
+      }
 
     });
 
@@ -51,6 +79,7 @@ export class ModulehidroPopupComponent implements OnInit {
     popupExpanded.style.display = 'flex';
     const popupModule = document.getElementById('moduleHidroPopup');
     popupModule.style.display = 'block';
+
   }
 
   closeBigPopup() {
@@ -61,7 +90,8 @@ export class ModulehidroPopupComponent implements OnInit {
     popupModule.style.display = 'none';
   }
 
-  changeSelection(event: any) {
+  changeSelection(event: any, item: any) {
+    console.log('Entró')
 
     // Reinicio selección en popup y popup expanded
     const expandedItems = document.getElementsByClassName('expandeditem');
@@ -92,10 +122,31 @@ export class ModulehidroPopupComponent implements OnInit {
       selectionExpanded.classList.add('popupbodytext-selected');
       selectionExpanded.classList.remove('popupbodytext');
     }
+
+    // Guardo el sensor seleccionado
+    this.selectedSensor = item;
+    console.log(this.selectedSensor)
   }
 
   displayDataSensor(item: any) {
     this.interaction.setSensor(item);
   }
+
+  initializePopup() {
+    // Escondo el popupExpanded y el popupModule
+    const popupExpanded = document.getElementById('myPopupExpandedContainer');
+    popupExpanded.style.display = 'none';
+    const popupModule = document.getElementById('moduleHidroPopup');
+    popupModule.style.display = 'none';
+
+    // Reinicio la selección de sensor del popup
+    const rows = document.getElementsByClassName('popupbodytext-selected');
+    // tslint:disable-next-line: prefer-for-of
+    for (let index = 0; index < rows.length; index++) {
+      rows[index].classList.add('popupbodytext');
+      rows[index].classList.remove('popupbodytext-selected');
+    }
+  }
+
 
 }
