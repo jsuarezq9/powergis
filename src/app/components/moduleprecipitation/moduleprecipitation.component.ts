@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import { GeoserverService } from '../../services/geoserver.service';
 
 @Component({
   selector: 'app-moduleprecipitation',
@@ -21,10 +22,20 @@ export class ModuleprecipitationComponent implements OnInit {
   zoomBetania = 10;
   zoomRioBogota = 10;
   zoomGuavio = 10;
+  rasters = [];
+  layerEstaciones: any;
 
-  constructor(private interaction: ComponentsInteractionService) { }
+  constructor(private interaction: ComponentsInteractionService,
+              private geoservice: GeoserverService ) {
+  this.getRasters();
+  }
 
   ngOnInit() {
+    this.layerEstaciones = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
+      name: 'vm_estaciones_vsg',
+      edit: false,
+    };
   }
 
   viewColombia() {
@@ -67,5 +78,46 @@ export class ModuleprecipitationComponent implements OnInit {
     }
   }
 
+  getRasters() {
+    const source = this.geoservice.RASTERS;
+    this.geoservice.getLayers(source).subscribe(async (rasters: any) => {
+      this.concatLayers(rasters);
+    }, (error) => {
+      this.handleError(source, error);
+    });
+  }
 
+  handleError(type, error) {
+    alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
+  }
+
+  concatLayers(layer: any[]): void {
+    this.rasters = this.rasters.length === 0 && layer !== undefined ? layer : this.rasters.concat(layer);
+  }
+
+  changeRaster(rasterSeleccionado: any) {
+    console.log('rasterSeleccionado', rasterSeleccionado);
+    this.removeAllRasters();
+    this.addRaster(rasterSeleccionado);
+    this.changeEstaciones();
+  }
+
+  removeAllRasters() {
+    this.rasters.forEach(element => {
+      this.interaction.setLayer(element, false, false);
+    });
+  }
+
+  addRaster(raster: any) {
+    this.interaction.setRaster(raster);
+  }
+
+  changeEstaciones() {
+    this.interaction.setLayer(this.layerEstaciones, false, false);
+    this.interaction.setPrecipitationLayer(this.layerEstaciones);
+  }
+
+  // getAggregatedData(initialDate: any, finalDate: any) {
+  //   console.log('getAggregatedData', initialDate, initialDate.typeOf(), finalDate);
+  // }
 }

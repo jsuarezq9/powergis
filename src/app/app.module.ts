@@ -1,7 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-// import {CommonModule} from '@angular/common';
-import { AppComponent } from './app.component';
 import { MapComponent } from './components/map/map.component';
 import { ListElementsComponent } from './components/list-elements/list-elements.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -15,11 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { ModulehidroPopupComponent } from './components/modulehidro-popup/modulehidro-popup.component';
 import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeseries/modulehidro-timeseries.component';
-
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
+import { AppComponent } from './app.component';
 import { PlotlyViaWindowModule  } from 'angular-plotly.js';
-// PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -40,8 +35,7 @@ import { PlotlyViaWindowModule  } from 'angular-plotly.js';
   imports: [
     BrowserModule,
     PlotlyViaWindowModule,
-    // CommonModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

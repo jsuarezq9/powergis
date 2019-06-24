@@ -23,7 +23,17 @@
               </button>
             </div>
         </div>
-
+        <!-- Agregar rasters -->
+        <div>
+            <div class="col offset-5">
+                <input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value">
+                <input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value">
+                <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
+                <p>
+                    <button *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones()'>{{item.name}}</button>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 <div class="control-zoom btn-group dropleft">

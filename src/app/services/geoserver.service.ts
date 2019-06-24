@@ -9,6 +9,7 @@ export class GeoserverService {
   BASE = 'base';
   TEMS = 'tem';
   DWHS = 'dwh';
+  RASTERS = 'raster';
   WMS = 'wms';
   WFS = 'wfs';
   APPJSON = 'application/json';
@@ -19,8 +20,8 @@ export class GeoserverService {
   authBasic = 'Basic YWRtaW46Z2Vvc2VydmVy';
   baseLayers: any[];
   temLayers: any[];
+
   constructor(private http: HttpClient) {
-    // this.getInfo(this.DWHS, 'vm_ultimo_dato_estacion', 'id_estacion,nombre_estacion');
   }
 
   getInfo(layer: any) {

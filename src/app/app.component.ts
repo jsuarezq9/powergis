@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { latLng, tileLayer } from 'leaflet';
-import { not } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-root',

@@ -1,12 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 // OL
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
-import OlTileLayer from 'ol/layer/Tile';
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
 import TileWMS from 'ol/source/TileWMS';
@@ -16,28 +14,24 @@ import lVector from 'ol/layer/Vector';
 
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
-import sVector from 'ol/source/Vector';
-import Point from 'ol/geom/Point';
-// import { Tile as TileLayer, Vector as VectorLayer, } from 'ol/layer';
-import TileJSON from 'ol/source/TileJSON';
+import { Tile as OlTileLayer, Vector as VectorLayer, } from 'ol/layer';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
 import Overlay from 'ol/Overlay';
-import { toStringHDMS } from 'ol/coordinate.js';
-import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import { defaults, control, ZoomSlider, OverviewMap, Zoom, ScaleLine, extend } from 'ol/control';
 import { Select } from 'ol/interaction';
 import { events } from 'ol/events';
 import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
-import { map } from 'rxjs/operators';
-import { layer, Tile } from 'openlayers';
 
 import * as moment from 'moment';
 import WMSGetFeatureInfo from 'ol/format/WMSGetFeatureInfo';
 import View from 'ol/View';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+
+import * as jsonPath from 'jsonpath/jsonpath';
+import { TimeSeriesService } from '../../services/timeseries.service';
 
 @Component({
   selector: 'app-map',
@@ -64,8 +58,21 @@ export class MapComponent implements OnInit {
   loadingTooltip: boolean;
   prueba: string;
 
+  precipitacionFechaInicio: any;
+  precipitacionFechaFin: any;
+
+
+  // este arreglo esta en el geoserver
+  rasters = ['PT_LAST_01H', 'PT_LAST_02H', 'PT_LAST_03H', 'PT_LAST_06H', 'PT_LAST_12H', 'PT_LAST_24H', 'PT_LAST_03D',
+   'PT_LAST_14D',
+   'PT_LAST_30D',
+   'PT_LAST_60D'
+  ];
+  precipitation = {};
+
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService,
+              private timeseries: TimeSeriesService,
               private http: HttpClient) { }
 
     ngOnInit() {
@@ -93,29 +100,35 @@ export class MapComponent implements OnInit {
         autoPan: true
       });
       this.map.addOverlay(overlay);
+      const hooverContainer = document.getElementById('popup-hoover');
+      const hoover = new Overlay({
+        element: hooverContainer,
+        autoPan: false,
+        autoPanAnimation: {
+          duration: 250
+        }
+      });
+      this.map.addOverlay(hoover);
 
       // SUSCRIPCIONES
-      // 1. Gestión de capas
-      // tslint:disable-next-line: no-shadowed-variable
+      // 1. Gestión de capas Módulo 1
       this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
         this.removeTooltip();
         if (layer.show) {
-          if (type && type === this.geoservice.BASE || type === this.geoservice.TEMS) {
-            this.addLayerTileWMS(layer.name, layer.edit, layer.show, overlay);
+          if (type) {
+            this.addLayerTileWMS(layer.name, type, layer.edit, overlay);
             this.prepareWMSData(layer.name);
-          } else if (type && type === this.geoservice.DWHS) {
-            this.addLayerWFS(type, layer.name, layer.edit);
           } else {
             alert('Something went Wrong!!');
           }
         } else {
+          console.log('ELIMINAR' , layer.name)
           this.removeLayer(layer.name);
         }
       });
 
-      // 2. Mostrar capa estaciones en módulos 2 y 3
-// tslint:disable-next-line: no-shadowed-variable
+      // 2. Mostrar capa estaciones módulo 2
       this.interaction.stationsInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
@@ -128,6 +141,34 @@ export class MapComponent implements OnInit {
         select = selectPointerMove;
         this.map.addInteraction(select);
         this.addPopupStations();
+      });
+
+      // 3. Mostrar capa estaciones módulo 3
+      this.interaction.precipitationInteraction.subscribe((layer: any) => {
+        console.log('AGREGANDO CAPA ESTACIONES', layer)
+        const type = this.getLayerTypeFromHref(layer);
+        this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
+      });
+
+      // 3. Mostrar raster
+      this.interaction.rastersInteraction.subscribe((rasterSeleccionado: any) => {
+        // Preparando consulta al servicio
+        const rasterArray = rasterSeleccionado.name.split('_');
+        const deltaDate = rasterArray[2];
+        const deltaDateTime = deltaDate.substring( deltaDate.length - 1, deltaDate.length).toLowerCase();
+        const deltaDatePeriod = deltaDate.substring( 0, deltaDate.length - 1);
+
+        const now = moment().format('YYYY-MM-DD hh:mm');
+        const fechaInicio = moment().subtract(deltaDatePeriod, deltaDateTime).format('YYYY-MM-DD hh:mm');
+        this.precipitacionFechaInicio = fechaInicio;
+        this.precipitacionFechaFin = now;
+
+        // Agregando raster
+        const type = this.getLayerTypeFromHref(rasterSeleccionado);
+        if (type && type === this.geoservice.RASTERS) {
+          this.addLayerTileWMS(rasterSeleccionado.name, type, false, false);
+        }
+
       });
 
       // 3. Cambio a view del mapa base
@@ -143,54 +184,119 @@ export class MapComponent implements OnInit {
         target: document.getElementById('control-scale')
       }));
 
+      // MODULO 3 ngonInit
+      let feature_onHover = Feature;
+      this.map.on('pointermove', (evt) => {
+        feature_onHover = this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+          return feature;
+        });
+        // console.log('Feature on hover', feature_onHover);
+        if (feature_onHover) {
+          hoover.setPosition(evt.coordinate);
+          if (feature_onHover.get('nombre')) {
+            hooverContainer.innerHTML = feature_onHover.getProperties().nombre;
+            hooverContainer.style.display = 'block';
+          } else if (feature_onHover.get('nombre_estacion')) {
+            hooverContainer.innerHTML = feature_onHover.get('nombre_estacion');
+            if ( jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0]) {
+              hooverContainer.innerHTML += '<p>Precipitación: ' +
+              jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].precipitacion
+                .toFixed(3) +
+              '</p><p>Datos Analizados: ' +
+              jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].cuenta +
+              '</p>' +
+              jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].color_rgb;
+              hooverContainer.style.display = 'inline-block';
+          }
+        }
+        } else {
+          hooverContainer.style.display = 'none';
+        }
+      });
+      this.map.render();
 
     }
 
+    // MODULO 3 functions
+    getAggregatedData(fechaInicio, fechaFin, type: any, name: any) {
+      console.log('getAggregatedData 1. fechaInicio - fechaFin', fechaInicio + ' ' + fechaFin);
+      this.timeseries.aggregatedPrecipitation(fechaInicio, fechaFin)
+      .subscribe((data: any) => {
+          console.log('getAggregatedData 2. respuesta servicio', data);
+          this.precipitation = { data };
+          console.log('getAggregatedData 3. this.precipitation', this.precipitation);
+          this.addPrecipitationWFS(type, name);
+        },
+          (error) => console.log(error)
+        );
+    }
 
+    addPrecipitationWFS(type: string, name: string) {
+      const vectorSource = this.requestLayerWFS(type, name);
+      const vector = this.stylePrecipitationsLayer(vectorSource, name);
+    }
 
-    addLayerWMS(name: string, edit: boolean) {
-      this.progressBar(name, true, edit);
-      let newLayer: any;
-      if (this.layers[name] && this.layers[name] !== undefined) {
-        newLayer = this.layers[name].layer;
-        this.progressBar(name, false, edit);
+    stylePrecipitationsLayer(vectorSource: any, name: any) {
+      const setStyle = (feature: any) => {
+        if (jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]')[0]) {
+        try {
+          const color_rgb = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' +
+          feature.get('id_estacion') + '" )]')[0].color_rgb;
+          const colorarray = color_rgb.split(',');
+          const colorR = colorarray[0];
+          const colorG = colorarray[1];
+          const colorB = colorarray[2];
+
+          const styles = {
+            Default: new Style({
+              image: new Circle({
+                radius: 5,
+                fill: new Fill({ color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)' }),
+                stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
+              })
+            })
+          };
+          return styles.Default;
+        } catch (error) {
+          console.log(error);
+        }
       } else {
-        const imageSource = new ImageWMS({
-          url: 'http://10.154.80.177:8080/geoserver/base/wms',
-          serverType: 'geoserver',
-          params: {
-            VERSION: '1..1.0',
-            WIDTH: 500,
-            HEIGHT: 500,
-            BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
-            SRS: 'EPSG:4686',
-            LAYERS: `base:${name}`,
-            TRANSPARENT: true
-          },
-          ration: 1
-        });
-        imageSource.on('imageloadend', () => {
-          this.progressBar(name, false, edit);
-        });
-        newLayer = new ImageLayer({
-          source: imageSource
-        });
-      }
-      newLayer.setOpacity(0.5);
-      this.saveLayer(name, newLayer);
-      // console.log('------ Opacidad: ', newLayer.getOpacity());
-    }
+          const style = {
+          Default: new Style({
+            image: new Circle({
+              radius: 5,
+              stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
+            })
+          })
+        };
+          return style.Default;
 
-    addLayerTileWMS(name: string, edit: boolean, show: boolean, overlay: any) {
+      }
+      };
+      const vector = new VectorLayer({
+        source: vectorSource,
+        renderMode: 'vector',
+        style: setStyle
+      });
+      this.saveLayer(name, vector);
+      return vector;
+    }
+    // FIN MODULO 3
+
+    addLayerTileWMS(name: string, type: any, edit: boolean, overlay ?: any) {
       this.tooltipvalue = [];
+      if (edit) {
       this.progressBar(name, true, edit);
+      }
       let newLayer: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
         newLayer = this.layers[name].layer;
+        if (edit) {
         this.progressBar(name, false, edit);
+        }
       } else {
         const imageSource = new TileWMS({
-          url: 'http://10.154.80.177:8080/geoserver/base/wms',
+          url: `http://10.154.80.177:8080/geoserver/${type}/wms`,
           serverType: 'geoserver',
           params: {
             VERSION: '1..1.0',
@@ -198,11 +304,16 @@ export class MapComponent implements OnInit {
             HEIGHT: 500,
             BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
             SRS: 'EPSG:4686',
-            LAYERS: `base:${name}`,
-            TRANSPARENT: true
+            LAYERS: `${type}:${name}`,
+            // TRANSPARENT: true
           },
           ration: 1
         });
+        if (edit) {
+          imageSource.on('imageloadend', () => {
+            this.progressBar(name, false, edit);
+          });
+        }
         newLayer = new OlTileLayer({
           visible: true,
           source: imageSource
@@ -250,35 +361,21 @@ export class MapComponent implements OnInit {
       let vector: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
         newLayer = this.layers[name].layer;
-        // this.saveLayer(name, newLayer);
         vector = '';
       } else {
-        vector = this.requestLayer(type, name, false);
-      }
-      return vector;
-    }
-
-    addLayerWFS(type: string, name: string, edit: boolean) {
-      let newLayer: any;
-      let vector: any;
-      if (this.layers[name] && this.layers[name] !== undefined) {
-        newLayer = this.layers[name].layer;
-        this.saveLayer(name, newLayer);
-        vector = 'Ñó';
-      } else {
-        this.progressBar(name, true, edit);
-        vector = this.requestLayer(type, name, edit);
+        vector = this.requestLayerWFS(type, name);
       }
       return vector;
     }
 
     addStationsWFS(type: string, name: string, styleIn: any) {
-      let vector: any;
-      vector = this.requestStationsLayer(type, name, styleIn);
+      const vectorSource = this.requestLayerWFS(type, name);
+      const vector = this.styleStationsLayer(vectorSource, name, styleIn);
       return vector;
     }
 
-    requestLayer(type: string, name: string, exists: boolean) {
+    requestLayerWFS(type: string, name: string) {
+      console.log(name, type)
 
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
@@ -293,22 +390,11 @@ export class MapComponent implements OnInit {
           const onError = () => {
             vectorSource.removeLoadedExtent(extent);
             alert(`Error while requesting (${name} - ${type})`);
-            if (exists) {
-              document.getElementById(`${name}-progress`).classList.add('bg-danger');
-              document.getElementById(`${name}-progress`).style.display = 'block';
-              setTimeout(() => {
-                document.getElementById(`${name}-progress`).style.display = 'none';
-                // tslint:disable-next-line: no-string-literal
-                document.getElementById(`${name}`)['checked'] = false;
-              }, 1000);
-            }
           };
           xhr.onerror = onError;
           xhr.onload = () => {
+
             if (xhr.status === 200) {
-              if (exists) {
-              document.getElementById(`${name}-progress`).style.display = 'none';
-              }
               vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
             } else {
               onError();
@@ -318,61 +404,10 @@ export class MapComponent implements OnInit {
         },
         strategy: bboxStrategy
       });
-
-      const vector = new lVector({
-        source: vectorSource,
-        style: new Style({
-          image: new Circle({
-            radius: 5,
-            fill: new Fill({
-              color: 'rgba(0, 191, 255, 1.0)'
-            }),
-            stroke: new Stroke({
-              color: 'rgba(0, 0, 255, 1.0)',
-              width: 1
-            })
-          }),
-          fill: new Fill({
-            color: 'rgba(120, 191, 255, 0.6)'
-          }),
-          stroke: new Stroke({
-            color: 'rgba(0, 0, 255, 0.8)',
-            width: 2
-          })
-        })
-      });
-      this.saveLayer(name, vector);
-      return vector;
-
+      return vectorSource;
     }
 
-    requestStationsLayer(type: string, name: string, styleIn: any) {
-
-      const vectorSource = new VectorSource({
-        format: new GeoJSON(),
-        loader(extent, resolution, projection) {
-          const proj = projection.getCode();
-          const url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/${type === 'tem' ? 'wfs' : 'ows'}?service=WFS&
-          version=1.1.0&request=GetFeature&typename=${type}:${name}& +
-          outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
-          bbox=${extent.join(',')},${proj}`;
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', url);
-          const onError = () => {
-            vectorSource.removeLoadedExtent(extent);
-          };
-          xhr.onerror = onError;
-          xhr.onload = () => {
-            if (xhr.status === 200) {
-              vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
-            } else {
-              onError();
-            }
-          };
-          xhr.send();
-        },
-        strategy: bboxStrategy
-      });
+    styleStationsLayer(vectorSource: any, name: any, styleIn: any) {
 
       const setStyle = (feature) => {
         if (feature.get('nombre_entidad') === 'EMGESA' ) {
@@ -392,13 +427,10 @@ export class MapComponent implements OnInit {
 
       const vector = new lVector({
         source: vectorSource,
-        // style: styleIn
         style: setStyle
       });
       this.saveLayer(name, vector);
-
       return vector;
-
     }
 
     progressBar(name: string, status: boolean, exists: boolean): void {
@@ -409,17 +441,23 @@ export class MapComponent implements OnInit {
 
 // tslint:disable-next-line: no-shadowed-variable
     saveLayer(name: string, layer: any) {
+      console.log('Guardo capa por key nombre', name)
       this.layers[name] = {
         layer,
         show: true
       };
+      console.log(this.layers)
       this.map.addLayer(layer);
     }
 
     removeLayer(name: string) {
+      console.log('quitar estaciones 2, this.layers', this.layers)
+      console.log('quitar estaciones 3', name, this.layers[name])
       if (this.layers[name]) {
+        console.log('quitar estaciones 4, entró al if')
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);
+        console.log('quitar estaciones 5', this.layers[name].layer)
       }
     }
 
@@ -432,6 +470,8 @@ export class MapComponent implements OnInit {
         return this.geoservice.TEMS;
       } else if (uri.search(this.geoservice.DWHS) > 0) {
         return this.geoservice.DWHS;
+      } else if (uri.search(this.geoservice.RASTERS) > 0) {
+        return this.geoservice.RASTERS;
       } else {
         return null;
       }
@@ -475,7 +515,13 @@ export class MapComponent implements OnInit {
           } else {
             console.log('No es la capa de estaciones');
           }
-        });
+        }
+        // , {
+        //   layerFiltter: (layer) => {
+        //     return layer.get('layer_name') === 'vector2';
+        //   }
+        // }
+        );
         if (info.length > 0) {
           this.map.addOverlay(overlay);
           if (!this.popup.classList.contains('show')) {
