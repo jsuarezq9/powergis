@@ -72,4 +72,19 @@ export class DatawarehouseService {
       return info;
     }));
   }
+  getAggregatedPrecipitation(fechaIncio, fechaFin) {
+    const urlBase = `${this.host}/${this.context}/rpc/get_precipitacion_estaciones_color?`;
+    let headers = new HttpHeaders();
+    headers = headers.append('Authorization', `Bearer ${this.token}`);
+    headers = headers.append('content-type', this.contentType);
+    const body = { fecha_inicio :  fechaIncio,
+            fecha_fin : fechaFin};
+    return  this.http.post(urlBase, JSON.stringify(body) , {headers})
+    .pipe(
+      map((res: Response ) => {
+      const data = res;
+      return data;
+    })
+    );
+  }
 }

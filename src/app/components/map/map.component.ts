@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-
 // OL
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
@@ -13,31 +11,15 @@ import TileWMS from 'ol/source/TileWMS';
 import OlView from 'ol/View';
 import { fromLonLat } from 'ol/proj';
 import lVector from 'ol/layer/Vector';
-
-import OSM from 'ol/source/OSM';
-import Feature from 'ol/Feature';
-import sVector from 'ol/source/Vector';
-import Point from 'ol/geom/Point';
-// import { Tile as TileLayer, Vector as VectorLayer, } from 'ol/layer';
-import TileJSON from 'ol/source/TileJSON';
 import VectorSource from 'ol/source/Vector';
-import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
+import {Style, Stroke, Circle, Fill } from 'ol/style';
 import Overlay from 'ol/Overlay';
-import { toStringHDMS } from 'ol/coordinate.js';
-import { toLonLat } from 'ol/proj.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
-import { defaults, control, ZoomSlider, OverviewMap, Zoom, ScaleLine, extend } from 'ol/control';
+import { Zoom, ScaleLine} from 'ol/control';
 import { Select } from 'ol/interaction';
-import { events } from 'ol/events';
-import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
-import { map } from 'rxjs/operators';
-import { layer, Tile } from 'openlayers';
-
-import * as moment from 'moment';
-import WMSGetFeatureInfo from 'ol/format/WMSGetFeatureInfo';
-import View from 'ol/View';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {pointerMove} from 'ol/events/condition';
+import { HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-map',
@@ -193,7 +175,7 @@ export class MapComponent implements OnInit {
           url: 'http://10.154.80.177:8080/geoserver/base/wms',
           serverType: 'geoserver',
           params: {
-            VERSION: '1..1.0',
+            VERSION: '1.1.0',
             WIDTH: 500,
             HEIGHT: 500,
             BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
