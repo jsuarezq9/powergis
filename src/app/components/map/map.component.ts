@@ -319,7 +319,11 @@ export class MapComponent implements OnInit {
       }
       newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
-      this.eventTooltip(newLayer, overlay);
+      if (overlay) {
+        this.eventTooltip(newLayer, overlay);
+      } else {
+        console.log('No debe haber popup');
+      }
     }
 
     eventTooltip(newLayer: any, overlay: any) {

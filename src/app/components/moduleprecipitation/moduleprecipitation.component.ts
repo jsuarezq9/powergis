@@ -104,7 +104,6 @@ export class ModuleprecipitationComponent implements OnInit {
     console.log('rasterSeleccionado', rasterSeleccionado);
     this.removeAllRasters();
     this.addRaster(rasterSeleccionado);
-    this.changeEstaciones();
   }
 
   removeAllRasters() {

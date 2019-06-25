@@ -1,7 +1,7 @@
 <div class="col-12 modules-outer-precipitation shadow" style="padding-left: 5px">
     <div class="animated fadeIn moduleFloat dropToolMenu border border-white" style="min-height: 100%; max-height: 100%">
         <!-- Búsqueda y añadir capas -->
-        <div class="container mt-3" style="width: 95%;">
+        <div class="container mt-3 border" style="width: 95%;">
             <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
                 <div class="col-10">
                     <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
@@ -29,7 +29,7 @@
                     <input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value">
                     <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
                     <p>
-                        <button *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones()'>{{item.name}}</button>
+                        <button *ngFor="let item of rasters" (click)='changeRaster(item);changeEstaciones()'>{{item.name}}</button>
                     </p>
                 </div>
             </div>
