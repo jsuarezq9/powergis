@@ -23,6 +23,7 @@ export class ModuleprecipitationComponent implements OnInit {
   zoomGuavio = 10;
   rasters = [];
   layerEstaciones: any;
+  layerVMEstaciones: any;
 
   constructor(private interaction: ComponentsInteractionService,
               private geoservice: GeoserverService ) {
@@ -33,6 +34,11 @@ export class ModuleprecipitationComponent implements OnInit {
     this.layerEstaciones = {
       href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
       name: 'vm_estaciones_vsg',
+      edit: false,
+    };
+    this.layerVMEstaciones = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
+      name: 'vm_ultimo_dato_estacion',
       edit: false,
     };
   }
@@ -112,8 +118,8 @@ export class ModuleprecipitationComponent implements OnInit {
   }
 
   changeEstaciones() {
-    this.interaction.setLayer(this.layerEstaciones, false, false);
-    this.interaction.setPrecipitationLayer(this.layerEstaciones);
+    this.interaction.setLayer(this.layerVMEstaciones, false, false);
+    this.interaction.setPrecipitationLayer(this.layerVMEstaciones);
   }
 
   // getAggregatedData(initialDate: any, finalDate: any) {

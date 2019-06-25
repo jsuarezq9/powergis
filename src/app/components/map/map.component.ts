@@ -209,7 +209,6 @@ export class MapComponent implements OnInit {
         }
       });
       this.map.render();
-      
     }
 
     getAggregatedData(fechaInicio, fechaFin, type: any, name: any) {
@@ -270,12 +269,12 @@ export class MapComponent implements OnInit {
         style: setStyle
       });
       this.saveLayer(name, vector);
-      const selectPointerMove = new Select({
+      const selectPointerMove2 = new Select({
         condition: pointerMove,
         style: setStyle,
         layer: vector
       });
-      this.map.addInteraction(selectPointerMove);
+      this.map.addInteraction(selectPointerMove2);
       return vector;
     }
     // FIN MODULO 3
