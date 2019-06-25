@@ -121,7 +121,14 @@ export class ModuleprecipitationComponent implements OnInit {
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones);
   }
 
-  // getAggregatedData(initialDate: any, finalDate: any) {
-  //   console.log('getAggregatedData', initialDate, initialDate.typeOf(), finalDate);
-  // }
+  setStyle(event: any) {
+    // Reinicio flechas
+    document.getElementById('buttonPreestablecido-arrow').classList.remove('rotate-180');
+    document.getElementById('buttonPersonalizado-arrow').classList.remove('rotate-180');
+    const button = document.getElementById(`${event.target.offsetParent.id}`);
+    console.log(event.target.offsetParent.id, `${event.target.offsetParent.id}-arrow`);
+    // button.classList.add('active');
+    const arrow = document.getElementById(`${event.target.offsetParent.id}-arrow`);
+    arrow.classList.add('rotate-180');
+  }
 }
