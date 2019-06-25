@@ -9,7 +9,6 @@ import { GeoserverService } from '../../services/geoserver.service';
 })
 export class ModuleprecipitationComponent implements OnInit {
 
-
   coordinatesColombia = [-74, 4];
   coordinatesEmgesa = [-76, 3.5];
   coordinatesQuimbo = [-76, 3.5];

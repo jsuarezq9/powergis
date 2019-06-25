@@ -9,7 +9,7 @@
                 <hr>
                 <button class="col btn btn-lg ripple roundedInputSearch" type="button" aria-pressed="mixed">
                   <i class="ripple fas fa-search"></i>
-              </button>
+                </button>
             </div>
             <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
                 <div class="col-1 btn-lg text-left">
@@ -20,26 +20,28 @@
                 </div>
                 <button class="col btn btn-lg btn-block ripple roundedInputSearch" aria-pressed="true">
                   <i class="ripple fas fa-plus-circle"></i>
-              </button>
+                </button>
+            </div>
+            <!-- Agregar rasters -->
+            <div>
+                <div class="col offset-5">
+                    <input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value">
+                    <input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value">
+                    <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
+                    <p>
+                        <button *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones()'>{{item.name}}</button>
+                    </p>
+                </div>
             </div>
         </div>
-        <!-- Agregar rasters -->
-        <div>
-            <div class="col offset-5">
-                <input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value">
-                <input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value">
-                <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
-                <p>
-                    <button *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones()'>{{item.name}}</button>
-                </p>
-            </div>
-        </div>
+
+
     </div>
 </div>
 <div class="control-zoom btn-group dropleft">
     <button class="control-zoom align-content-center dropdown-toggle" title="Seleccionar zona" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="far fa-compass control-zoom-icon"></i>
-    </button>
+    <i class="far fa-compass control-zoom-icon"></i>
+  </button>
     <div class="dropdown-menu mr-3 overflow-auto" style="max-height: 150px; margin-top: -50px">
         <h6 class="dropdown-header">Zona:</h6>
         <div class="dropdown-divider"></div>

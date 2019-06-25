@@ -3,7 +3,6 @@ import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
 
 import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-sidebar',
@@ -27,6 +26,7 @@ export class SidebarComponent implements OnInit {
   expandSidebar = false;
   rotation: string;
   layerEstaciones: any;
+  layerVMEstaciones: any;
   layerRaster: any;
 
   // Estilos
@@ -73,6 +73,11 @@ export class SidebarComponent implements OnInit {
     this.layerEstaciones = {
       href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
       name: 'vm_estaciones_vsg',
+      edit: false,
+    };
+    this.layerVMEstaciones = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_ultimo_dato_estacion.json',
+      name: 'vm_ultimo_dato_estacion',
       edit: false,
     };
     this.layerRaster = {
@@ -135,8 +140,7 @@ export class SidebarComponent implements OnInit {
   addEstacionesPrecipitation() {
     this.removeEstaciones();
     this.addRaster(this.layerRaster);
-    this.interaction.setPrecipitationLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
-    // arreglar ESTACIONES: consulta al servicio)
+    this.interaction.setPrecipitationLayer(this.layerVMEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }
 
   removeEstaciones() {

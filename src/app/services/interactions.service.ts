@@ -20,7 +20,6 @@ export class ComponentsInteractionService {
   setLayer(layer: any, show: boolean, edit: boolean): void {
     layer.show = show;
     layer.edit = edit;
-    console.log(layer)
     this.mapInteraction.next(layer);
   }
 

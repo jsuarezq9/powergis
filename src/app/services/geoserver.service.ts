@@ -12,6 +12,7 @@ export class GeoserverService {
   RASTERS = 'raster';
   WMS = 'wms';
   WFS = 'wfs';
+  RASTER = 'raster';
   APPJSON = 'application/json';
   host = 'http://10.154.80.177';
   port = 8080;
