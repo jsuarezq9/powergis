@@ -32,13 +32,13 @@ export class SidebarComponent implements OnInit {
   // Estilos
   stylesHidro = {
     hidroEmgesaActiva:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.20, anchor: [0.5, 1] })}),
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.15, anchor: [0.5, 1] })}),
     hidroEmgesaInactiva:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaInactiva.png',   scale: 0.20, anchor: [0.5, 1] })}),
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaInactiva.png',   scale: 0.15, anchor: [0.5, 1] })}),
     hidroActiva:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.45, anchor: [0.5, 1] })}),
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.35, anchor: [0.5, 1] })}),
     hidroInactiva:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosInactiva.png',   scale: 0.45, anchor: [0.5, 1] })}),
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosInactiva.png',   scale: 0.35, anchor: [0.5, 1] })}),
     Default : new Style({image: new Circle({
       radius: 30,
       fill: new Fill({color: 'rgba(120, 191, 255, 0.6)'}),
@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
 
   selectedStylesHidro = {
     hidroSelected:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoSeleccionado.png', scale: 0.45, anchor: [0.5, 1] })}),
+      image: new Icon({ src: './assets/icons/estaciones/IconoSeleccionado.png', scale: 0.40, anchor: [0.5, 1] })}),
     Default : new Style({image: new Circle({
       radius: 20,
       fill: new Fill({color: 'rgba(120, 191, 255, 0.6)'}),
