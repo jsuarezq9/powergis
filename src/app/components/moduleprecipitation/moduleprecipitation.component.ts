@@ -24,6 +24,7 @@ export class ModuleprecipitationComponent implements OnInit {
   rasters = [];
   layerEstaciones: any;
   layerVMEstaciones: any;
+  isQuery = false;
 
   constructor(private interaction: ComponentsInteractionService,
               private geoservice: GeoserverService ) {
@@ -87,6 +88,7 @@ export class ModuleprecipitationComponent implements OnInit {
     const source = this.geoservice.RASTERS;
     this.geoservice.getLayers(source).subscribe(async (rasters: any) => {
       this.concatLayers(rasters);
+      this.getRastersNames();
     }, (error) => {
       this.handleError(source, error);
     });
@@ -100,10 +102,40 @@ export class ModuleprecipitationComponent implements OnInit {
     this.rasters = this.rasters.length === 0 && layer !== undefined ? layer : this.rasters.concat(layer);
   }
 
+  getRastersNames(): void {
+    this.rasters.forEach(element => {
+      const rasterArray = element.name.split('_');
+      let nameButton = '';
+      const deltaDate = rasterArray[2];
+      const deltaDateTime = deltaDate.substring( deltaDate.length - 1, deltaDate.length).toLowerCase();
+      const deltaDatePeriod = Number(deltaDate.substring( 0, deltaDate.length - 1));
+      if (deltaDateTime === 'h') {
+        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== 1) {
+          nameButton = nameButton + `Últimas ${deltaDatePeriod} horas`;
+        } else {
+          nameButton = nameButton + 'Última hora';
+        }
+      } else if (deltaDateTime === 'd') {
+        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== 1) {
+          nameButton = nameButton + `Últimos ${deltaDatePeriod} días`;
+        } else {
+          nameButton = nameButton + 'Último día';
+        }
+      }
+      element.title = nameButton;
+    });
+  }
+
   changeRaster(rasterSeleccionado: any) {
-    console.log('rasterSeleccionado', rasterSeleccionado);
+    console.log('rasterSeleccionado', rasterSeleccionado.name);
     this.removeAllRasters();
     this.addRaster(rasterSeleccionado);
+
+    // Cambiar estilo de selección
+    this.rasters.forEach(element => {
+      document.getElementById(element.name).classList.remove('active');
+    });
+    document.getElementById(rasterSeleccionado.name).classList.add('active');
   }
 
   removeAllRasters() {
@@ -116,19 +148,36 @@ export class ModuleprecipitationComponent implements OnInit {
     this.interaction.setRaster(raster);
   }
 
-  changeEstaciones() {
+  changeEstaciones(iniDate?: any, finDate?: any) {
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
-    this.interaction.setPrecipitationLayer(this.layerVMEstaciones);
+    this.interaction.setPrecipitationLayer(this.layerVMEstaciones, this.isQuery, iniDate, finDate);
+  }
+
+  getDateQuery(inicio: any, final: any) {
+    // Warning
+    if (!inicio || !final) {
+      document.getElementById(`warningText`).style.display = 'block';
+    } else {
+      document.getElementById(`warningText`).style.display = 'none';
+      // Cambio de estaciones con booleano en true
+      this.isQuery = true;
+      this.changeEstaciones(inicio, final);
+      console.log('query ', this.isQuery, inicio, final);
+      this.isQuery = false;
+    }
   }
 
   setStyle(event: any) {
-    // Reinicio flechas
-    document.getElementById('buttonPreestablecido-arrow').classList.remove('rotate-180');
-    document.getElementById('buttonPersonalizado-arrow').classList.remove('rotate-180');
-    const button = document.getElementById(`${event.target.offsetParent.id}`);
-    console.log(event.target.offsetParent.id, `${event.target.offsetParent.id}-arrow`);
-    // button.classList.add('active');
-    const arrow = document.getElementById(`${event.target.offsetParent.id}-arrow`);
-    arrow.classList.add('rotate-180');
+    // Reiniciar estilos
+    document.getElementById(`buttonPreestablecido`).classList.remove('active');
+    document.getElementById(`buttonPersonalizado`).classList.remove('active');
+
+    // Asignar estilos a botón seleccionado
+    const button = document.getElementById(`${event.target.id}`);
+    button.classList.add('active');
+  }
+
+  keepDropdown(event: any) {
+    event.stopPropagation();
   }
 }

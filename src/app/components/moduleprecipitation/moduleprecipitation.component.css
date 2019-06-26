@@ -48,10 +48,10 @@
 .control-zoom {
     height: 28px;
     width: 26px;
-    bottom: 17%;
+    bottom: 15.2%;
     position: fixed;
     left: auto;
-    right: 1.8%;
+    right: .5em;
     /* background-color: rgba(255, 69, 0, 0.2); */
     /* border: 5px solid red; */
     border: none;
@@ -87,7 +87,25 @@
 }
 
 .active {
-    color: white!important;
+    color: #3C93F8!important;
+    background-color: rgba(196, 196, 196, 0.3)!important;
+}
+
+.buttonLeft {
+    border-radius: 20px 0px 0px 20px;
+}
+
+.buttonRight {
+    border-radius: 0px 20px 20px 0px;
+}
+
+.inputDate {
+    width: 90%;
+    border-color: grey!important;
+    /* border-color: rgba(196, 196, 196, 0.8)!important; */
+    border-radius: 20px 20px 20px 20px;
+    /* -webkit-appearance:none!important; */
+    padding-inline-start: 8px!important;
 }
 
 .dropleft .dropdown-toggle::before {

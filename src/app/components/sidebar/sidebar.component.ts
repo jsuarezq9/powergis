@@ -140,7 +140,7 @@ export class SidebarComponent implements OnInit {
   addEstacionesPrecipitation() {
     this.removeEstaciones();
     this.addRaster(this.layerRaster);
-    this.interaction.setPrecipitationLayer(this.layerVMEstaciones);
+    this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
   }
 
   removeEstaciones() {

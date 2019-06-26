@@ -37,9 +37,11 @@ export class ComponentsInteractionService {
     this.stationsInteraction.next(layer);
   }
 
-  setPrecipitationLayer(layer: any, styleIn?: any, selectedStyleIn?: any): void {
-    layer.style = styleIn;
-    layer.selectedstyle = selectedStyleIn;
+  setPrecipitationLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): void {
+    layer.query = query;
+    console.log('bool en interaction ', query);
+    layer.iniDate = iniDate;
+    layer.finDate = finDate;
     this.precipitationInteraction.next(layer);
   }
 

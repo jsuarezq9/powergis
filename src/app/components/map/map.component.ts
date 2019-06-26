@@ -128,7 +128,14 @@ export class MapComponent implements OnInit {
       this.interaction.precipitationInteraction.subscribe((layer: any) => {
         console.log('AGREGANDO CAPA ESTACIONES', layer);
         const type = this.getLayerTypeFromHref(layer);
-        this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
+        // this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
+        if (layer.iniDate && layer.finDate) {
+          console.log('Hubo query')
+          this.getAggregatedData(layer.iniDate, layer.finDate, type, layer.name);
+        } else {
+          console.log('Normal')
+          this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
+        }
         this.addPopupPrecipitation();
       });
 
@@ -222,13 +229,19 @@ export class MapComponent implements OnInit {
     }
 
     addPrecipitationWFS(type: string, name: string) {
-      const CQLfilter = 'id_sensor=%270240%27';
+      const CQLfilter = 'CQL_FILTER=id_sensor=%270240%27&';
+      // const CQLfilter = '';
       const vectorSource = this.requestLayerWFS(type, name, CQLfilter);
       const vector = this.stylePrecipitationsLayer(vectorSource, name);
     }
 
     stylePrecipitationsLayer(vectorSource: any, name: any) {
+      let c = 0;
       const setStyle = (feature: any) => {
+        c += 1;
+        console.log((feature));
+        console.log((this.precipitation));
+        console.log(c, jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]'))
         if (jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]')[0]) {
           try {
             const color_rgb = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' +
@@ -547,10 +560,14 @@ export class MapComponent implements OnInit {
         format: new GeoJSON(),
         loader(extent, resolution, projection) {
           const proj = projection.getCode();
-          const url = `http://elaacgresf00.enelint.global:8080/geoserver/wfs?service=WFS&
-          version=1.1.0&request=GetFeature&typename=${type}:${name}& +
-          ${CQLfilter}outputFormat=application/json&outputFormat=application/json&srsname=${proj}&
-          bbox=${extent.join(',')},${proj}`;
+          let url: string;
+          if (CQLfilter) {
+            // tslint:disable-next-line: max-line-length
+            url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${type}:${name}&${CQLfilter}outputFormat=application/json&srsname=${proj}`;
+          } else {
+            // tslint:disable-next-line: max-line-length
+            url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${type}:${name}&outputFormat=application/json&srsname=${proj}&bbox=${extent.join(',')},${proj}`;
+          }
           const xhr = new XMLHttpRequest();
           xhr.open('GET', url);
           const onError = () => {

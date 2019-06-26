@@ -1,38 +1,62 @@
 <div class="col-12 modules-outer-precipitation shadow" style="padding-left: 5px">
     <div class="animated fadeIn moduleFloat dropToolMenu border border-white" style="min-height: 100%; max-height: 100%">
         <!-- Búsqueda y añadir capas -->
-        <div class="container mt-3 border" style="width: 95%;">
+        <div class="container mt-3 mb-3" style="width: 95%;">
             <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
                 <div class="col-1 btn-lg text-left">
                     <img src="./assets/icons/sidemenu/IconoIntervaloModulo3.png" alt="Intervalo de Tiempo" style="height: 30px">
                 </div>
-                <div class="col-9 btn-lg text-center" style="color: #5B5B61">
+                <div class="col-9 btn-lg text-center" style="color: #5B5B61;font-size: 1.5vw">
                     Intervalo de tiempo
 
                 </div>
             </div>
-            <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
-                <div class="col-6 btn-lg text-center border-right pointer" id="buttonPreestablecido" (click)="setStyle($event);">
-                    <small>Preestablecido</small> &nbsp; <img id="buttonPreestablecido-arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="5%">
+            <div class="row mt-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                <div class="dropdown w-50">
+                    <div class="col btn-lg buttonLeft text-center border-right pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPreestablecido" (click)="setStyle($event);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <small id="buttonPreestablecido">Preestablecido</small>
+                    </div>
+                    <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="dropdownMenuButton" style="width: 200%; max-height: 180px;" id="drop1">
+                        <a class="dropdown-item pointer" *ngFor="let item of rasters" (click)='changeRaster(item);changeEstaciones()' id="{{item.name}}">{{item.title}}</a>
+                    </div>
                 </div>
-                <div class="col-6 btn-lg text-center pointer" id="buttonPersonalizado" (click)="setStyle($event);">
-                    <small>Personalizado</small> &nbsp; <img id="buttonPersonalizado-arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="5%">
-                </div>
-            </div>
-            <!-- Agregar rasters -->
-            <div>
-                <div class="col offset-5">
-                    <input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value">
-                    <input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value">
-                    <button (click)='getAggregatedData( this.date_inicio,this.date_final)'>push</button>
-                    <p>
-                        <button *ngFor="let item of rasters" (click)='changeRaster(item);changeEstaciones()'>{{item.name}}</button>
-                    </p>
+                <div class="dropdown w-50">
+                    <div class="col btn-lg buttonRight text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPersonalizado" (click)="setStyle($event);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <small id="buttonPersonalizado">Personalizado</small>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-right mt-2 overflow-auto p-3" aria-labelledby="dropdownMenuButton" style="width: 200%; max-height: fit-content;" (click)="keepDropdown($event);" id="drop2">
+                        <!-- <hr> Fecha fin: <input type="date" name="fecha_inicio" id="fechaFin"> <br><br> -->
+                        <div class="col pl-3">
+                            <div class="col w-100"><small>Fecha inicial</small></div>
+                            <div class="row">
+                                <div class="col-10"><input type="datetime-local" [value]="date_inicio" (input)="date_inicio=$event.target.value" class="inputDate"></div>
+                                <div class="col-2"><img src="./assets/icons/sidemenu/IconCalendar.png" alt="" style="width: 23px"></div>
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col pl-3">
+                            <div class="col w-100"><small>Fecha final</small></div>
+                            <div class="row">
+                                <div class="col-10"><input type="datetime-local" [value]="date_final" (input)="date_final=$event.target.value" class="inputDate"></div>
+                                <div class="col-2"><img src="./assets/icons/sidemenu/IconCalendar.png" alt="" style="width: 23px"></div>
+                            </div>
+                        </div>
+                        <div class="w-100">
+                            <hr class="ml-2 mr-2">
+                        </div>
+                        <button class="btn btn-primary btn-block" (click)='getDateQuery(this.date_inicio,this.date_final)'>Consultar</button>
+                        <div id="warningText" style="display: none">
+                            <div class="w-100">
+                                <hr class="ml-2 mr-2">
+                            </div>
+                            <div class="alert alert-warning text-center" role="alert">
+                                Inserte fecha y hora en ambos campos
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 <div class="control-zoom btn-group dropleft">
