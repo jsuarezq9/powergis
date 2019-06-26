@@ -187,6 +187,8 @@ export class MapComponent implements OnInit {
         }
       });
       this.map.addOverlay(hoover);
+      hooverContainer.classList.remove('hide');
+      hooverContainer.classList.add('show');
 
       let featureOnHover = Feature;
       this.map.on('pointermove', (evt) => {

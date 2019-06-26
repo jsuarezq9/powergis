@@ -115,6 +115,10 @@
 
 /* Toggle this class - hide and show the popup */
 
+.hide {
+    visibility: hidden;
+}
+
 .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
