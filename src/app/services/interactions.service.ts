@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 export class ComponentsInteractionService {
 
   public mapInteraction: Subject<any> = new Subject();
+  public layerTitlesInteraction: Subject<any> = new Subject();
   public mapviewInteraction: Subject<any> = new Subject();
   public stationsInteraction: Subject<any> = new Subject();
   public precipitationInteraction: Subject<any> = new Subject();
@@ -15,12 +16,19 @@ export class ComponentsInteractionService {
   public tooltipInteraction: Subject<any> = new Subject();
   public timeSeriesInteraction: Subject<any> = new Subject();
 
+  public layerTitlesPlusGeometryInteraction: Subject<any> = new Subject();
+
   constructor() {}
 
   setLayer(layer: any, show: boolean, edit: boolean): void {
     layer.show = show;
     layer.edit = edit;
     this.mapInteraction.next(layer);
+  }
+
+  setLayerTitles(layer: any): void {
+    console.log('INTERACTION')
+    this.layerTitlesInteraction.next(layer);
   }
 
   setView(coordinates: any, zoom: any): void {
@@ -62,6 +70,11 @@ export class ComponentsInteractionService {
 
   setSensor(sensor: object): void {
     this.timeSeriesInteraction.next(sensor);
+  }
+
+  returnInfoLayers(info: any): void {
+    console.log('returnInfoLayers!!!')
+    this.layerTitlesPlusGeometryInteraction.next(info);
   }
 
 }

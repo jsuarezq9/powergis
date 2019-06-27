@@ -15,6 +15,7 @@ import { ModulehidroPopupComponent } from './components/modulehidro-popup/module
 import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeseries/modulehidro-timeseries.component';
 import { AppComponent } from './app.component';
 import { PlotlyViaWindowModule  } from 'angular-plotly.js';
+import { LegendComponent } from './components/legend/legend.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { PlotlyViaWindowModule  } from 'angular-plotly.js';
     LayerNamePipe,
     CapitalizePipe,
     ModulehidroPopupComponent,
-    ModulehidroTimeseriesComponent
+    ModulehidroTimeseriesComponent,
+    LegendComponent
   ],
   imports: [
     BrowserModule,

@@ -83,3 +83,33 @@
     margin: 0%;
     padding: 0%;
 }
+
+.legend-collapsed {
+    /* height: 20%; */
+    width: 10%;
+    position: fixed;
+    left: 9%;
+    bottom: 30px;
+    max-height: 60%;
+    background-color: white;
+    border-radius: 10px 0px 10px 10px;
+    margin: 0%;
+    padding: 0%;
+}
+
+.legend-expanded {
+    width: 30%!important;
+}
+
+.prueba {
+    /* height: 20%; */
+    width: 10%;
+    position: fixed;
+    left: 9%;
+    bottom: 90px;
+    max-height: 60%;
+    background-color: white;
+    border-radius: 10px 0px 10px 10px;
+    margin: 0%;
+    padding: 0%;
+}

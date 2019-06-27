@@ -42,5 +42,9 @@
         <div>
             <app-modulehidro-popup class="hidro-popup-expanded" style="display: none" id="moduleHidroPopup"></app-modulehidro-popup>
         </div>
+        <!-- Para la leyenda -->
+        <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container">
+            <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
+        </div>
     </div>
 </div>

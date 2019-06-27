@@ -57,7 +57,23 @@ export class GeoserverService {
     return this.http.get(`${this.host}:${this.port}${this.uriWorkSpace}/${source}/layers/${name}`, { headers })
     .pipe( map ((response: any) => {
       return response.layer.attribution.title ? response.layer : null;
-  }));
+    }));
+  }
+
+  getRasterLegend(name: string) {
+    const type = 'raster';
+    const  headers = new HttpHeaders();
+    let params = new HttpParams();
+    params = params.append('VERSION', '1.1.0');
+    params = params.append('SERVICE', 'WMS');
+    params = params.append('REQUEST', 'GetLegendGraphic');
+    params = params.append('FORMAT', 'image/png');
+    params = params.append('TRANSPARENT', 'false');
+    params = params.append('LAYER', `${type}:${name}`);
+    params = params.append('format_options', 'layout:precipitation');
+    return `${this.host}:${this.port}${this.uriInfo}/${type}/wms?
+      ?VERSION=1.1.0&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&
+      TRANSPARENT=false&LAYER=${type}:${name}&format_options=layout:precipitation`;
   }
 
   getLayers(source: string) {

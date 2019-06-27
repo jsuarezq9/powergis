@@ -56,14 +56,10 @@ export class SidebarComponent implements OnInit {
       width: 2})})})
   };
 
-  // stylesPrecipitation = {
-  //   hidroEmgesaActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesa.png',  scale: 0.25 })}),
-  //   hidroEmgesaInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaEmgesaInactiva.png',   scale: 0.25 })}),
-  //   hidroActiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaInactiva.png',   scale: 0.25 })}),
-  //   hidroInactiva:  new Style({ image: new Icon({ src: 'assets/IconoEstacionHidrologicaOtros.png',   scale: 0.25 })}),
-  //   Default : new Style({image: new Circle({radius: 4, fill: new Fill({color: 'rgba(120, 191, 255, 0.6)', }),
-  //    stroke: new Stroke({color: 'rgba(0, 0, 255, 0.8)', width: 2})})})
-  // };
+  legendHidro: any;
+  legendDiv: any;
+  legendExp: any;
+  legendColl: any;
 
 
   constructor(private geoserver: GeoserverService,
@@ -85,6 +81,8 @@ export class SidebarComponent implements OnInit {
       name: 'PT_LAST_60D',
       edit: false,
     };
+    this.legendDiv = document.getElementById('buttonCollapseLegendDiv');
+    this.legendHidro = document.getElementById('legendModuleHidro');
   }
 
   collapseAll(event: any) {
@@ -135,17 +133,41 @@ export class SidebarComponent implements OnInit {
   addEstacionesHidro() {
     this.removeEstaciones();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
+    console.log(this.legendHidro)
+    this.legendHidro.style.display = 'flex';
+
+    const legendDiv = document.getElementById('legend');
+    // legendDiv.classList.toggle('legend-expanded');
+    let isExpanded = false;
+    for (let index = 0; index < legendDiv.classList.length; index++) {
+      const element = legendDiv.classList[index];
+      if (element === 'legend-expanded') {
+        isExpanded = true;
+      }
+    }
+    console.log(isExpanded)
+    if (!isExpanded) {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+    }
+
   }
 
   addEstacionesPrecipitation() {
     this.removeEstaciones();
     this.addRaster(this.layerRaster);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+    this.legendHidro.style.display = 'none';
   }
 
   removeEstaciones() {
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
+    this.legendHidro.style.display = 'none';
   }
 
   addRaster(raster: any) {

@@ -8,6 +8,15 @@
     bottom: 0px;
 }
 
+.raster-legend {
+    position: fixed;
+    top: 5%;
+    right: 24px!important;
+    height: 250px;
+    width: 90px;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+}
+
 .control-zoom {
     bottom: 10.5%;
     position: fixed;

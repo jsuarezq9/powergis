@@ -14,9 +14,9 @@ import lVector from 'ol/layer/Vector';
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
 import { Tile as OlTileLayer, Vector as VectorLayer, } from 'ol/layer';
-import VectorSource from 'ol/source/Vector';
-import {Style, Stroke, Circle, Fill } from 'ol/style';
+import {Style, Stroke, Circle, Fill, Icon } from 'ol/style';
 import Overlay from 'ol/Overlay';
+import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import { Zoom, ScaleLine} from 'ol/control';
@@ -31,6 +31,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import * as jsonPath from 'jsonpath/jsonpath';
 import { DatawarehouseService } from '../../services/datawarehouse.service';
+import { forkJoin } from 'rxjs';
+import { count } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-map',
@@ -48,6 +51,7 @@ export class MapComponent implements OnInit {
 
   layers = {};
   layersInfo = {};
+  selectedLayersAttributes = {};
 
   popup: any;
   features = [];
@@ -61,6 +65,8 @@ export class MapComponent implements OnInit {
   precipitacionFechaFin: any;
 
   precipitation = {};
+
+  legend: any;
 
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService,
@@ -94,6 +100,62 @@ export class MapComponent implements OnInit {
       this.map.addOverlay(overlay);
 
       // SUSCRIPCIONES
+
+      // 0. Guardar las capas con los Títulos
+      this.interaction.layerTitlesInteraction.subscribe(( layers: any ) => {
+        console.log('Recibo en map *******************', layers)
+        // tslint:disable-next-line: prefer-for-of
+        for (let index = 0; index < layers.length; index++) {
+          const element = layers[index];
+          const type = this.getLayerTypeFromHref(element);
+          const count1 = 'count=1&';
+          const param = count1;
+          const name = element.name;
+          const layerFeatureVS = new VectorSource({
+            format: new GeoJSON(),
+            loader(extent, resolution, projection) {
+              const proj = projection.getCode();
+              let url: string;
+              if (param) {
+                // tslint:disable-next-line: max-line-length
+                url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=2.0.0&request=GetFeature&typename=${type}:${name}&${param}outputFormat=application/json&srsname=${proj}`;
+              } else {
+                // tslint:disable-next-line: max-line-length
+                url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${type}:${name}&outputFormat=application/json&srsname=${proj}&bbox=${extent.join(',')},${proj}`;
+              }
+              const xhr = new XMLHttpRequest();
+              xhr.open('GET', url);
+              const onError = () => {
+                layerFeatureVS.removeLoadedExtent(extent);
+                alert(`Error while requesting (${name} - ${type})`);
+              };
+              xhr.onerror = onError;
+              xhr.onload = () => {
+                if (xhr.status === 200) {
+                  layerFeatureVS.addFeatures(layerFeatureVS.getFormat().readFeatures(xhr.responseText));
+                } else {
+                  onError();
+                }
+              };
+              xhr.send();
+            },
+            strategy: bboxStrategy
+          });
+
+          element.geomFeature = {};
+          console.log(layerFeatureVS)
+          layerFeatureVS.on('change', (evt) => {
+            console.log('********* ON CHANGE', layerFeatureVS.getFeatures())
+            element.geomFeature = layerFeatureVS.getFeatures()[0];
+            console.log('********* ON CHANGE', element)
+          });
+
+          this.layersInfo[element.name] = element;
+        }
+        // Envío a modulebase
+        this.interaction.returnInfoLayers(this.layersInfo);
+      });
+
       // 1. Gestión de capas Módulo 1
       this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
@@ -101,6 +163,9 @@ export class MapComponent implements OnInit {
         if (layer.show) {
           if (type) {
             this.addLayerTileWMS(layer.name, type, layer.edit, overlay);
+            console.log(this.layers)
+            // Consulta tipo capa. Hacer caché. Enviar por interaction.
+            // this.getLegend(type, layer.name);
             this.prepareWMSData(layer.name);
           } else {
             alert('Something went Wrong!!');
@@ -130,17 +195,17 @@ export class MapComponent implements OnInit {
         const type = this.getLayerTypeFromHref(layer);
         // this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         if (layer.iniDate && layer.finDate) {
-          console.log('Hubo query')
+          console.log('Hubo query');
           this.getAggregatedData(layer.iniDate, layer.finDate, type, layer.name);
         } else {
-          console.log('Normal')
+          console.log('Normal');
           this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         }
         this.addPopupPrecipitation();
       });
 
       // 4. Mostrar raster
-      this.interaction.rastersInteraction.subscribe((rasterSeleccionado: any) => {
+      this.interaction.rastersInteraction.subscribe(async(rasterSeleccionado: any) => {
         // Preparando consulta al servicio
         const rasterArray = rasterSeleccionado.name.split('_');
         const deltaDate = rasterArray[2];
@@ -156,6 +221,7 @@ export class MapComponent implements OnInit {
         const type = this.getLayerTypeFromHref(rasterSeleccionado);
         if (type && type === this.geoservice.RASTERS) {
           this.addLayerTileWMS(rasterSeleccionado.name, type, false, false);
+          this.legend = this.geoservice.getRasterLegend(rasterSeleccionado.name);
         }
 
       });
@@ -177,6 +243,7 @@ export class MapComponent implements OnInit {
 
 
     // MODULO 3 funciones
+
     addPopupPrecipitation() {
       const hooverContainer = document.getElementById('popup-hoover');
       const hoover = new Overlay({
@@ -241,33 +308,37 @@ export class MapComponent implements OnInit {
       let c = 0;
       const setStyle = (feature: any) => {
         c += 1;
-        console.log((feature));
-        console.log((this.precipitation));
-        console.log(c, jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]'))
-        if (jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]')[0]) {
+
+        const station = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]');
+        if (station[0] && station[0].color_rgb) {
           try {
-            const color_rgb = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' +
-            feature.get('id_estacion') + '" )]')[0].color_rgb;
+            const color_rgb = station[0].color_rgb;
             const colorarray = color_rgb.split(',');
             const colorR = colorarray[0];
             const colorG = colorarray[1];
             const colorB = colorarray[2];
-
-            const styles = {
-              Default: new Style({
-                image: new Circle({
-                  radius: 7,
-                  fill: new Fill({ color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)' }),
-                  stroke: new Stroke({ color: 'rgba(255, 255, 255, 0.8)', width: 2 })
-                })
-              })
-            };
-            return styles.Default;
+            if (station[0].precipitacion > 0) {
+              return new Style({
+                  image: new Icon({
+                    src: './assets/icons/estaciones/IconoPrecipitacion.png',
+                    color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)',
+                    scale: 0.25
+                  })
+              });
+            } else {
+                return new Style({
+                    image: new Circle({
+                      radius: 7,
+                      fill: new Fill({ color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)' }),
+                      stroke: new Stroke({ color: 'rgba(255, 255, 255, 0.8)', width: 2 })
+                    })
+                });
+            }
           } catch (error) {
             console.log(error);
           }
         } else {
-            const style = {
+          const style = {
             Default: new Style({
               image: new Circle({
                 radius: 5,
@@ -275,7 +346,7 @@ export class MapComponent implements OnInit {
               })
             })
           };
-            return style.Default;
+          return style.Default;
         }
       };
       const vector = new VectorLayer({
@@ -291,8 +362,7 @@ export class MapComponent implements OnInit {
       });
       this.map.addInteraction(selectPointerMove2);
       return vector;
-    }
-    // FIN MODULO 3
+    }    // FIN MODULO 3
 
 
     // MODULO 1 funciones -----------------------------------------------
@@ -318,6 +388,7 @@ export class MapComponent implements OnInit {
             BBOX: '-81.8100662231445,-4.31388235092163,-66.7727737426758,13.4828310012817',
             SRS: 'EPSG:4686',
             LAYERS: `${type}:${name}`,
+            // format_options: 'layout:precipitation'
             // TRANSPARENT: true
           },
           ration: 1
@@ -334,6 +405,7 @@ export class MapComponent implements OnInit {
       }
       newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
+      console.log('TIPO DE CAPA', name, newLayer, this.layers);
       if (overlay) {
         this.eventTooltip(newLayer, overlay);
       } else {
@@ -342,7 +414,6 @@ export class MapComponent implements OnInit {
     }
 
     eventTooltip(newLayer: any, overlay: any) {
-
       this.map.on('click', (evt: any) => {
 
         this.removeTooltip();
@@ -353,15 +424,15 @@ export class MapComponent implements OnInit {
         const viewProjection = this.map.getView().getProjection();
         const viewResolution = this.map.getView().getResolution();
         const url = newLayer.values_.source.getGetFeatureInfoUrl(
-          evt.coordinate, viewResolution, viewProjection, {INFO_FORMAT: 'application/json'});
+        evt.coordinate, viewResolution, viewProjection, {INFO_FORMAT: 'application/json'});
         this.http.get(url).subscribe( (data: any) => {
           // Si responde algo que no es vacío,
           if (data.features.length > 0) {
             const layerNameAtPixel =  data.features[0].id.split('.', 1)[0];
             if (this.layers[layerNameAtPixel].show) {
-            const layerIdAtPixel =  data.features[0].id;
-            const loadId = setInterval(() => this.manageInterval(layerNameAtPixel, layerIdAtPixel, loadId), 1000);
-          }
+              const layerIdAtPixel =  data.features[0].id;
+              const loadId = setInterval(() => this.manageInterval(layerNameAtPixel, layerIdAtPixel, loadId), 1000);
+            }
           } else {
             this.removeTooltip();
           }
@@ -385,24 +456,27 @@ export class MapComponent implements OnInit {
     prepareWMSData(name: string) {
       const nameView = `${name}_view`;
       this.geoservice.getInfo(nameView).subscribe( (data: any) => {
-        this.layersInfo[name] = data.features;
+        this.selectedLayersAttributes[name] = data.features;
       }, ((error: any) => {
-        this.layersInfo[name] = error.ok;
+        this.selectedLayersAttributes[name] = error.ok;
       }));
     }
 
     manageInterval(layerName, layerId, intervalId) {
       // Si aún no hay información,
-      if (this.layersInfo[layerName] === undefined) {
+      if (this.selectedLayersAttributes[layerName] === undefined) {
         this.loadingTooltip = true;
-      // Si ya hay,
+        // Si ya hay,
       } else {
         // Y si es diferente de "false"
-        if (this.layersInfo[layerName]) {
+        if (this.selectedLayersAttributes[layerName]) {
           this.loadingTooltip = false;
-          const filter = this.layersInfo[layerName].filter((feature: any) => feature.id === layerId);
+          const featureId = layerId.substring(0, layerId.indexOf('.')) + '_view' +
+          layerId.substring(layerId.indexOf('.'), layerId.length);
+
+          const filter = this.selectedLayersAttributes[layerName].filter((feature: any) => feature.id === featureId);
           if (filter.length > 0) {
-            const filter2 = this.tooltipvalue.filter((feature: any) => feature[0].id.split('.', 1)[0] === layerName);
+            const filter2 = this.tooltipvalue.filter((feature: any) => feature[0].id.split('.', 1)[0] === `${layerName}_view`);
             if (filter[0].properties !== undefined && filter[0].properties.length === undefined) {
               filter[0].properties = this.setTooltipProperties(filter[0]);
             }
@@ -422,7 +496,7 @@ export class MapComponent implements OnInit {
       }
     }
 
-    setTooltipProperties(filter): any[] {
+    setTooltipProperties(filter: any): any[] {
       const properties = [];
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < Object.keys(filter.properties).length; i++) {
@@ -457,25 +531,29 @@ export class MapComponent implements OnInit {
       return vector;
     }
 
-    styleStationsLayer(vectorSource: any, name: any, styleIn: any) {
-
-      const setStyle = (feature) => {
-        if (feature.get('nombre_entidad') === 'EMGESA' ) {
-          if (feature.get('estado_estacion') === 'Activa') {
-            return styleIn.hidroEmgesaInactiva;
+    styleStationsLayer(vectorSource: any, name: any, styleIn?: any) {
+      let vector: any;
+      let setStyle: any;
+      if (styleIn) {
+        setStyle = (feature) => {
+          if (feature.get('nombre_entidad') === 'EMGESA' ) {
+            if (feature.get('estado_estacion') === 'Activa') {
+              return styleIn.hidroEmgesaInactiva;
+            } else {
+              return styleIn.hidroEmgesaActiva;
+            }
           } else {
-            return styleIn.hidroEmgesaActiva;
+            if (feature.get('estado_estacion') === 'Activa') {
+              return styleIn.hidroInactiva;
+            } else {
+              return styleIn.hidroActiva;
+            }
           }
-        } else {
-          if (feature.get('estado_estacion') === 'Activa') {
-            return styleIn.hidroInactiva;
-          } else {
-            return styleIn.hidroActiva;
-          }
-        }
-      };
-
-      const vector = new lVector({
+        };
+      } else {
+        setStyle = (feature) => {};
+      }
+      vector = new lVector({
         source: vectorSource,
         style: setStyle
       });
@@ -555,17 +633,15 @@ export class MapComponent implements OnInit {
 
 
     // GENERALES
-    requestLayerWFS(type: string, name: string, CQLfilter ?: any) {
-      console.log(CQLfilter);
-
+    requestLayerWFS(type: string, name: string, param ?: any) {
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
         loader(extent, resolution, projection) {
           const proj = projection.getCode();
           let url: string;
-          if (CQLfilter) {
+          if (param) {
             // tslint:disable-next-line: max-line-length
-            url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${type}:${name}&${CQLfilter}outputFormat=application/json&srsname=${proj}`;
+            url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=2.0.0&request=GetFeature&typename=${type}:${name}&${param}outputFormat=application/json&srsname=${proj}`;
           } else {
             // tslint:disable-next-line: max-line-length
             url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${type}:${name}&outputFormat=application/json&srsname=${proj}&bbox=${extent.join(',')},${proj}`;
@@ -578,7 +654,6 @@ export class MapComponent implements OnInit {
           };
           xhr.onerror = onError;
           xhr.onload = () => {
-
             if (xhr.status === 200) {
               vectorSource.addFeatures(vectorSource.getFormat().readFeatures(xhr.responseText));
             } else {
@@ -632,6 +707,11 @@ export class MapComponent implements OnInit {
         // tslint:disable-next-line: no-string-literal
         document.getElementById(`${element}`)['checked'] = false;
       }
+    }
+
+    getLegend(type: string, name: string) {
+      const count = 'count=1&';
+      this.requestLayerWFS(type, name, count);
     }
 
   }

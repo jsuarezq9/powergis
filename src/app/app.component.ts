@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,6 +18,7 @@ export class AppComponent {
   expandSidemenu = false;
   BUTTON_COLLAPSE_ID = 'buttonCollapse';
   BUTTON_COLLAPSE_DIV_ID = 'buttonCollapseDiv';
+  BUTTON_COLLAPSE_LEGEND_DIV_ID = 'buttonCollapseLegendDiv';
 
   // Ids presentes en el html de sidebar en cada boton
   BUTTON_BASES_ID = 'buttonBases';
@@ -31,10 +33,13 @@ export class AppComponent {
   MODULES_SHOW = 'block';
   MODULES_HIDE = 'none';
 
+  // Leyenda
+
   constructor() {
     this.resetModules();
 
   }
+
 
   resetModules(): void {
     if (this.moduleBases) {
@@ -65,10 +70,12 @@ export class AppComponent {
 
   showCollapseButton(): void {
     document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_SHOW;
+    document.getElementById(this.BUTTON_COLLAPSE_LEGEND_DIV_ID).style.visibility = 'visible';
   }
 
   hideCollapseButton(): void {
     document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_HIDE;
+    document.getElementById(this.BUTTON_COLLAPSE_LEGEND_DIV_ID).style.visibility = 'hidden';
   }
 
   getState(show: any): void {
@@ -159,6 +166,32 @@ export class AppComponent {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+    }
+  }
+
+  getLegend(event: any) {
+    const legendDiv = document.getElementById('legend');
+    legendDiv.classList.toggle('legend-expanded');
+    console.log(legendDiv.classList);
+    let isExpanded = false;
+    for (let index = 0; index < legendDiv.classList.length; index++) {
+      const element = legendDiv.classList[index];
+      console.log(element)
+      if (element === 'legend-expanded') {
+        isExpanded = true;
+      }
+    }
+    console.log(isExpanded)
+    if (isExpanded) {
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+    } else {
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'block';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'none';
     }
   }
 

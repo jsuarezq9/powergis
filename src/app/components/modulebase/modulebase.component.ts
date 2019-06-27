@@ -14,13 +14,29 @@ export class ModulebaseComponent implements OnInit {
   @Output() collapsedModule = new EventEmitter();
 
   layers = [];
+  layersInfo = [];
   rotation: string;
 
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) {
-    this.getBases();
-    this.getTems();
-    // this.getDWHS();
+    forkJoin(this.getBases(), this.getTems()).subscribe((layers) => {
+      console.log("Construc")
+      for (let i = 0; i < layers.length; i++) {
+        let element = layers[i];
+        this.concatLayers(element);
+      }
+      for (let i = 0; i < this.layers.length; i++) {
+        const element = this.layers[i];
+        const source = this.getLayerTypeFromHref(element);
+        element.source = source;
+      }
+      this.getLayersTitles(this.layers);
+      console.log(this.layers);
+
+    }, (error) => {
+      this.handleError('carga inicial de capas', error);
+    });
+
   }
 
   ngOnInit() {
@@ -30,30 +46,36 @@ export class ModulebaseComponent implements OnInit {
     this.interaction.setLayer(event.layer, event.e.target.checked, true);
   }
 
-  async getBases() {
-    this.geoservice.getLayers(this.geoservice.BASE).subscribe((bases: any) => {
-      this.getLayersTitles(bases, this.geoservice.BASE);
-    }, (error) => {
-      this.handleError(this.geoservice.BASE, error);
-    });
+  getBases() {
+    return this.geoservice.getLayers(this.geoservice.BASE).toPromise();
   }
 
   getTems() {
-    const source = this.geoservice.TEMS;
-    this.geoservice.getLayers(this.geoservice.TEMS).subscribe(async (tems: any) => {
-      this.getLayersTitles(tems, source);
-    }, (error) => {
-      this.handleError(this.geoservice.TEMS, error);
-    });
+    return this.geoservice.getLayers(this.geoservice.TEMS).toPromise();
   }
 
   getDWHS() {
-    const source = this.geoservice.DWHS;
-    this.geoservice.getLayers(this.geoservice.DWHS).subscribe(async (dwhs: any) => {
-      this.getLayersTitles(dwhs, source);
-    }, (error) => {
-      this.handleError(this.geoservice.DWHS, error);
-    });
+    return this.geoservice.getLayers(this.geoservice.DWHS).toPromise();
+    // .subscribe(async (dwhs: any) => {
+    //   this.getLayersTitles(dwhs, source);
+    // }, (error) => {
+    //   this.handleError(this.geoservice.DWHS, error);
+    // });
+  }
+
+  getLayerTypeFromHref(layer: any): string {
+    const uri = `${layer.href}`;
+    if (uri.search(this.geoservice.BASE) > 0) {
+      return this.geoservice.BASE;
+    } else if (uri.search(this.geoservice.TEMS) > 0) {
+      return this.geoservice.TEMS;
+    } else if (uri.search(this.geoservice.DWHS) > 0) {
+      return this.geoservice.DWHS;
+    } else if (uri.search(this.geoservice.RASTERS) > 0) {
+      return this.geoservice.RASTERS;
+    } else {
+      return null;
+    }
   }
 
   concatLayers(layer: any[]): void {
@@ -64,17 +86,20 @@ export class ModulebaseComponent implements OnInit {
     alert(`Something went wrong while layer's request (${type}) on modulebase: ${error.message}`);
   }
 
-  async getLayersTitles(layers: any[], source: string) {
+  async getLayersTitles(layers: any[]) {
     const promises = [];
     // tslint:disable-next-line: prefer-for-of
+    console.log(layers)
     for (let i = 0; i < layers.length; i++ ) {
-      promises.push(this.geoservice.getLayersName(source, layers[i].name));
+      promises.push(this.geoservice.getLayersName(layers[i].source, layers[i].name));
     }
-    forkJoin(promises).subscribe((responses: any) => {
-      // console.log('FORK\n', responses);
+    forkJoin(promises).subscribe((response: any) => {
+
+      console.log('Fork', response)
+      // console.log('FORK\n', response);
       // tslint:disable-next-line: prefer-for-of
-      for (let i = 0; i < responses.length; i++) {
-        const element = responses[i];
+      for (let i = 0; i < response.length; i++) {
+        const element = response[i];
         if (element) {
           // console.log('****´', element.attribution.title);
           const newLayer = layers.filter(layer => element.name === layer.name)[0];
@@ -84,7 +109,9 @@ export class ModulebaseComponent implements OnInit {
           }
         }
       }
-      this.concatLayers(layers);
+      // this.concatLayers(layers);
+      // console.log(responses.length, promises.length)
+      this.interaction.setLayerTitles(layers);
     });
 
   }
