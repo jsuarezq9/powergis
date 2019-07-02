@@ -3,6 +3,7 @@ import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
 
 import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-sidebar',
@@ -167,6 +168,7 @@ export class SidebarComponent implements OnInit {
   removeEstaciones() {
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
+    this.interaction.setLayer(this.layerRaster, false, false);
     this.legendHidro.style.display = 'none';
   }
 

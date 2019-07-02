@@ -83,7 +83,18 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     this.actualYear = (new Date()).getFullYear();
     this.firstDateYear = new Date('1/1/' + this.actualYear);
     this.layout = {
-      title: 'Name Test',
+      title: false,
+      autosize: true,
+      // autosize: false,
+      // width: 500,
+      // height: 300,
+      margin: {
+        l: 50,
+        r: 50,
+        b: 100,
+        t: 50,
+        // pad: 5
+      },
       xaxis: {
           tipe: 'date',
           rangeselector: this.selectorOptions,
@@ -91,9 +102,8 @@ export class ModulehidroTimeseriesComponent implements OnInit {
           rangeslider: {}
       },
       yaxis: {
-
           fixedrange: true
-      }
+      },
   };
   }
 
@@ -155,6 +165,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   formingRequest(initial, final, idStation, idSensor) {
     console.log('Formando solicitud');
     this.dwhService.getSensorByStation(initial, final, idStation, idSensor).subscribe(response => {
+      console.log('RESPONSE[idSensor]', response[idSensor]);
       this.data[idSensor] = response;
       this.actualData = response;
       this.setData(response[idSensor]);
@@ -171,26 +182,37 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       // name: `${dataSensor.sensor} [ ${dataSensor.valor.split(' ', 1)[1]} ]`,
       x: dataSensor.fecha,
       y: dataSensor.total,
-      line: { color: '#17BECF' }
+      line: { color: '#17BECF' },
+      autosize: true
     };
     this.dataLines.push(sensor);
   }
 
-  refreshData() {
+  refreshData(inicio: any, final: any) {
     // this.interaction.setSensor(item);
+    // Warning
+    if (!inicio || !final) {
+      document.getElementById(`warningText2`).style.display = 'block';
+    } else {
+      document.getElementById(`warningText2`).style.display = 'none';
+      this.fi = document.getElementById('fechaInicio');
+      this.ff = document.getElementById('fechaFin');
+  
+      const today = moment().format('YYYY-MM-DD HH:mm:ss');
+      console.log('Fechas input', inicio, final);
+      console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
+      const a = moment(this.fi.value).format('YYYY-MM-DD HH:mm:ss');
+      const b = moment(this.ff.value).format('YYYY-MM-DD HH:mm:ss');
+      console.log('Fechas ffff', a, b)
+      console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor)
+      console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion)
 
-    this.fi = document.getElementById('fechaInicio');
-    this.ff = document.getElementById('fechaFin');
+      this.renderTimeSeries(a, b, this.selectedSensor.idEstacion, this.selectedSensor.idSensor);
+    }
+  }
 
-    const today = moment().format('YYYY-MM-DD HH:mm:ss');
-    console.log('Fechas', this.fi.value, this.ff.value)
-    const a = moment(this.fi.value).format('YYYY-MM-DD HH:mm:ss');
-    const b = moment(this.ff.value).format('YYYY-MM-DD HH:mm:ss');
-    console.log('Fechas ffff', a, b)
-    console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor)
-    console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion)
-
-    this.renderTimeSeries(a, b, this.selectedSensor.idEstacion, this.selectedSensor.idSensor);
+  keepDropdown(event: any) {
+    event.stopPropagation();
   }
 
   appendLeadingZeroes(n) {
