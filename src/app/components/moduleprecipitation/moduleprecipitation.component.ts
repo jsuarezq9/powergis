@@ -89,6 +89,7 @@ export class ModuleprecipitationComponent implements OnInit {
     this.geoservice.getLayers(source).subscribe(async (rasters: any) => {
       this.concatLayers(rasters);
       this.getRastersNames();
+      this.rasters.sort((a, b) => a.title.localeCompare(b.title));
     }, (error) => {
       this.handleError(source, error);
     });
@@ -127,7 +128,6 @@ export class ModuleprecipitationComponent implements OnInit {
   }
 
   changeRaster(rasterSeleccionado: any) {
-    console.log('rasterSeleccionado', rasterSeleccionado.name);
     this.removeAllRasters();
     this.addRaster(rasterSeleccionado);
 

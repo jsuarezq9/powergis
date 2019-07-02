@@ -113,3 +113,8 @@
     margin: 0%;
     padding: 0%;
 }
+
+positionLegend {
+    position: absolute !important;
+    z-index: 0;
+}
