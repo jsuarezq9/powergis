@@ -1,10 +1,56 @@
-<div class="row">
-    <div class="col-3 form-group">
-        <br><br> Fecha inicio: <input type="date" name="fecha_inicio" id="fechaInicio">
-        <hr> Fecha fin: <input type="date" name="fecha_inicio" id="fechaFin"> <br><br>
-        <button type="button" class="btn btn-success" id="recargar" (click)="refreshData()">Consultar Fechas</button>
+<div class="row justify-content-md-center align-items-center h-100 pb-5">
+    <div class="col-3 text-center">
+        <img src="./assets/icons/sidemenu/IconoIntervaloModulo3.png" alt="Intervalo" style="height: 20px"> Intervalo
     </div>
-    <div class="col-9 bg-light">
+    <div class="col-9 m-0 p-0 pt-3 pb-3">
+        <div class="row justify-content-md-center align-items-center">
+            <div class="col-6 dropdown">
+                <div class="col btn-lg buttonSelection text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPreestablecido" (click)="setStyle($event);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <small id="buttonPreestablecido" class="" style="line-height: 30px">Preestablecido</small>
+                </div>
+                <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="dropdownMenuButton" style="width: 80%;max-height: 180px;" id="drop1">
+                    <a class="dropdown-item pointer" id="">Opciones</a>
+                </div>
+            </div>
+            <div class="col-6 dropdown">
+                <div class="col btn-lg buttonSelection text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPersonalizado" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <small id="buttonPersonalizado">Personalizado</small>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right mt-2 overflow-auto p-3" aria-labelledby="dropdownMenuButton" style="width: 100%; max-height: fit-content;" (click)="keepDropdown($event);" id="drop2">
+                    <div class="col pl-3">
+                        <div class="col w-100"><small>Fecha inicial</small></div>
+                        <div class="row">
+                            <div class="col-10"><input type="datetime-local" name="fecha_inicio" id="fechaInicio" class="inputDate" [value]="fecha_inicio" (input)="fecha_inicio=$event.target.value"></div>
+                            <div class="col-2"><img src="./assets/icons/sidemenu/IconCalendar.png" alt="" style="width: 23px"></div>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col pl-3">
+                        <div class="col w-100"><small>Fecha final</small></div>
+                        <div class="row">
+                            <div class="col-10"><input type="datetime-local" name="fecha_inicio" id="fechaFin" class="inputDate" [value]="fecha_fin" (input)="fecha_fin=$event.target.value"></div>
+                            <div class="col-2"><img src="./assets/icons/sidemenu/IconCalendar.png" alt="" style="width: 23px"></div>
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <hr class="ml-2 mr-2">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="recargar" (click)="refreshData(this.fecha_inicio,this.fecha_fin)">Consultar</button>
+                    <div id="warningText2" style="display: none">
+                        <div class="w-100">
+                            <hr class="ml-2 mr-2">
+                        </div>
+                        <div class="alert alert-warning text-center" role="alert">
+                            Inserte fecha y hora en ambos campos
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0;">
         <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
+        <!-- <plotly-plot [style]="{width: '100%', height: '100%', border: '5px solid red'}" [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot> -->
     </div>
 </div>

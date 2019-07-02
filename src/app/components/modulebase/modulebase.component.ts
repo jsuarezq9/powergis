@@ -20,18 +20,20 @@ export class ModulebaseComponent implements OnInit {
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) {
     forkJoin(this.getBases(), this.getTems()).subscribe((layers) => {
-      console.log("Construc")
+      // console.log('Construc');
+      // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < layers.length; i++) {
-        let element = layers[i];
+        const element = layers[i];
         this.concatLayers(element);
       }
+      // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.layers.length; i++) {
         const element = this.layers[i];
         const source = this.getLayerTypeFromHref(element);
         element.source = source;
       }
       this.getLayersTitles(this.layers);
-      console.log(this.layers);
+      // console.log(this.layers);
 
     }, (error) => {
       this.handleError('carga inicial de capas', error);
@@ -56,11 +58,6 @@ export class ModulebaseComponent implements OnInit {
 
   getDWHS() {
     return this.geoservice.getLayers(this.geoservice.DWHS).toPromise();
-    // .subscribe(async (dwhs: any) => {
-    //   this.getLayersTitles(dwhs, source);
-    // }, (error) => {
-    //   this.handleError(this.geoservice.DWHS, error);
-    // });
   }
 
   getLayerTypeFromHref(layer: any): string {
@@ -88,15 +85,14 @@ export class ModulebaseComponent implements OnInit {
 
   async getLayersTitles(layers: any[]) {
     const promises = [];
+    // console.log(layers)
     // tslint:disable-next-line: prefer-for-of
-    console.log(layers)
     for (let i = 0; i < layers.length; i++ ) {
       promises.push(this.geoservice.getLayersName(layers[i].source, layers[i].name));
     }
     forkJoin(promises).subscribe((response: any) => {
 
-      console.log('Fork', response)
-      // console.log('FORK\n', response);
+      // console.log('Fork', response)
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < response.length; i++) {
         const element = response[i];
