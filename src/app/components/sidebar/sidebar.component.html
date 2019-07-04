@@ -19,7 +19,7 @@
             <div class="col bg-dark collapse multiple-collapse dropMenu shadow-lg" id="dropbar">
                 <div class="menuHigh">
                     <div class="btn-group-vertical w-100" style="height: 45%">
-                        <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event); removeEstaciones()" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false"
+                        <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event); removeEstaciones(); removeLegendRaster()" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false"
                             aria-controls="collapseExample" #buttonBases>
                             <img src="./assets/icons/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Base</div>

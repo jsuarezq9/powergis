@@ -52,7 +52,7 @@ export class MapComponent implements OnInit {
   layers = {};
   layersInfo = {};
   selectedLayersAttributes = {};
-
+  legendRaster: any;
   popup: any;
   features = [];
   info = [];
@@ -91,6 +91,7 @@ export class MapComponent implements OnInit {
         view: this.view,
         controls: []
       });
+      this.legendRaster = document.getElementById('rasterLegend');
 
       this.tooltip = document.getElementById('myTooltip');
       const overlay = new Overlay({
@@ -159,11 +160,11 @@ export class MapComponent implements OnInit {
       // 1. Gestión de capas Módulo 1
       this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
+        console.log(layer);
         this.removeTooltip();
         if (layer.show) {
           if (type) {
             this.addLayerTileWMS(layer.name, type, layer.edit, overlay);
-            console.log(this.layers)
             // Consulta tipo capa. Hacer caché. Enviar por interaction.
             // this.getLegend(type, layer.name);
             this.prepareWMSData(layer.name);
@@ -189,9 +190,10 @@ export class MapComponent implements OnInit {
         this.addPopupStations();
       });
 
+
       // 3. Mostrar capa estaciones módulo 3
       this.interaction.precipitationInteraction.subscribe((layer: any) => {
-        console.log('AGREGANDO CAPA ESTACIONES', layer);
+        console.log('Capa de estaciones ', layer);
         const type = this.getLayerTypeFromHref(layer);
         // this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         if (layer.iniDate && layer.finDate) {
@@ -205,7 +207,7 @@ export class MapComponent implements OnInit {
       });
 
       // 4. Mostrar raster
-      this.interaction.rastersInteraction.subscribe(async(rasterSeleccionado: any) => {
+      this.interaction.rastersInteraction.subscribe(async (rasterSeleccionado: any) => {
         // Preparando consulta al servicio
         const rasterArray = rasterSeleccionado.name.split('_');
         const deltaDate = rasterArray[2];
@@ -225,6 +227,15 @@ export class MapComponent implements OnInit {
         }
 
       });
+
+      // 5. Mostrar capa de lluvia
+      setTimeout(() => {
+        this.interaction.precipitationInteraction.subscribe((layer: any) => {
+          console.log('Capa de lluvia ', layer);
+          const type = this.getLayerTypeFromHref(layer);
+          this.addPrecipitationRainWFS(type, layer.name);
+        });
+      }, 3500);
 
       // 5. Cambio a view del mapa base
       this.interaction.mapviewInteraction.subscribe((info: any) => {
@@ -304,11 +315,32 @@ export class MapComponent implements OnInit {
       const vector = this.stylePrecipitationsLayer(vectorSource, name);
     }
 
+    addPrecipitationRainWFS(type: string, name: string) {
+      const CQLfilter = 'CQL_FILTER=id_sensor=%270240%27 AND estado_lluvia=%271%27&';
+      const vectorSource = this.requestLayerWFS(type, name, CQLfilter);
+      const vector = this.styleLastPrecipitation(vectorSource, name);
+    }
+
+    styleLastPrecipitation(vectorSource: any, name: any) {
+      const setStyle  =  new Style({
+          image: new Icon({
+          src: './assets/icons/estaciones/IconoPrecipitacion2.png',
+          color: 'rgba(55, 163, 230, 0.8)',
+          scale: 0.3,
+        })
+      });
+      const vector = new VectorLayer({
+        source: vectorSource,
+        renderMode: 'vector',
+        style: setStyle
+        });
+      this.saveLayer(name, vector);
+  }
+
     stylePrecipitationsLayer(vectorSource: any, name: any) {
       let c = 0;
       const setStyle = (feature: any) => {
         c += 1;
-
         const station = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]');
         if (station[0] && station[0].color_rgb) {
           try {
@@ -320,7 +352,7 @@ export class MapComponent implements OnInit {
             if (station[0].precipitacion > 0) {
               return new Style({
                   image: new Icon({
-                    src: './assets/icons/estaciones/IconoPrecipitacion.png',
+                    src: './assets/icons/estaciones/IconoEstacionOtrosInactiva.png',
                     color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)',
                     scale: 0.25
                   })
@@ -369,7 +401,7 @@ export class MapComponent implements OnInit {
     addLayerTileWMS(name: string, type: any, edit: boolean, overlay ?: any) {
       this.tooltipvalue = [];
       if (edit) {
-      this.progressBar(name, true, edit);
+        this.progressBar(name, true, edit);
       }
       let newLayer: any;
       if (this.layers[name] && this.layers[name] !== undefined) {
@@ -397,6 +429,7 @@ export class MapComponent implements OnInit {
           imageSource.on('imageloadend', () => {
             this.progressBar(name, false, edit);
           });
+          this.progressBar(name, false, edit);
         }
         newLayer = new OlTileLayer({
           visible: true,
@@ -700,7 +733,7 @@ export class MapComponent implements OnInit {
     resetLayers() {
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
-
+      this.legendRaster.style.display = 'none';
       for (let index = 0; index < length; index++) {
         const element = keys[index];
         this.removeLayer(element);
@@ -710,6 +743,7 @@ export class MapComponent implements OnInit {
     }
 
     getLegend(type: string, name: string) {
+      // tslint:disable-next-line:no-shadowed-variable
       const count = 'count=1&';
       this.requestLayerWFS(type, name, count);
     }

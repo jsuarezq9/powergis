@@ -58,6 +58,7 @@ export class SidebarComponent implements OnInit {
   };
 
   legendHidro: any;
+  legendRaster: any;
   legendDiv: any;
   legendExp: any;
   legendColl: any;
@@ -84,6 +85,7 @@ export class SidebarComponent implements OnInit {
     };
     this.legendDiv = document.getElementById('buttonCollapseLegendDiv');
     this.legendHidro = document.getElementById('legendModuleHidro');
+    this.legendRaster = document.getElementById('rasterLegend');
   }
 
   collapseAll(event: any) {
@@ -133,8 +135,10 @@ export class SidebarComponent implements OnInit {
 
   addEstacionesHidro() {
     this.removeEstaciones();
+    this.removeLegendRaster();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
-    console.log(this.legendHidro)
+    setInterval(this.runLayersHidroHourly, 3600000);
+    console.log(this.legendHidro);
     this.legendHidro.style.display = 'flex';
 
     const legendDiv = document.getElementById('legend');
@@ -146,7 +150,7 @@ export class SidebarComponent implements OnInit {
         isExpanded = true;
       }
     }
-    console.log(isExpanded)
+    console.log(isExpanded);
     if (!isExpanded) {
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       legendDiv.classList.add('legend-expanded');
@@ -162,18 +166,34 @@ export class SidebarComponent implements OnInit {
     this.removeEstaciones();
     this.addRaster(this.layerRaster);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+    setInterval(this.runLayersPrecipitationHourly, 3600000);
+    // this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
     this.legendHidro.style.display = 'none';
+    this.legendRaster.style.display = 'block';
   }
 
   removeEstaciones() {
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
+    this.interaction.setLayer(this.layerVMEstaciones, false, false);
     this.interaction.setLayer(this.layerRaster, false, false);
     this.legendHidro.style.display = 'none';
   }
 
+  removeLegendRaster = () => {
+    this.legendRaster.style.display = 'none';
+  }
+
   addRaster(raster: any) {
     this.interaction.setRaster(raster);
+  }
+
+  runLayersPrecipitationHourly = () => {
+    this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+  }
+
+  runLayersHidroHourly = () => {
+    this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }
 
 }

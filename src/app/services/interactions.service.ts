@@ -45,7 +45,7 @@ export class ComponentsInteractionService {
     this.stationsInteraction.next(layer);
   }
 
-  setPrecipitationLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): void {
+  setPrecipitationLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): any {
     layer.query = query;
     console.log('bool en interaction ', query);
     layer.iniDate = iniDate;
