@@ -44,3 +44,14 @@
     padding-right: 0;
     padding-left: 0;
 }
+
+activeCapasTitle {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 35px;
+    line-height: 41px;
+    display: flex;
+    align-items: center;
+    color: #5B5B61;
+}

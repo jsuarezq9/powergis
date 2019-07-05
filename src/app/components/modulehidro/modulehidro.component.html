@@ -21,10 +21,15 @@
             </div>
         </div>
         <!-- Capas disponibles en mapa -->
-        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 200px; max-height: 200px; background-color: white">
-            <br>
-            <!-- <app-list-elements (selected)="selectLayer($event)" [element]="element" *ngFor="let element of layerTems"></app-list-elements> -->
-            <br>
+        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
+            <div class="row m-1 border border-primary rounded-pill" *ngFor="let layer of layersInHidro" [id]="layer.name">
+                <div class="custom-control custom-switch">
+                    <div>
+                        {{layer | layerName | capitalize}}
+                    </div> 
+                </div>
+            </div>
         </div>
+        
     </div>
 </div>

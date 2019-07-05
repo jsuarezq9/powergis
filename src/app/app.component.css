@@ -118,3 +118,9 @@ positionLegend {
     position: absolute !important;
     z-index: 0;
 }
+
+activeBorderCapas {
+    border: 6px solid #3C93F8 !important;
+    box-sizing: border-box !important;
+    border-radius: 30px !important;
+}

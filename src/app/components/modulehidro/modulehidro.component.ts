@@ -1,15 +1,40 @@
 import { Component, OnInit } from '@angular/core';
+import { ComponentsInteractionService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-modulehidro',
   templateUrl: './modulehidro.component.html',
-  styleUrls: ['./modulehidro.component.css']
+  styleUrls: ['./modulehidro.component.css'],
 })
 export class ModulehidroComponent implements OnInit {
 
-  constructor() { }
+  layersInHidro = [];
+  layersInfo = [];
+
+  constructor(private interaction: ComponentsInteractionService) { }
 
   ngOnInit() {
-  }
+    // Información con título desde map
+    this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
+      // console.log('llegando a LEGEND', layersArray);
+      this.layersInfo = layersArray;
+      console.log(layersArray);
+    });
 
-}
+    // Cada vez que se edite una capa en módulo 1
+    this.interaction.mapInteraction.subscribe(( layer: any ) => {
+      // Agrego al arreglo si show=true
+      if (layer.show) {
+        this.layersInHidro.push(this.layersInfo[layer.name]);
+      } else {
+        const index = this.layersInHidro.indexOf(this.layersInfo[layer.name], 0);
+        if (index > -1) {
+          this.layersInHidro.splice(index, 1);
+        }
+      }
+      // Consulto el tipo de geometría de la nueva capa
+      // this.requestLayerWFS();
+    });
+
+  }
+  }

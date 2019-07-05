@@ -23,13 +23,12 @@ export class LegendComponent implements OnInit {
   ngOnInit() {
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
-      console.log('llegando a LEGEND', layersArray);
+      // console.log('llegando a LEGEND', layersArray);
       this.layersInfo = layersArray;
     });
 
     // Cada vez que se edite una capa en módulo 1
     this.interaction.mapInteraction.subscribe(( layer: any ) => {
-
       // Agrego al arreglo si show=true
       if (layer.show) {
         this.layersInLegend.push(this.layersInfo[layer.name]);
@@ -46,7 +45,7 @@ export class LegendComponent implements OnInit {
       }
 
       this.getLegend();
-      console.log('LEGENDCOMP', this.layersInLegend);
+      // console.log('LEGENDCOMP', this.layersInLegend);
 
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();

@@ -160,7 +160,6 @@ export class MapComponent implements OnInit {
       // 1. Gestión de capas Módulo 1
       this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
-        console.log(layer);
         this.removeTooltip();
         if (layer.show) {
           if (type) {
@@ -193,7 +192,6 @@ export class MapComponent implements OnInit {
 
       // 3. Mostrar capa estaciones módulo 3
       this.interaction.precipitationInteraction.subscribe((layer: any) => {
-        console.log('Capa de estaciones ', layer);
         const type = this.getLayerTypeFromHref(layer);
         // this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         if (layer.iniDate && layer.finDate) {
@@ -231,7 +229,6 @@ export class MapComponent implements OnInit {
       // 5. Mostrar capa de lluvia
       setTimeout(() => {
         this.interaction.precipitationInteraction.subscribe((layer: any) => {
-          console.log('Capa de lluvia ', layer);
           const type = this.getLayerTypeFromHref(layer);
           this.addPrecipitationRainWFS(type, layer.name);
         });
@@ -324,9 +321,12 @@ export class MapComponent implements OnInit {
     styleLastPrecipitation(vectorSource: any, name: any) {
       const setStyle  =  new Style({
           image: new Icon({
-          src: './assets/icons/estaciones/IconoPrecipitacion2.png',
-          color: 'rgba(55, 163, 230, 0.8)',
-          scale: 0.3,
+          src: './assets/icons/estaciones/RainCloud2.png',
+          color: 'rgba(255, 255, 255, 0.8)',
+          scale: 0.35,
+          offsetOrigin: 'top-right',
+          size: [95, 70],
+          offset: [2, 3],
         })
       });
       const vector = new VectorLayer({
@@ -334,6 +334,7 @@ export class MapComponent implements OnInit {
         renderMode: 'vector',
         style: setStyle
         });
+      vector.setZIndex(2);
       this.saveLayer(name, vector);
   }
 
@@ -349,7 +350,7 @@ export class MapComponent implements OnInit {
             const colorR = colorarray[0];
             const colorG = colorarray[1];
             const colorB = colorarray[2];
-            if (station[0].precipitacion > 0) {
+            if (station[0].precipitacion >= 0) {
               return new Style({
                   image: new Icon({
                     src: './assets/icons/estaciones/IconoEstacionOtrosInactiva.png',
@@ -386,6 +387,7 @@ export class MapComponent implements OnInit {
         renderMode: 'vector',
         style: setStyle
       });
+      vector.setZIndex(0);
       this.saveLayer(name, vector);
       const selectPointerMove2 = new Select({
         condition: pointerMove,
@@ -438,7 +440,7 @@ export class MapComponent implements OnInit {
       }
       newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
-      console.log('TIPO DE CAPA', name, newLayer, this.layers);
+      // console.log('TIPO DE CAPA', name, newLayer, this.layers);
       if (overlay) {
         this.eventTooltip(newLayer, overlay);
       } else {
@@ -739,6 +741,8 @@ export class MapComponent implements OnInit {
         this.removeLayer(element);
         // tslint:disable-next-line: no-string-literal
         document.getElementById(`${element}`)['checked'] = false;
+        // tslint:disable-next-line:no-string-literal
+        // document.getElementById(`${element}`)['display'] = 'none';
       }
     }
 
