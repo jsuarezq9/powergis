@@ -17,6 +17,8 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   firstDateYear: Date;
   data: object;
   actualData: object;
+  fecha_inicio;
+  fecha_fin;
   fi: any;
   ff: any;
   selectorOptions = {
@@ -69,7 +71,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
         step: 'all',
         label: 'Todos'
     }]
-  }
+  };
   public dataLines: any[];
   public layout = {};
   public debug = true;
@@ -108,7 +110,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.firstDateYear)
+    console.log(this.firstDateYear);
     const initial = moment(this.firstDateYear.valueOf()).format('YYYY-MM-DD HH:MM:SS');
     const today = moment().format('YYYY-MM-DD HH:mm:ss A');
 
@@ -197,15 +199,15 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       document.getElementById(`warningText2`).style.display = 'none';
       this.fi = document.getElementById('fechaInicio');
       this.ff = document.getElementById('fechaFin');
-  
+
       const today = moment().format('YYYY-MM-DD HH:mm:ss');
       console.log('Fechas input', inicio, final);
       console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
       const a = moment(this.fi.value).format('YYYY-MM-DD HH:mm:ss');
       const b = moment(this.ff.value).format('YYYY-MM-DD HH:mm:ss');
-      console.log('Fechas ffff', a, b)
-      console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor)
-      console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion)
+      console.log('Fechas ffff', a, b);
+      console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor);
+      console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion);
 
       this.renderTimeSeries(a, b, this.selectedSensor.idEstacion, this.selectedSensor.idSensor);
     }
@@ -220,5 +222,14 @@ export class ModulehidroTimeseriesComponent implements OnInit {
         return '0' + n;
     }
     return n;
+}
+setStyle(event: any) {
+  // Reiniciar estilos
+  document.getElementById(`buttonPreestablecido`).classList.remove('active');
+  document.getElementById(`buttonPersonalizado`).classList.remove('active');
+
+  // Asignar estilos a botón seleccionado
+  const button = document.getElementById(`${event.target.id}`);
+  button.classList.add('active');
 }
 }

@@ -25,6 +25,8 @@ export class ModuleprecipitationComponent implements OnInit {
   layerEstaciones: any;
   layerVMEstaciones: any;
   isQuery = false;
+  date_inicio;
+  date_final;
 
   constructor(private interaction: ComponentsInteractionService,
               private geoservice: GeoserverService ) {
