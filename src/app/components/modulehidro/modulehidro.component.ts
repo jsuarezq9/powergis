@@ -16,9 +16,7 @@ export class ModulehidroComponent implements OnInit {
   ngOnInit() {
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
-      // console.log('llegando a LEGEND', layersArray);
       this.layersInfo = layersArray;
-      console.log(layersArray);
     });
 
     // Cada vez que se edite una capa en módulo 1

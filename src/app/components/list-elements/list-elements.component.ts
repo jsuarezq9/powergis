@@ -10,10 +10,11 @@ export class ListElementsComponent implements OnInit {
 
   @Input() element: any;
   @Output() selected = new EventEmitter();
-
+  isBordered: boolean;
   constructor() { }
 
   ngOnInit() {
+    this.isBordered = false;
   }
 
   select(select, event) {
@@ -21,6 +22,9 @@ export class ListElementsComponent implements OnInit {
       layer: select,
       e: event
     });
+  }
+  toggleBorder = () => {
+    this.isBordered = !this.isBordered;
   }
 
 }

@@ -138,7 +138,7 @@ export class SidebarComponent implements OnInit {
     this.removeLegendRaster();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
     setInterval(this.runLayersHidroHourly, 3600000);
-    console.log(this.legendHidro);
+    // console.log(this.legendHidro);
     this.legendHidro.style.display = 'flex';
 
     const legendDiv = document.getElementById('legend');
@@ -151,7 +151,7 @@ export class SidebarComponent implements OnInit {
         isExpanded = true;
       }
     }
-    console.log(isExpanded);
+    // console.log(isExpanded);
     if (!isExpanded) {
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       legendDiv.classList.add('legend-expanded');

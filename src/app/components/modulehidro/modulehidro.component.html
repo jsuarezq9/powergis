@@ -22,9 +22,9 @@
         </div>
         <!-- Capas disponibles en mapa -->
         <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
-            <div class="row m-1 border border-primary rounded-pill" *ngFor="let layer of layersInHidro" [id]="layer.name">
+            <div class="row m-1 border border-primary rounded text-justify text-center" *ngFor="let layer of layersInHidro" [id]="layer.name" style="height: 41px; font-family: Roboto; font-style: normal; font-weight: 500; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
                 <div class="custom-control custom-switch">
-                    <div>
+                    <div class="text-justify text-center" style="margin-top: 6px">
                         {{layer | layerName | capitalize}}
                     </div> 
                 </div>

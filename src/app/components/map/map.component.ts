@@ -177,7 +177,7 @@ export class MapComponent implements OnInit {
 
       // 2. Mostrar capa estaciones módulo 2
       this.interaction.stationsInteraction.subscribe((layer: any) => {
-        console.log('AGREGANDO CAPA ESTACIONES', layer);
+        // console.log('AGREGANDO CAPA ESTACIONES', layer);
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
         const selectPointerMove = new Select({
@@ -186,6 +186,9 @@ export class MapComponent implements OnInit {
           layer: layerStations
         });
         this.map.addInteraction(selectPointerMove);
+        this.removePoppup();
+        // console.log(this.map.getLayers());
+        // this.removeLayerRain('vm_ultimo_dato_estacion');
         this.addPopupStations();
       });
 
@@ -201,6 +204,8 @@ export class MapComponent implements OnInit {
           console.log('Normal');
           this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         }
+        // const layersss = this.map.getLayers();
+        // console.log(layersss);
         this.addPopupPrecipitation();
       });
 
@@ -227,12 +232,13 @@ export class MapComponent implements OnInit {
       });
 
       // 5. Mostrar capa de lluvia
-      setTimeout(() => {
-        this.interaction.precipitationInteraction.subscribe((layer: any) => {
-          const type = this.getLayerTypeFromHref(layer);
-          this.addPrecipitationRainWFS(type, layer.name);
-        });
-      }, 3500);
+      this.interaction.precipitationInteraction.subscribe((layer: any) => {
+        const type = this.getLayerTypeFromHref(layer);
+        this.addPrecipitationRainWFS(type, layer.name);
+        // const layersss = this.map.getLayers();
+        // console.log(layer.name);
+        // console.log(layersss);
+      });
 
       // 5. Cambio a view del mapa base
       this.interaction.mapviewInteraction.subscribe((info: any) => {
@@ -306,7 +312,6 @@ export class MapComponent implements OnInit {
 
     addPrecipitationWFS(type: string, name: string) {
       const CQLfilter = 'CQL_FILTER=id_sensor=%270240%27&';
-      // const CQLfilter = '';
       const vectorSource = this.requestLayerWFS(type, name, CQLfilter);
       const vector = this.stylePrecipitationsLayer(vectorSource, name);
     }
@@ -324,8 +329,8 @@ export class MapComponent implements OnInit {
           color: 'rgba(255, 255, 255, 0.8)',
           scale: 0.35,
           offsetOrigin: 'top-right',
-          size: [95, 70],
-          offset: [2, 3],
+          size: [95, 80],
+          offset: [2, 1],
         })
       });
       const vector = new VectorLayer({
@@ -605,7 +610,6 @@ export class MapComponent implements OnInit {
 
       // POPUP
       this.map.on('singleclick', (evt: any) => {
-        console.log('click');
         const info = [];
         const coordinate = evt.coordinate;
         overlay.setPosition(coordinate);
@@ -714,6 +718,19 @@ export class MapComponent implements OnInit {
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);
       }
+    }
+
+    removePoppup = () => {
+      const hooverContainer = document.getElementById('popup-hoover');
+      const hoover = new Overlay({
+        element: hooverContainer,
+      });
+      this.map.removeOverlay(hoover);
+    }
+
+    removeLayerRain = (layername: any) => {
+      console.log(layername);
+      this.map.removeLayer(layername);
     }
 
     getLayerTypeFromHref(layer: any): string {
