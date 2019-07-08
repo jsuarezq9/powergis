@@ -281,10 +281,9 @@ export class MapComponent implements OnInit {
               hooverContainer.innerHTML += '<p>Precipitación: ' +
               jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].precipitacion
                 .toFixed(3) +
-              '</p><p>Datos Analizados: ' +
+              ' [mm]</p><p>Datos Analizados: ' +
               jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].cuenta +
-              '</p>' +
-              jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].color_rgb;
+              '</p>';
               hooverContainer.style.display = 'inline-block';
           }
         }

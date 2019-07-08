@@ -16,7 +16,7 @@ export class DatawarehouseService {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
       // tslint:disable-next-line: max-line-length
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiZ2VzdG9yX2ludGVybm8iLCJlbWFpbCI6ImFuZHJlcy52ZWxhc2NvQGVuZWwuY29tIiwiZXhwIjoxNTc3MTQ1NjAwfQ.57g7-Xu2R8OBWHODxHsQ9y3twsICBPg2uf7-oc1twT0'
+      Authorization: 'Bearer '+ this.token
     })
   };
 
