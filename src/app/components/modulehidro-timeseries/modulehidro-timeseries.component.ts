@@ -110,10 +110,9 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.firstDateYear);
+    // console.log(this.firstDateYear);
     const initial = moment(this.firstDateYear.valueOf()).format('YYYY-MM-DD HH:MM:SS');
-    const today = moment().format('YYYY-MM-DD HH:mm:ss A');
-
+    const today = moment().format('YYYY-MM-DD HH:MM:SS');
     this.interaction.timeSeriesInteraction.subscribe(sensor => {
       this.selectedSensor = sensor;
       console.log('Info en Modulehidro timeseries', sensor);

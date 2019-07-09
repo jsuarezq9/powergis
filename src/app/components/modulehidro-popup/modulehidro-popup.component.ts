@@ -125,7 +125,7 @@ export class ModulehidroPopupComponent implements OnInit {
 
     // Guardo el sensor seleccionado
     this.selectedSensor = item;
-    console.log(this.selectedSensor)
+    // console.log(this.selectedSensor);
   }
 
   displayDataSensor(item: any) {
