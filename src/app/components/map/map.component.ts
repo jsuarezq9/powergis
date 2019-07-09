@@ -57,6 +57,7 @@ export class MapComponent implements OnInit {
   features = [];
   info = [];
   tooltip: any;
+  popupPrecipitacion: any;
   tooltipvalue = [];
   loadingTooltip: boolean;
   prueba: string;
@@ -92,7 +93,7 @@ export class MapComponent implements OnInit {
         controls: []
       });
       this.legendRaster = document.getElementById('rasterLegend');
-
+      this.popupPrecipitacion = document.getElementById('popup-hoover');
       this.tooltip = document.getElementById('myTooltip');
       const overlay = new Overlay({
         element: this.tooltip,
@@ -161,6 +162,7 @@ export class MapComponent implements OnInit {
       this.interaction.mapInteraction.subscribe(( layer: any ) => {
         const type = this.getLayerTypeFromHref(layer);
         this.removeTooltip();
+        // this.removePoppup();
         if (layer.show) {
           if (type) {
             this.addLayerTileWMS(layer.name, type, layer.edit, overlay);
@@ -180,14 +182,14 @@ export class MapComponent implements OnInit {
         // console.log('AGREGANDO CAPA ESTACIONES', layer);
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
-        const selectPointerMove = new Select({
+        const selectPointerMove2 = new Select({
           condition: pointerMove,
           style: layer.selectedstyle.hidroSelected,
-          layer: layerStations
+          layer: layerStations,
         });
-        this.map.addInteraction(selectPointerMove);
-        this.removePoppup();
-        // console.log(this.map.getLayers());
+        this.removeSelectColors();
+        this.map.addInteraction(selectPointerMove2);
+          // this.removePoppup();
         // this.removeLayerRain('vm_ultimo_dato_estacion');
         this.addPopupStations();
       });
@@ -204,8 +206,6 @@ export class MapComponent implements OnInit {
           console.log('Normal');
           this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         }
-        // const layersss = this.map.getLayers();
-        // console.log(layersss);
         this.addPopupPrecipitation();
       });
 
@@ -235,9 +235,6 @@ export class MapComponent implements OnInit {
       this.interaction.precipitationInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
         this.addPrecipitationRainWFS(type, layer.name);
-        // const layersss = this.map.getLayers();
-        // console.log(layer.name);
-        // console.log(layersss);
       });
 
       // 5. Cambio a view del mapa base
@@ -398,7 +395,10 @@ export class MapComponent implements OnInit {
         style: setStyle,
         layer: vector
       });
+      this.removeSelectColors();
       this.map.addInteraction(selectPointerMove2);
+      const inte = this.map.getInteractions();
+      console.log(inte);
       return vector;
     }    // FIN MODULO 3
 
@@ -720,12 +720,13 @@ export class MapComponent implements OnInit {
       }
     }
 
-    removePoppup = () => {
-      const hooverContainer = document.getElementById('popup-hoover');
-      const hoover = new Overlay({
-        element: hooverContainer,
-      });
-      this.map.removeOverlay(hoover);
+    removePoppup() {
+      this.popupPrecipitacion.classList.remove('hide');
+      // const hooverContainer = document.getElementById('popup-hoover');
+      // const hoover = new Overlay({
+      //   element: hooverContainer,
+      // });
+      // this.map.removeOverlay(hoover);
     }
 
     removeLayerRain = (layername: any) => {
@@ -766,6 +767,38 @@ export class MapComponent implements OnInit {
       // tslint:disable-next-line:no-shadowed-variable
       const count = 'count=1&';
       this.requestLayerWFS(type, name, count);
+    }
+
+    removeSelectColors() {
+
+      const inte = this.map.getInteractions();
+      console.log(inte);
+      this.map.removeInteraction(inte.array_[9]);
+
+      console.log(this.map.removeInteraction(inte.array_[9]));
+      // 3.Removiendo la capa de colores
+
+        // const layerStations = layer;
+        // console.log(layerStations);
+        // const selectPointerMove = new Select({
+        //   condition: pointerMove,
+        //   layer: layerStations
+        // });
+      console.log('hola entró');
+        // this.map.removeInteraction(layer);
+      // this.interaction.removeMapSelectInteraction.subscribe((layer: any) => {
+      //   const CQLfilter = 'CQL_FILTER=id_sensor=%270240%27&';
+
+      //   const type = this.getLayerTypeFromHref(layer);
+
+      //   const layerStations = this.requestLayerWFS(type, layer.name, CQLfilter);
+      //   console.log(layerStations);
+      //   const selectPointerMove = new Select({
+      //     condition: pointerMove,
+      //     layer: layerStations
+      //   });
+      //   console.log('hola entró');
+      // });
     }
 
   }
