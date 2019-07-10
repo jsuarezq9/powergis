@@ -57,7 +57,6 @@ export class MapComponent implements OnInit {
   features = [];
   info = [];
   tooltip: any;
-  popupPrecipitacion: any;
   tooltipvalue = [];
   loadingTooltip: boolean;
   prueba: string;
@@ -93,7 +92,6 @@ export class MapComponent implements OnInit {
         controls: []
       });
       this.legendRaster = document.getElementById('rasterLegend');
-      this.popupPrecipitacion = document.getElementById('popup-hoover');
       this.tooltip = document.getElementById('myTooltip');
       const overlay = new Overlay({
         element: this.tooltip,
@@ -179,7 +177,6 @@ export class MapComponent implements OnInit {
 
       // 2. Mostrar capa estaciones módulo 2
       this.interaction.stationsInteraction.subscribe((layer: any) => {
-        // console.log('AGREGANDO CAPA ESTACIONES', layer);
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
         const selectPointerMove2 = new Select({
@@ -188,9 +185,9 @@ export class MapComponent implements OnInit {
           layer: layerStations,
         });
         this.removeSelectColors();
+        this.removePoppup();
         this.map.addInteraction(selectPointerMove2);
-          // this.removePoppup();
-        // this.removeLayerRain('vm_ultimo_dato_estacion');
+        this.removeLayerRain('vm_ultimo_dato_estacion');
         this.addPopupStations();
       });
 
@@ -397,8 +394,6 @@ export class MapComponent implements OnInit {
       });
       this.removeSelectColors();
       this.map.addInteraction(selectPointerMove2);
-      const inte = this.map.getInteractions();
-      console.log(inte);
       return vector;
     }    // FIN MODULO 3
 
@@ -714,6 +709,7 @@ export class MapComponent implements OnInit {
     }
 
     removeLayer(name: string) {
+      // console.log(this.layers[name].layer);
       if (this.layers[name]) {
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);
@@ -721,17 +717,20 @@ export class MapComponent implements OnInit {
     }
 
     removePoppup() {
-      this.popupPrecipitacion.classList.remove('hide');
-      // const hooverContainer = document.getElementById('popup-hoover');
-      // const hoover = new Overlay({
-      //   element: hooverContainer,
-      // });
-      // this.map.removeOverlay(hoover);
+      const hooverContainer = document.getElementById('popup-hoover');
+      hooverContainer.classList.remove('show');
+      hooverContainer.classList.add('hide');
     }
 
-    removeLayerRain = (layername: any) => {
+    removeLayerRain(layername: any) {
       console.log(layername);
-      this.map.removeLayer(layername);
+      this.layers[layername].show = false;
+      this.map.removeLayer(this.layers[layername].layer);
+    }
+
+    removeSelectColors() {
+      const inte = this.map.getInteractions();
+      this.map.removeInteraction(inte.array_[9]);
     }
 
     getLayerTypeFromHref(layer: any): string {
@@ -767,38 +766,6 @@ export class MapComponent implements OnInit {
       // tslint:disable-next-line:no-shadowed-variable
       const count = 'count=1&';
       this.requestLayerWFS(type, name, count);
-    }
-
-    removeSelectColors() {
-
-      const inte = this.map.getInteractions();
-      console.log(inte);
-      this.map.removeInteraction(inte.array_[9]);
-
-      console.log(this.map.removeInteraction(inte.array_[9]));
-      // 3.Removiendo la capa de colores
-
-        // const layerStations = layer;
-        // console.log(layerStations);
-        // const selectPointerMove = new Select({
-        //   condition: pointerMove,
-        //   layer: layerStations
-        // });
-      console.log('hola entró');
-        // this.map.removeInteraction(layer);
-      // this.interaction.removeMapSelectInteraction.subscribe((layer: any) => {
-      //   const CQLfilter = 'CQL_FILTER=id_sensor=%270240%27&';
-
-      //   const type = this.getLayerTypeFromHref(layer);
-
-      //   const layerStations = this.requestLayerWFS(type, layer.name, CQLfilter);
-      //   console.log(layerStations);
-      //   const selectPointerMove = new Select({
-      //     condition: pointerMove,
-      //     layer: layerStations
-      //   });
-      //   console.log('hola entró');
-      // });
     }
 
   }
