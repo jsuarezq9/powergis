@@ -35,18 +35,15 @@ export class ModulehidroPopupComponent implements OnInit {
     this.selectedSensor = {};
     // Recibir respuesta de servicio de interacción de la capa estaciones y determinar acción
     this.interaction.popupInteraction.subscribe((popup: any) => {
-      console.log('Recibe: ', popup);
       if ( popup !== undefined) {
         this.initializePopup();
         this.stationCompany = popup.nombreEntidad;
         this.stationName = popup.nombreEstacion;
         this.stationId = popup.idEstacion;
         this.stationState = popup.estadoEstacion;
-        console.log('Estación seleccionada: ', this.stationId);
 
         // Preguntar y recibir respuesta de servicio de dwh de la estación seleccionada y determinar acción
         this.dwhService.getSensorsLastInfoByStation(this.stationId).subscribe((data: any) => {
-          console.log('DATA dwh', data);
           if (data.length > 0) {
             this.showInfo = true;
             this.info = data;
@@ -54,7 +51,7 @@ export class ModulehidroPopupComponent implements OnInit {
             const formatDates = this.date.valueOf().toString().split(',')[0].split('/');
             this.date = `${formatDates[0]} ${this.months[Number(formatDates[1]) - 1]}`;
           } else {
-            console.log('NO hay datos de la estación seleccionada');
+            // console.log('NO hay datos de la estación seleccionada');
             this.showInfo = false;
             this.info = [];
             this.date = undefined;
@@ -91,7 +88,6 @@ export class ModulehidroPopupComponent implements OnInit {
   }
 
   changeSelection(event: any, item: any) {
-    console.log('Entró')
 
     // Reinicio selección en popup y popup expanded
     const expandedItems = document.getElementsByClassName('expandeditem');
@@ -125,7 +121,6 @@ export class ModulehidroPopupComponent implements OnInit {
 
     // Guardo el sensor seleccionado
     this.selectedSensor = item;
-    // console.log(this.selectedSensor);
   }
 
   displayDataSensor(item: any) {

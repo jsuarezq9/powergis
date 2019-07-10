@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 export class ComponentsInteractionService {
 
   public mapInteraction: Subject<any> = new Subject();
+  public removeMapSelectInteraction: Subject<any> = new Subject();
   public layerTitlesInteraction: Subject<any> = new Subject();
   public mapviewInteraction: Subject<any> = new Subject();
   public stationsInteraction: Subject<any> = new Subject();
@@ -20,7 +21,7 @@ export class ComponentsInteractionService {
 
   constructor() {}
 
-  setLayer(layer: any, show: boolean, edit: boolean): any {
+  setLayer(layer: any, show: boolean, edit: boolean): void {
     layer.show = show;
     layer.edit = edit;
     this.mapInteraction.next(layer);
@@ -39,6 +40,12 @@ export class ComponentsInteractionService {
     this.mapviewInteraction.next(all);
   }
 
+  setSelectLayer(layer: any, show: boolean, edit: boolean): void {
+    layer.show = show;
+    layer.edit = edit;
+    this.removeMapSelectInteraction.next(layer);
+  }
+
   setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): void {
     layer.style = styleIn;
     layer.selectedstyle = selectedStyleIn;
@@ -47,7 +54,6 @@ export class ComponentsInteractionService {
 
   setPrecipitationLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): any {
     layer.query = query;
-    console.log('bool en interaction ', query);
     layer.iniDate = iniDate;
     layer.finDate = finDate;
     this.precipitationInteraction.next(layer);

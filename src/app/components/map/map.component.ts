@@ -93,6 +93,7 @@ export class MapComponent implements OnInit {
       });
       this.legendRaster = document.getElementById('rasterLegend');
       this.tooltip = document.getElementById('myTooltip');
+      this.popup = document.getElementById('myPopup');
       const overlay = new Overlay({
         element: this.tooltip,
         autoPan: true
@@ -184,11 +185,18 @@ export class MapComponent implements OnInit {
           style: layer.selectedstyle.hidroSelected,
           layer: layerStations,
         });
-        this.removeSelectColors();
-        this.removePoppup();
         this.map.addInteraction(selectPointerMove2);
-        this.removeLayerRain('vm_ultimo_dato_estacion');
+        // this.removeLayerRain('vm_ultimo_dato_estacion');
         this.addPopupStations();
+      });
+
+      // INTERACIÓN PARA EL CONTROL DE LO QUE SE DEBE MOSTRAR EN CADA MODULO Y EN CADA CAPA
+      this.interaction.removeMapSelectInteraction.subscribe((layer: any) => {
+        if (layer.show) {
+          this.removeLayerRain('vm_ultimo_dato_estacion');
+          this.removePoppup();
+          this.removeSelectColors();
+        }
       });
 
 
@@ -197,10 +205,8 @@ export class MapComponent implements OnInit {
         const type = this.getLayerTypeFromHref(layer);
         // this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         if (layer.iniDate && layer.finDate) {
-          console.log('Hubo query');
           this.getAggregatedData(layer.iniDate, layer.finDate, type, layer.name);
         } else {
-          console.log('Normal');
           this.getAggregatedData(this.precipitacionFechaInicio, this.precipitacionFechaFin, type, layer.name);
         }
         this.addPopupPrecipitation();
@@ -442,8 +448,6 @@ export class MapComponent implements OnInit {
       // console.log('TIPO DE CAPA', name, newLayer, this.layers);
       if (overlay) {
         this.eventTooltip(newLayer, overlay);
-      } else {
-        console.log('No debe haber popup');
       }
     }
 
@@ -597,7 +601,6 @@ export class MapComponent implements OnInit {
 
     addPopupStations() {
       // OVERLAY
-      this.popup = document.getElementById('myPopup');
       const overlay = new Overlay({
         element: this.popup,
         autoPan: true
@@ -632,6 +635,8 @@ export class MapComponent implements OnInit {
           if (!this.popup.classList.contains('show')) {
             this.popup.classList.add('show');
           }
+          // this.popup.classList.add('show');
+
         } else {
           this.popup.classList.remove('show');
         }
@@ -723,9 +728,14 @@ export class MapComponent implements OnInit {
     }
 
     removeLayerRain(layername: any) {
-      console.log(layername);
-      this.layers[layername].show = false;
-      this.map.removeLayer(this.layers[layername].layer);
+      const layersActive = this.map.getLayers();
+      // console.log(layersActive);
+      // console.log(layername);
+      // this.layers[layername].show = false;
+      // console.log(this.layers[layername].layer);
+      // console.log(layersActive.array_[1]);
+      // this.map.removeLayer(this.layers[layername].layer);
+      this.map.removeLayer(layersActive.array_[1]);
     }
 
     removeSelectColors() {
