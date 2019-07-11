@@ -588,14 +588,14 @@ export class MapComponent implements OnInit {
       if (styleIn) {
         setStyle = (feature) => {
           if (feature.get('nombre_entidad') === 'EMGESA' ) {
-            if (feature.get('estado_estacion') === 'Activa') {
+            if (feature.get('estado_estacion') === 'Inactiva') {
               console.log(feature.get('estado_estacion'));
-              return styleIn.hidroEmgesaActiva;
-            } else {
               return styleIn.hidroEmgesaInactiva;
+            } else {
+              return styleIn.hidroEmgesaActiva;
             }
           } else {
-            if (feature.get('estado_estacion') === 'Activa') {
+            if (feature.get('estado_estacion') === 'Inactiva') {
               return styleIn.hidroInactiva;
             } else {
               return styleIn.hidroActiva;
