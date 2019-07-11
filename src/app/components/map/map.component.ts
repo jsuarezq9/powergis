@@ -743,17 +743,22 @@ export class MapComponent implements OnInit {
 
     removeLayerRain(layername: any) {
       const layersActive = this.map.getLayers();
-      // console.log(layersActive);
-      // console.log(layername);
-      // this.layers[layername].show = false;
-      // console.log(this.layers[layername].layer);
-      // console.log(layersActive.array_[1]);
-      // this.map.removeLayer(this.layers[layername].layer);
-      this.map.removeLayer(layersActive.array_[1]);
+      console.log(layersActive);
+      // this.map.removeLayer(layersActive.array_[2]);
+      const length = Object.keys(this.layers).length;
+      const keys = Object.keys(this.layers);
+      for (let index = 0; index < length; index++) {
+        const element = keys[index];
+        console.log(element);
+        // this.removeLayer(element);
+        // tslint:disable-next-line: no-string-literal
+        // document.getElementById(`${element}`)['checked'] = false;
+        // tslint:disable-next-line:no-string-literal
+        // document.getElementById(`${element}`)['display'] = 'none';
+      }
     }
     removeLayerRainCustom() {
       const layersActive = this.map.getLayers();
-
       this.map.removeLayer(layersActive.array_[1]);
       this.map.removeLayer(layersActive.array_[3]);
     }
@@ -784,6 +789,7 @@ export class MapComponent implements OnInit {
       this.legendRaster.style.display = 'none';
       for (let index = 0; index < length; index++) {
         const element = keys[index];
+        console.log(element);
         this.removeLayer(element);
         // tslint:disable-next-line: no-string-literal
         document.getElementById(`${element}`)['checked'] = false;

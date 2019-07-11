@@ -177,7 +177,6 @@ export class SidebarComponent implements OnInit {
   removeEstaciones() {
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
-    this.interaction.setLayer(this.layerVMEstaciones, false, false);
     this.interaction.setLayer(this.layerRaster, false, false);
     this.interaction.setSelectLayer(this.layerVMEstaciones, true, false);
     this.legendHidro.style.display = 'none';
