@@ -33,6 +33,10 @@ export class ModulehidroComponent implements OnInit {
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();
     });
+    // Eliminando desde el botón limpiar la ayuda del menu desplegable
+    this.interaction.setActiveBaseLayers.subscribe((layer: any) => {
+      this.layersInHidro = [];
+    });
+  }
+}
 
-  }
-  }

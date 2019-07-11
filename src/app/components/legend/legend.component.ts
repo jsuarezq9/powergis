@@ -50,6 +50,11 @@ export class LegendComponent implements OnInit {
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();
     });
+    // Eliminando desde el botón limpiar la ayuda del layend
+    this.interaction.setActiveBaseLayers.subscribe((layer: any) => {
+      this.layersInLegend = [];
+    });
+
 
     this.getLegend();
   }

@@ -13,7 +13,7 @@
             <div class="row mt-2 rounded-pill shadow-sm align-items-center itemsWhite">
                 <div class="dropdown w-50">
                     <div class="col btn-lg buttonLeft text-center border-right pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPreestablecido" (click)="setStyle($event);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <small id="buttonPreestablecido">{{nameRasterActual}}</small>
+                        <span id="buttonPreestablecido">{{nameRasterActual}}</span>
                     </div>
                     <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonPreestablecido" style="width: 200%; max-height: 180px;" id="drop1">
                         <a class="dropdown-item pointer" *ngFor="let item of rasters" (click)='changeRaster(item);changeEstaciones(); changeNameDrop(item)' id="{{item.name}}"  aria-labelledby="buttonPreestablecido">{{item.title}}</a>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="dropdown w-50">
                     <div class="col btn-lg buttonRight text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPersonalizado" (click)="setStyle($event);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <small id="buttonPersonalizado">Personalizado</small>
+                        <span id="buttonPersonalizado">Personalizado</span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right mt-2 overflow-auto p-3" aria-labelledby="dropdownMenuButton" style="width: 200%; max-height: fit-content;" (click)="keepDropdown($event);" id="drop2">
                         <!-- <hr> Fecha fin: <input type="date" name="fecha_inicio" id="fechaFin"> <br><br> -->

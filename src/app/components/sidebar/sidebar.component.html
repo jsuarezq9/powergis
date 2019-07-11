@@ -22,17 +22,17 @@
                         <button (click)="collapse=!collapse; this.buttonBases.classList.add('activeButton'); borderActive($event); removeEstaciones(); removeLegendRaster()" id="buttonBases" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleBasesTarget" aria-expanded="false"
                             aria-controls="collapseExample" #buttonBases>
                             <img src="./assets/icons/sidebar/Basica-{{image.buttonBases}}.png" class="w-50 align-content-center pb-2" alt="Asset Base Icon">
-                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Base</div>
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 80%">Base</div>
                         </button>
                         <button (click)="collapse=!collapse; this.buttonHidrology.classList.add('activeButton'); borderActive($event); addEstacionesHidro();" id="buttonHidrology" class="btn modulesButton ripple" type="button" data-toggle="collapse" data-target="#moduleHidrologyTarget"
                             aria-expanded="false" aria-controls="collapseExample" #buttonHidrology>
                             <img src="./assets/icons/sidebar/MonitoreoHidrometeorologico-{{image.buttonHidrology}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
-                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Monitoreo</div>
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 80%">Monitoreo</div>
                         </button>
                         <button (click)="collapse=!collapse; this.buttonPrecipitation.classList.add('activeButton'); borderActive($event);addEstacionesPrecipitation()" id="buttonPrecipitation" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse"
                             data-target="#modulePrecipitationTarget" aria-expanded="false" aria-controls="collapseExample" #buttonPrecipitation>
                             <img src="./assets/icons/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-2" alt="Asset Tem Icon">
-                            <div class="small text-wrap" style="color: aliceblue; font-size: 50%">Precipitación (mm)</div>
+                            <div class="small text-wrap" style="color: aliceblue; font-size: 80%">Precipitación (mm)</div>
                         </button>
                     </div>
                 </div>

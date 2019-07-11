@@ -589,7 +589,6 @@ export class MapComponent implements OnInit {
         setStyle = (feature) => {
           if (feature.get('nombre_entidad') === 'EMGESA' ) {
             if (feature.get('estado_estacion') === 'Inactiva') {
-              console.log(feature.get('estado_estacion'));
               return styleIn.hidroEmgesaInactiva;
             } else {
               return styleIn.hidroEmgesaActiva;
@@ -743,18 +742,14 @@ export class MapComponent implements OnInit {
 
     removeLayerRain(layername: any) {
       const layersActive = this.map.getLayers();
-      console.log(layersActive);
       // this.map.removeLayer(layersActive.array_[2]);
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
       for (let index = 0; index < length; index++) {
         const element = keys[index];
-        console.log(element);
-        // this.removeLayer(element);
-        // tslint:disable-next-line: no-string-literal
-        // document.getElementById(`${element}`)['checked'] = false;
-        // tslint:disable-next-line:no-string-literal
-        // document.getElementById(`${element}`)['display'] = 'none';
+        if (element === 'vm_ultimo_dato_estacion') {
+          this.removeLayer(element);
+        }
       }
     }
     removeLayerRainCustom() {
@@ -789,13 +784,20 @@ export class MapComponent implements OnInit {
       this.legendRaster.style.display = 'none';
       for (let index = 0; index < length; index++) {
         const element = keys[index];
-        console.log(element);
         this.removeLayer(element);
-        // tslint:disable-next-line: no-string-literal
-        document.getElementById(`${element}`)['checked'] = false;
+        if (element.substr(0, 1) === 'c' || element.substr(0, 4) === 'vm_c') {
         // tslint:disable-next-line:no-string-literal
-        // document.getElementById(`${element}`)['display'] = 'none';
+          document.getElementById(`${element}`)['checked'] = false;
+        }
       }
+      this.layers = {};
+      this.interaction.setActiveLayers(this.layers);
+    }
+
+    resetCheckButton(element: any) {
+      const checkButton = document.getElementById(element);
+      checkButton.classList.add('inactiveCheck');
+      checkButton.classList.remove('activeCheck');
     }
 
     getLegend(type: string, name: string) {

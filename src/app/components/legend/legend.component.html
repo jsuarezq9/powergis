@@ -23,7 +23,7 @@
     <!-- Capas base -->
     <div class="row pt-2 justify-content-md-center">
         <div class="col-3 text-wrap text-center" *ngFor="let layer of layersInLegend" style="font-size: 10px" [id]="layer.name">
-            <img class="w-25" src="./assets/icons/sidemenu/Polygon.png" alt="" [id]="layer.name"> {{layer | layerName | capitalize}}
+            <img class="w-25" src="./assets/icons/sidemenu/Polygon.png" alt="" [id]="layer.name"> {{layer.title}}
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ export class ComponentsInteractionService {
   public removeMapSelectInteraction: Subject<any> = new Subject();
   public removeRainLayer: Subject<any> = new Subject();
   public layerTitlesInteraction: Subject<any> = new Subject();
+  public setActiveBaseLayers: Subject<any> = new Subject();
   public mapviewInteraction: Subject<any> = new Subject();
   public stationsInteraction: Subject<any> = new Subject();
   public precipitationInteraction: Subject<any> = new Subject();
@@ -51,6 +52,10 @@ export class ComponentsInteractionService {
     layer.show = show;
     layer.edit = edit;
     this.removeRainLayer.next(layer);
+  }
+
+  setActiveLayers(layer: any) {
+    this.setActiveBaseLayers.next(layer);
   }
 
   setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): void {
