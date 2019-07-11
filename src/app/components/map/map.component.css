@@ -157,16 +157,28 @@
 
 .ol-popup {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: #FFFFFF;
     -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
     filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
-    padding: 15px;
     border-radius: 10px;
-    border: 1px solid #000000;
-    bottom: 12px;
+    bottom: 6px;
     left: -50px;
     color: whitesmoke;
     min-width: 280px;
+}
+
+.ol-popup-body {
+    background-color:#FFFFFF;
+    border-radius: 0px 0px 10px 10px;
+    color: #5B5B61;
+    padding-left: 4px;
+}
+
+.ol-popup-title {
+    background-color: #2F86EA;
+    color: whitesmoke;
+    border-radius: 10px 10px 0px 0px;
+    padding: 4px;
 }
 
 .ol-popup:after,
@@ -181,14 +193,14 @@
 }
 
 .ol-popup:after {
-    border-top-color: rgba(0, 0, 0, 0.6);
+    border-top-color:#FFFFFF;
     border-width: 10px;
     left: 48px;
     margin-left: -10px;
 }
 
 .ol-popup:before {
-    border-top-color: rgba(0, 0, 0, 0.6);
+    border-top-color:#FFFFFF;
     border-width: 11px;
     left: 48px;
     margin-left: -11px;

@@ -8,10 +8,12 @@ export class ComponentsInteractionService {
 
   public mapInteraction: Subject<any> = new Subject();
   public removeMapSelectInteraction: Subject<any> = new Subject();
+  public removeRainLayer: Subject<any> = new Subject();
   public layerTitlesInteraction: Subject<any> = new Subject();
   public mapviewInteraction: Subject<any> = new Subject();
   public stationsInteraction: Subject<any> = new Subject();
   public precipitationInteraction: Subject<any> = new Subject();
+  public precipitationRainInteraction: Subject<any> = new Subject();
   public rastersInteraction: Subject<any> = new Subject();
   public popupInteraction: Subject<any> = new Subject();
   public tooltipInteraction: Subject<any> = new Subject();
@@ -45,6 +47,11 @@ export class ComponentsInteractionService {
     layer.edit = edit;
     this.removeMapSelectInteraction.next(layer);
   }
+  setRainLayer(layer: any, show: boolean, edit: boolean): void {
+    layer.show = show;
+    layer.edit = edit;
+    this.removeRainLayer.next(layer);
+  }
 
   setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): void {
     layer.style = styleIn;
@@ -57,6 +64,12 @@ export class ComponentsInteractionService {
     layer.iniDate = iniDate;
     layer.finDate = finDate;
     this.precipitationInteraction.next(layer);
+  }
+  setPrecipitationRainLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): any {
+    layer.query = query;
+    layer.iniDate = iniDate;
+    layer.finDate = finDate;
+    this.precipitationRainInteraction.next(layer);
   }
 
   setRaster(layer: any): void {

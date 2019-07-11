@@ -172,16 +172,13 @@ export class AppComponent {
   getLegend(event: any) {
     const legendDiv = document.getElementById('legend');
     legendDiv.classList.toggle('legend-expanded');
-    console.log(legendDiv.classList);
     let isExpanded = false;
     for (let index = 0; index < legendDiv.classList.length; index++) {
       const element = legendDiv.classList[index];
-      console.log(element)
       if (element === 'legend-expanded') {
         isExpanded = true;
       }
     }
-    console.log(isExpanded)
     if (isExpanded) {
       const legendCollapsed = document.getElementById('legendCollapsed');
       legendCollapsed.style.display = 'none';

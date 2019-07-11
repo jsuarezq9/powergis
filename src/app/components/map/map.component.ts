@@ -235,9 +235,16 @@ export class MapComponent implements OnInit {
       });
 
       // 5. Mostrar capa de lluvia
-      this.interaction.precipitationInteraction.subscribe((layer: any) => {
+      this.interaction.precipitationRainInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
         this.addPrecipitationRainWFS(type, layer.name);
+      });
+
+      // 6. Eliminar la capa de lluvia cuando se cambia de raster
+      this.interaction.removeRainLayer.subscribe((layer: any) => {
+        if (layer.show) {
+          this.removeLayerRainCustom();
+        }
       });
 
       // 5. Cambio a view del mapa base
@@ -260,6 +267,8 @@ export class MapComponent implements OnInit {
 
     addPopupPrecipitation() {
       const hooverContainer = document.getElementById('popup-hoover');
+      const hooverTitle = document.getElementById('popupTitle');
+      const hooverBody = document.getElementById('popupBody');
       const hoover = new Overlay({
         element: hooverContainer,
         autoPan: false,
@@ -272,6 +281,7 @@ export class MapComponent implements OnInit {
       hooverContainer.classList.add('show');
 
       let featureOnHover = Feature;
+
       this.map.on('pointermove', (evt) => {
         featureOnHover = this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
           return feature;
@@ -281,15 +291,18 @@ export class MapComponent implements OnInit {
           if (featureOnHover.get('nombre')) {
             hooverContainer.innerHTML = featureOnHover.getProperties().nombre;
             hooverContainer.style.display = 'block';
+            hooverTitle.style.display = 'block';
+            hooverBody.style.display = 'block';
           } else if (featureOnHover.get('nombre_estacion')) {
-            hooverContainer.innerHTML = featureOnHover.get('nombre_estacion');
+            hooverTitle.innerHTML = featureOnHover.get('nombre_estacion');
             if ( jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0]) {
-              hooverContainer.innerHTML += '<p>Precipitación: ' +
+              hooverBody.innerHTML = '<div>Ultima lectura: <small>' + featureOnHover.get('fecha_hora') +
+              '</small></div><div>Precipitación: ' +
               jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].precipitacion
                 .toFixed(3) +
-              ' [mm]</p><p>Datos Analizados: ' +
+              ' [mm]</div><div>Datos Analizados: ' +
               jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].cuenta +
-              '</p>';
+              '</div>';
               hooverContainer.style.display = 'inline-block';
           }
         }
@@ -576,9 +589,10 @@ export class MapComponent implements OnInit {
         setStyle = (feature) => {
           if (feature.get('nombre_entidad') === 'EMGESA' ) {
             if (feature.get('estado_estacion') === 'Activa') {
-              return styleIn.hidroEmgesaInactiva;
-            } else {
+              console.log(feature.get('estado_estacion'));
               return styleIn.hidroEmgesaActiva;
+            } else {
+              return styleIn.hidroEmgesaInactiva;
             }
           } else {
             if (feature.get('estado_estacion') === 'Activa') {
@@ -736,6 +750,12 @@ export class MapComponent implements OnInit {
       // console.log(layersActive.array_[1]);
       // this.map.removeLayer(this.layers[layername].layer);
       this.map.removeLayer(layersActive.array_[1]);
+    }
+    removeLayerRainCustom() {
+      const layersActive = this.map.getLayers();
+
+      this.map.removeLayer(layersActive.array_[1]);
+      this.map.removeLayer(layersActive.array_[3]);
     }
 
     removeSelectColors() {

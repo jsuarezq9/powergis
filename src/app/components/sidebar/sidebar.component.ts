@@ -167,6 +167,7 @@ export class SidebarComponent implements OnInit {
     this.removeEstaciones();
     this.addRaster(this.layerRaster);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+    this.interaction.setPrecipitationRainLayer(this.layerVMEstaciones, false);
     setInterval(this.runLayersPrecipitationHourly, 3600000);
     // this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
     this.legendHidro.style.display = 'none';
@@ -192,6 +193,7 @@ export class SidebarComponent implements OnInit {
 
   runLayersPrecipitationHourly = () => {
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+    this.interaction.setPrecipitationRainLayer(this.layerVMEstaciones, false);
   }
 
   runLayersHidroHourly = () => {

@@ -22,15 +22,19 @@ export class ModuleprecipitationComponent implements OnInit {
   zoomRioBogota = 10;
   zoomGuavio = 10;
   rasters = [];
+  nameRasterActual = 'Preestablecido';
   layerEstaciones: any;
   layerVMEstaciones: any;
   isQuery = false;
+  // tslint:disable-next-line:variable-name
   date_inicio;
+  // tslint:disable-next-line:variable-name
   date_final;
 
   constructor(private interaction: ComponentsInteractionService,
               private geoservice: GeoserverService ) {
   this.getRasters();
+  this.nameRasterActual = 'Preestablecido';
   }
 
   ngOnInit() {
@@ -44,6 +48,7 @@ export class ModuleprecipitationComponent implements OnInit {
       name: 'vm_ultimo_dato_estacion',
       edit: false,
     };
+    this.nameRasterActual = 'Preestablecido';
   }
 
   viewColombia() {
@@ -140,6 +145,10 @@ export class ModuleprecipitationComponent implements OnInit {
     document.getElementById(rasterSeleccionado.name).classList.add('active');
   }
 
+  changeNameDrop(rasterSeleccionado: any) {
+    this.nameRasterActual = rasterSeleccionado.title;
+  }
+
   removeAllRasters() {
     this.rasters.forEach(element => {
       this.interaction.setLayer(element, false, false);
@@ -153,6 +162,7 @@ export class ModuleprecipitationComponent implements OnInit {
   changeEstaciones(iniDate?: any, finDate?: any) {
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, this.isQuery, iniDate, finDate);
+    this.interaction.setRainLayer(this.layerVMEstaciones, true, false);
   }
 
   getDateQuery(inicio: any, final: any) {
