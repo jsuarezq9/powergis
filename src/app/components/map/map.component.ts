@@ -186,7 +186,6 @@ export class MapComponent implements OnInit {
           layer: layerStations,
         });
         this.map.addInteraction(selectPointerMove2);
-        // this.removeLayerRain('vm_ultimo_dato_estacion');
         this.addPopupStations();
       });
 
@@ -281,7 +280,6 @@ export class MapComponent implements OnInit {
       hooverContainer.classList.add('show');
 
       let featureOnHover = Feature;
-
       this.map.on('pointermove', (evt) => {
         featureOnHover = this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
           return feature;
@@ -350,9 +348,9 @@ export class MapComponent implements OnInit {
         source: vectorSource,
         renderMode: 'vector',
         style: setStyle
-        });
+      });
       vector.setZIndex(2);
-      this.saveLayer(name, vector);
+      this.saveLayer('vm_ultimo_dato_rain_estacion', vector);
   }
 
     stylePrecipitationsLayer(vectorSource: any, name: any) {
@@ -747,7 +745,7 @@ export class MapComponent implements OnInit {
       const keys = Object.keys(this.layers);
       for (let index = 0; index < length; index++) {
         const element = keys[index];
-        if (element === 'vm_ultimo_dato_estacion') {
+        if (element === 'vm_ultimo_dato_rain_estacion') {
           this.removeLayer(element);
         }
       }
