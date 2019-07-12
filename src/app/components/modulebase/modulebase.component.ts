@@ -14,6 +14,7 @@ export class ModulebaseComponent implements OnInit {
   @Output() collapsedModule = new EventEmitter();
 
   layers = [];
+  layersF = [];
   layersInfo = [];
   rotation: string;
 
@@ -85,31 +86,27 @@ export class ModulebaseComponent implements OnInit {
 
   async getLayersTitles(layers: any[]) {
     const promises = [];
-    // console.log(layers)
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < layers.length; i++ ) {
       promises.push(this.geoservice.getLayersName(layers[i].source, layers[i].name));
     }
     forkJoin(promises).subscribe((response: any) => {
-
-      // console.log('Fork', response)
+      console.log('Fork', response);
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < response.length; i++) {
         const element = response[i];
         if (element) {
-          // console.log('****´', element.attribution.title);
           const newLayer = layers.filter(layer => element.name === layer.name)[0];
-          if (newLayer && newLayer !== undefined && layers.indexOf(newLayer) > 0) {
+          if (newLayer && newLayer !== undefined && layers.indexOf(newLayer) >= 0) {
             const j = layers.indexOf(newLayer);
             layers[j].title = element.attribution.title;
           }
         }
       }
-      // this.concatLayers(layers);
-      // console.log(responses.length, promises.length)
-      this.interaction.setLayerTitles(layers);
+      this.layersF = layers;
+      console.log(this.layersF);
+      this.interaction.setLayerTitles(this.layersF);
     });
-
   }
 
 }
