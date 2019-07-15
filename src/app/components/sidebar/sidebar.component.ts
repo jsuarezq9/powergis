@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit {
     buttonBases: this.WHITE,
     buttonHidrology: this.WHITE,
     buttonPrecipitation: this.WHITE,
+    buttonDespacho: this.WHITE,
   };
   expandSidebar = false;
   rotation: string;

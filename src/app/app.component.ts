@@ -11,6 +11,7 @@ export class AppComponent {
   moduleBases: boolean;
   moduleHidrology: boolean;
   modulePrecipitation: boolean;
+  moduleDespacho: boolean;
 
   // Booleanos del estado de los botones de colapsar de cada módulo
   moduleMemory = '';
@@ -24,11 +25,13 @@ export class AppComponent {
   BUTTON_BASES_ID = 'buttonBases';
   BUTTON_HIDROLOGY_ID = 'buttonHidrology';
   BUTTON_PRECIPITATION_ID = 'buttonPrecipitation';
+  BUTTON_DESPACHO_ID = 'buttonDespacho';
 
   // Ids presentes en el html de cada uno de los modulos
   MODULE_BASES_ID = 'moduleBases';
   MODULE_HIDROLOGY_ID = 'moduleHidrology';
   MODULE_PRECIPITATION_ID = 'modulePrecipitation';
+  MODULE_DESPACHO_ID = 'moduleDespacho';
 
   MODULES_SHOW = 'block';
   MODULES_HIDE = 'none';
@@ -48,10 +51,13 @@ export class AppComponent {
       this.moduleMemory = this.MODULE_HIDROLOGY_ID;
     } else if (this.modulePrecipitation) {
       this.moduleMemory = this.MODULE_PRECIPITATION_ID;
+    } else if (this.moduleDespacho) {
+      this.moduleMemory = this.MODULE_DESPACHO_ID;
     }
     this.moduleBases = false;
     this.moduleHidrology = false;
     this.modulePrecipitation = false;
+    this.moduleDespacho = false;
   }
 
   rotateCollapseButton(): void {
@@ -80,7 +86,8 @@ export class AppComponent {
 
   getState(show: any): void {
     // Si viene de los botones
-    if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID) {
+    // tslint:disable-next-line:max-line-length
+    if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID || show === this.BUTTON_DESPACHO_ID) {
       const EXPANDSIDEMENU_TEMP = this.expandSidemenu;
       this.expandSidemenu = true;
       this.resetModules();
@@ -127,6 +134,7 @@ export class AppComponent {
     document.getElementById('sidemenu').style.display = displaySidemenu;
   }
 
+
   getStateFromButtons(show: any): void {
     if (show === this.BUTTON_BASES_ID) {
       this.moduleBases = !this.moduleBases;
@@ -134,6 +142,8 @@ export class AppComponent {
       this.moduleHidrology = !this.moduleHidrology;
     } else if (show === this.BUTTON_PRECIPITATION_ID) {
       this.modulePrecipitation = !this.modulePrecipitation;
+    } else if (show === this.BUTTON_DESPACHO_ID) {
+      this.moduleDespacho = !this.moduleDespacho;
     }
   }
 
@@ -145,6 +155,8 @@ export class AppComponent {
         this.moduleHidrology = !this.moduleHidrology;
       } else if (this.moduleMemory === this.MODULE_PRECIPITATION_ID) {
         this.modulePrecipitation = !this.modulePrecipitation;
+      } else if (this.moduleMemory === this.MODULE_DESPACHO_ID) {
+        this.moduleDespacho = !this.moduleDespacho;
       }
     }
   }
@@ -154,18 +166,27 @@ export class AppComponent {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_SHOW;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
     } else if (this.moduleHidrology) {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
-      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_SHOW;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_SHOW;
     } else if (this.modulePrecipitation) {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_SHOW;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+    } else if (this.moduleDespacho) {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_SHOW;
     } else {
       document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
       document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
     }
   }
 

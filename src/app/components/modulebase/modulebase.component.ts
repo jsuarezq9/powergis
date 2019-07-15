@@ -104,7 +104,6 @@ export class ModulebaseComponent implements OnInit {
         }
       }
       this.layersF = layers;
-      console.log(this.layersF);
       this.interaction.setLayerTitles(this.layersF);
     });
   }

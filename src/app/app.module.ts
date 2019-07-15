@@ -16,6 +16,7 @@ import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeser
 import { AppComponent } from './app.component';
 import { PlotlyViaWindowModule  } from 'angular-plotly.js';
 import { LegendComponent } from './components/legend/legend.component';
+import { ModuleDespachoComponent } from './components/module-despacho/module-despacho.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { LegendComponent } from './components/legend/legend.component';
     CapitalizePipe,
     ModulehidroPopupComponent,
     ModulehidroTimeseriesComponent,
-    LegendComponent
+    LegendComponent,
+    ModuleDespachoComponent
   ],
   imports: [
     BrowserModule,

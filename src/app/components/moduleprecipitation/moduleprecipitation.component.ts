@@ -137,7 +137,6 @@ export class ModuleprecipitationComponent implements OnInit {
   changeRaster(rasterSeleccionado: any) {
     this.removeAllRasters();
     this.addRaster(rasterSeleccionado);
-
     // Cambiar estilo de selección
     this.rasters.forEach(element => {
       document.getElementById(element.name).classList.remove('active');
