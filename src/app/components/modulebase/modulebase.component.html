@@ -1,5 +1,5 @@
 <div class="col-12 modules-outer-base shadow" style="padding-left: 5px;">
-    <div class="animated fadeIn moduleFloat dropToolMenu border border-white" style="height: 100%; padding-bottom: 15px;">
+    <div class="animated fadeIn moduleFloat dropToolMenu border border-white" >
         <!-- Búsqueda y añadir capas -->
         <div class="container mt-3" style="width: 95%;">
             <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!-- Capas disponibles en mapa -->
-        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
+        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 20vh; max-height: 50vh; background-color: white">
             <br>
             <app-list-elements (selected)="selectLayer($event)" [element]="element" *ngFor="let element of layers"></app-list-elements>
             <br>
