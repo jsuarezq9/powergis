@@ -751,9 +751,14 @@ export class MapComponent implements OnInit {
       }
     }
     removeLayerRainCustom() {
-      const layersActive = this.map.getLayers();
-      this.map.removeLayer(layersActive.array_[1]);
-      this.map.removeLayer(layersActive.array_[3]);
+      const length = Object.keys(this.layers).length;
+      const keys = Object.keys(this.layers);
+      for (let index = 0; index < length; index++) {
+        const element = keys[index];
+        if (element === 'vm_ultimo_dato_rain_estacion') {
+          this.removeLayer(element);
+        }
+      }
     }
 
     removeSelectColors() {
