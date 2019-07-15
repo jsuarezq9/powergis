@@ -86,6 +86,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     this.firstDateYear = new Date('1/1/' + this.actualYear);
     this.layout = {
       title: false,
+      connectgaps:false,
       autosize: true,
       // autosize: false,
       // width: 500,
@@ -104,7 +105,8 @@ export class ModulehidroTimeseriesComponent implements OnInit {
           rangeslider: {}
       },
       yaxis: {
-          fixedrange: true
+          fixedrange: true,
+
       },
   };
   }
