@@ -193,6 +193,7 @@ export class MapComponent implements OnInit {
       this.interaction.removeMapSelectInteraction.subscribe((layer: any) => {
         if (layer.show) {
           this.removeLayerRain('vm_ultimo_dato_estacion');
+          this.removeRasterCustom();
           this.removePoppup();
           this.removeSelectColors();
         }
@@ -726,9 +727,21 @@ export class MapComponent implements OnInit {
 
     removeLayer(name: string) {
       // console.log(this.layers[name].layer);
+      // console.log(this.layers);
       if (this.layers[name]) {
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);
+      }
+    }
+
+    removeRasterCustom() {
+      const length = Object.keys(this.layers).length;
+      const keys = Object.keys(this.layers);
+      for (let index = 0; index < length; index++) {
+        const element = keys[index];
+        if (element.substr(0, 2) === 'PT') {
+          this.removeLayer(element);
+        }
       }
     }
 
