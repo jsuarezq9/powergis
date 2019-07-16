@@ -295,7 +295,9 @@ export class MapComponent implements OnInit {
           } else if (featureOnHover.get('nombre_estacion')) {
             hooverTitle.innerHTML = featureOnHover.get('nombre_estacion');
             if ( jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0]) {
-              hooverBody.innerHTML = '<div>Ultima lectura: <small>' + featureOnHover.get('fecha_hora') +
+              const fecha = featureOnHover.get('fecha_hora');
+              const ultimaFecha = moment(fecha).add(0, 'day').format('YYYY-MM-DD HH:mm A');
+              hooverBody.innerHTML = '<div>Ultima lectura: <small>' + ultimaFecha +
               '</small></div><div>Precipitación: ' +
               jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + featureOnHover.get('id_estacion') + '" )]')[0].precipitacion
                 .toFixed(3) +

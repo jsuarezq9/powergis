@@ -116,15 +116,22 @@ export class ModuleprecipitationComponent implements OnInit {
       let nameButton = '';
       const deltaDate = rasterArray[2];
       const deltaDateTime = deltaDate.substring( deltaDate.length - 1, deltaDate.length).toLowerCase();
-      const deltaDatePeriod = Number(deltaDate.substring( 0, deltaDate.length - 1));
+      let deltaDatePeriod;
+
+      if (deltaDate.length - 1 === 3) {
+        deltaDatePeriod = Number(deltaDate.substring( 0, deltaDate.length - 1));
+      } else {
+        deltaDatePeriod = deltaDate.substr(0, deltaDate.length - 1);
+      }
+
       if (deltaDateTime === 'h') {
-        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== 1) {
+        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== '01') {
           nameButton = nameButton + `Últimas ${deltaDatePeriod} horas`;
         } else {
           nameButton = nameButton + 'Última hora';
         }
       } else if (deltaDateTime === 'd') {
-        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== 1) {
+        if (rasterArray[1] === 'LAST' && deltaDatePeriod !== '01') {
           nameButton = nameButton + `Últimos ${deltaDatePeriod} días`;
         } else {
           nameButton = nameButton + 'Último día';

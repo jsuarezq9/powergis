@@ -91,7 +91,6 @@ export class ModulebaseComponent implements OnInit {
       promises.push(this.geoservice.getLayersName(layers[i].source, layers[i].name));
     }
     forkJoin(promises).subscribe((response: any) => {
-      console.log('Fork', response);
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < response.length; i++) {
         const element = response[i];
