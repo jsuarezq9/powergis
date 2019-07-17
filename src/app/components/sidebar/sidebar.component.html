@@ -34,7 +34,7 @@
                             <img src="./assets/icons/sidebar/Precipitacion-{{image.buttonPrecipitation}}.png" class="w-50 align-content-center pb-2 mt-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 80%">Precipitación (mm)</div>
                         </button>
-                        <button (click)="collapse=!collapse; this.buttonDespacho.classList.add('activeButton'); borderActive($event); addEstacionesHidro();" id="buttonDespacho" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse"
+                        <button (click)="collapse=!collapse; this.buttonDespacho.classList.add('activeButton'); borderActive($event); addEstacionesHidro(); " id="buttonDespacho" class="btn modulesButton modulesButton-bottom ripple" type="button" data-toggle="collapse"
                             data-target="#moduleDespachoTarget" aria-expanded="false" aria-controls="collapseExample" #buttonDespacho>
                             <img src="./assets/icons/sidebar/Despacho-{{image.buttonDespacho}}.png" class="w-50 align-content-center pb-2 mt-2" alt="Asset Tem Icon">
                             <div class="small text-wrap" style="color: aliceblue; font-size: 80%">Despacho</div>

@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit {
   layerEstaciones: any;
   layerVMEstaciones: any;
   layerRaster: any;
+  interval: any;
 
   // Estilos
   stylesHidro = {
@@ -138,7 +139,7 @@ export class SidebarComponent implements OnInit {
     this.removeEstaciones();
     this.removeLegendRaster();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
-    setInterval(this.runLayersHidroHourly, 3600000);
+    this.interval = setInterval(this.runLayersHidroHourly, 3600000);
     // console.log(this.legendHidro);
     this.legendHidro.style.display = 'flex';
 
@@ -169,13 +170,14 @@ export class SidebarComponent implements OnInit {
     this.addRaster(this.layerRaster);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
     this.interaction.setPrecipitationRainLayer(this.layerVMEstaciones, false);
-    setInterval(this.runLayersPrecipitationHourly, 3600000);
-    // this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
+    this.interval = setInterval(this.runLayersPrecipitationHourly, 3600000);
+    // clearInterval(this.interval);
     this.legendHidro.style.display = 'none';
     this.legendRaster.style.display = 'block';
   }
 
   removeEstaciones() {
+    clearInterval(this.interval);
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
     this.interaction.setLayer(this.layerRaster, false, false);
@@ -191,12 +193,23 @@ export class SidebarComponent implements OnInit {
     this.interaction.setRaster(raster);
   }
 
+
   runLayersPrecipitationHourly = () => {
+    // borrando las layers
+    this.interaction.setLayer(this.layerVMEstaciones, false, false);
+    this.interaction.setLayer(this.layerRaster, false, false);
+    this.interaction.setSelectLayer(this.layerVMEstaciones, true, false);
+    // creando las layers
+    this.interaction.setRaster(this.layerRaster);
     this.interaction.setPrecipitationLayer(this.layerVMEstaciones, false);
     this.interaction.setPrecipitationRainLayer(this.layerVMEstaciones, false);
   }
 
   runLayersHidroHourly = () => {
+    // borrando las layers
+    this.interaction.setLayer(this.layerEstaciones, false, false);
+    this.interaction.setSelectLayer(this.layerVMEstaciones, true, false);
+    // creando las layers
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
   }
 

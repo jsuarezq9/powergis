@@ -58,7 +58,7 @@ export class ComponentsInteractionService {
     this.setActiveBaseLayers.next(layer);
   }
 
-  setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): void {
+  setStationsLayer(layer: any, styleIn: any, selectedStyleIn: any): any {
     layer.style = styleIn;
     layer.selectedstyle = selectedStyleIn;
     this.stationsInteraction.next(layer);
