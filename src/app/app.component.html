@@ -1,55 +1,55 @@
 <div class="container-12">
-    <div class="container-fluid">
-        <div class="mapbody">
-            <app-body></app-body>
-        </div>
-        <div>
-            <app-header></app-header>
-        </div>
-        <div class="row container">
-            <div class="col-1" style="width: 100%">
-                <app-sidebar (activeModule)="getState($event)"></app-sidebar>
-            </div>
-            <!--  Esconder desde aquí, no deja interactuar con el mapa  -->
-            <div class="col-5" id="sidemenu" style="display: none; height:fit-content;">
-                <div class="container h-100">
-                    <div class="row h-100">
-                        <div class="col" style="display: none; width: 33%" id="moduleBases">
-                            <div class="h-100">
-                                <app-modulebase></app-modulebase>
-                            </div>
-                        </div>
-                        <div class="col" style="display: none; width: 33%" id="moduleHidrology">
-                            <div class="h-100">
-                                <app-modulehidro></app-modulehidro>
-                            </div>
-                        </div>
-                        <div class="col" style="display: none; width: 33%" id="modulePrecipitation">
-                            <div class="h-100">
-                                <app-moduleprecipitation></app-moduleprecipitation>
-                            </div>
-                        </div>
-                        <div class="col mt-3" style="display: none; width: 33%" id="moduleDespacho">
-                            <div class="h-100">
-                                <app-module-despacho></app-module-despacho>
-                            </div>
-                        </div>
-                    </div>
+  <div class="container-fluid">
+      <div class="mapbody">
+          <app-body></app-body>
+      </div>
+      <div>
+          <app-header></app-header>
+      </div>
+      <div class="row container">
+          <div class="col-1" style="width: 100%">
+              <app-sidebar (activeModule)="getState($event)"></app-sidebar>
+          </div>
+          <!--  Esconder desde aquí, no deja interactuar con el mapa  -->
+          <div class="col-5" id="sidemenu" style="display: none; height:fit-content;">
+              <div class="container h-100">
+                  <div class="row h-100">
+                      <div class="col" style="display: none; width: 33%" id="moduleBases">
+                          <div class="h-100">
+                              <app-modulebase></app-modulebase>
+                          </div>
+                      </div>
+                      <div class="col" style="display: none; width: 33%" id="moduleHidrology">
+                          <div class="h-100">
+                              <app-modulehidro></app-modulehidro>
+                          </div>
+                      </div>
+                      <div class="col" style="display: none; width: 33%" id="modulePrecipitation">
+                          <div class="h-100">
+                              <app-moduleprecipitation></app-moduleprecipitation>
+                          </div>
+                      </div>
+                      <div class="col mt-3" style="display: none; width: 33%" id="moduleDespacho">
+                          <div class="h-100">
+                              <app-module-despacho></app-module-despacho>
+                          </div>
+                      </div>
+                  </div>
 
-                </div>
-            </div>
-            <div id="buttonCollapseDiv" style="display: none;">
-                <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
-                    <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
-                </button>
-            </div>
-        </div>
-        <div style="position: absolute; z-index: 2;" >
-            <app-modulehidro-popup class="hidro-popup-expanded" style="display: none" id="moduleHidroPopup"></app-modulehidro-popup>
-        </div>
-        <!-- Para la leyenda -->
-        <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container positionLegend">
-            <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
-        </div>
-    </div>
+              </div>
+          </div>
+          <div id="buttonCollapseDiv" style="display: none;">
+              <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
+                  <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
+              </button>
+          </div>
+      </div>
+      <div style="position: absolute; z-index: 2;">
+          <app-modulehidro-popup class="hidro-popup-expanded" style="display: none" id="moduleHidroPopup"></app-modulehidro-popup>
+      </div>
+      <!-- Para la leyenda -->
+      <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container positionLegend">
+          <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
+      </div>
+  </div>
 </div>

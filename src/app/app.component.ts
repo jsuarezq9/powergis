@@ -194,6 +194,7 @@ export class AppComponent {
     const legendDiv = document.getElementById('legend');
     legendDiv.classList.toggle('legend-expanded');
     let isExpanded = false;
+    // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < legendDiv.classList.length; index++) {
       const element = legendDiv.classList[index];
       if (element === 'legend-expanded') {

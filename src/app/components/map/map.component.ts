@@ -220,8 +220,8 @@ export class MapComponent implements OnInit {
         const deltaDateTime = deltaDate.substring( deltaDate.length - 1, deltaDate.length).toLowerCase();
         const deltaDatePeriod = deltaDate.substring( 0, deltaDate.length - 1);
 
-        const now = moment().format('YYYY-MM-DD hh:mm');
-        const fechaInicio = moment().subtract(deltaDatePeriod, deltaDateTime).format('YYYY-MM-DD hh:mm');
+        const now = moment().format('YYYY-MM-DD HH:mm');
+        const fechaInicio = moment().subtract(deltaDatePeriod, deltaDateTime).format('YYYY-MM-DD HH:mm');
         this.precipitacionFechaInicio = fechaInicio;
         this.precipitacionFechaFin = now;
 
@@ -315,10 +315,12 @@ export class MapComponent implements OnInit {
     }
 
     getAggregatedData(fechaInicio, fechaFin, type: any, name: any) {
+      console.log(fechaInicio+" "+fechaFin);
       this.datawarehouse.aggregatedPrecipitation(fechaInicio, fechaFin)
       .subscribe((data: any) => {
           this.precipitation = { data };
           this.addPrecipitationWFS(type, name);
+          console.log(data);
         },
           (error) => console.log(error)
         );
