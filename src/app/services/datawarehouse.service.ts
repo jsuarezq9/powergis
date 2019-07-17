@@ -21,8 +21,7 @@ export class DatawarehouseService {
   };
 
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {  }
 
   getSensorByStation(startDate: string, endDate: string, idStation: string, idSensor: string) {
     console.log('Servicio!!!', startDate, endDate, idStation, idSensor);

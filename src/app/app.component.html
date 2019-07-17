@@ -51,5 +51,9 @@
         <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container positionLegend">
             <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
         </div>
+        <!-- popup Despacho -->
+         <div style="position: absolute; z-index: 2;" >
+            <app-despacho-popup class="hidro-popup-expanded" style="display:block" id="moduleHidroPopup"></app-despacho-popup>
+        </div>
     </div>
 </div>

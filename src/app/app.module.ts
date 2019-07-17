@@ -17,6 +17,7 @@ import { AppComponent } from './app.component';
 import { PlotlyViaWindowModule  } from 'angular-plotly.js';
 import { LegendComponent } from './components/legend/legend.component';
 import { ModuleDespachoComponent } from './components/module-despacho/module-despacho.component';
+import { DespachoPopupComponent } from './components/module-despacho/despacho-popup/despacho-popup.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ModuleDespachoComponent } from './components/module-despacho/module-des
     ModulehidroPopupComponent,
     ModulehidroTimeseriesComponent,
     LegendComponent,
-    ModuleDespachoComponent
+    ModuleDespachoComponent,
+    DespachoPopupComponent
   ],
   imports: [
     BrowserModule,
