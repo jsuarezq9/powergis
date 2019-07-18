@@ -72,14 +72,15 @@
 }
 
 .hidro-popup-expanded {
-    height: 61%;
+    height: 91%;
     width: 90%;
     padding: 0%;
     position: fixed;
+    top: 20vh;
     right: 1.5%;
-    bottom: 0px;
+    /*bottom: 0px;*/
     max-height: 60%;
-    /* background-color: blue; */
+     /*background-color: blue;*/
     margin: 0%;
     padding: 0%;
 }

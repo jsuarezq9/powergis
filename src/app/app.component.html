@@ -36,20 +36,24 @@
                       </div>
                   </div>
 
-              </div>
-          </div>
-          <div id="buttonCollapseDiv" style="display: none;">
-              <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
-                  <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
-              </button>
-          </div>
-      </div>
-      <div style="position: absolute; z-index: 2;">
-          <app-modulehidro-popup class="hidro-popup-expanded" style="display: none" id="moduleHidroPopup"></app-modulehidro-popup>
-      </div>
-      <!-- Para la leyenda -->
-      <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container positionLegend">
-          <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
-      </div>
-  </div>
+                </div>
+            </div>
+            <div id="buttonCollapseDiv" style="display: none;">
+                <button id="buttonCollapse" (click)="rotateCollapseButton();getState($event);" class="button-collapse-expanded animated fadeIn moduleFloat">
+                    <img id="arrow" src="./assets/icons/sidemenu/IconoColapsar.png" width="65%">
+                </button>
+            </div>
+        </div>
+        <div style="position: absolute; z-index: 2;" >
+            <app-modulehidro-popup class="hidro-popup-expanded" style="display: none" id="moduleHidroPopup"></app-modulehidro-popup>
+        </div>
+        <!-- Para la leyenda -->
+        <div id="buttonCollapseLegendDiv" style="visibility: hidden;" class="container positionLegend">
+            <app-legend id="legend" class="row legend-collapsed" style="height: fit-content;" (legendSelected)="getLegend($event)"></app-legend>
+        </div>
+        <!-- popup Despacho -->
+         <div style="position: absolute; z-index: 2;" >
+            <app-despacho-popup class="hidro-popup-expanded" style="display:block" id="moduleHidroPopup"></app-despacho-popup>
+        </div>
+    </div>
 </div>
