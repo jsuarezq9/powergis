@@ -1,0 +1,84 @@
+.nav {
+    display: flex;
+    position: sticky;
+    bottom: 0px;
+    padding-left: 0;
+}
+
+ul li a {
+    color: white;
+}
+
+ul li a:hover {
+    color: grey;
+}
+
+.dropMenu {
+    /* height: 82vh; */
+    max-height: 100%;
+    transition: 1s;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.logo-bg {
+    background-color: #2F86EA;
+}
+
+.roundedBot {
+    border-radius: 0px 0px 30px 30px;
+}
+
+.circleBot {
+    background-color: #2F86EA;
+    border: 10px;
+    border-radius: 0px 0px 60px 60px;
+    /* padding-top: 5%;
+    padding-bottom: 5% */
+}
+
+.borderRightActive {
+    border-right: #2F86EA 5px
+}
+
+.col,
+[class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+
+/* .btn,
+[class*="btn"] {
+    padding-top: 0;
+    padding-bottom: 0;
+} */
+
+.modulesButton {
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.modulesButton-bottom {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0;
+}
+
+hr {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.bg-personalized {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-right: 5px solid #2F86EA;
+}

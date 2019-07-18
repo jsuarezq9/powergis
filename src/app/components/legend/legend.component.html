@@ -1,0 +1,29 @@
+<button id="buttonCollapseLegend" (click)="select($event)" class="button-collapse-legend animated fadeIn moduleFloat">
+    <img id="arrowLegend" class="rotate-90" src="./assets/icons/sidemenu/IconoColapsar.png" width="45%">
+</button>
+<div class="col text-center legend-text" style="line-height: 25px" id="legendCollapsed">
+    <small><strong>LEYENDA</strong></small>
+</div>
+<div class="col p-3" style="display: none;" id="legendExpanded">
+    <!-- Capa estaciones módulo 2 -->
+    <div class="row pb-2 border-bottom justify-content-md-center" id="legendModuleHidro" style="display: none;">
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/LegendEmgesaActiva.png" alt=""> Estación activa EMGESA
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/LegendEmgesaInactiva.png" alt=""> Estación inactiva EMGESA
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/LegendOtrosActiva.png" alt=""> Estación activa otros
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/LegendOtrosInactiva.png" alt=""> Estación inactiva otros
+        </div>
+    </div>
+    <!-- Capas base -->
+    <div class="row pt-2 justify-content-md-center">
+        <div class="col-3 text-wrap text-center" *ngFor="let layer of layersInLegend" style="font-size: 10px" [id]="layer.name">
+            <img class="w-25" src="./assets/icons/sidemenu/Polygon.png" alt="" [id]="layer.name"> {{layer.title}}
+        </div>
+    </div>
+</div>

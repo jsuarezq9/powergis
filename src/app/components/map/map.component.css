@@ -1,0 +1,218 @@
+.map {
+    height: 100%;
+    width: 100%;
+    padding: 0%;
+    position: fixed;
+    margin: 0%;
+    right: 0px;
+    bottom: 0px;
+}
+
+.raster-legend {
+    position: fixed;
+    top: 5%;
+    right: 24px!important;
+    height: 250px;
+    width: 90px;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+}
+
+.control-zoom {
+    bottom: 10.5%;
+    position: fixed;
+    /* left: auto; */
+    right: 44px!important;
+    background-color: rgba(255, 69, 0, 0.2);
+}
+
+.control-scale {
+    bottom: 1%;
+    position: absolute;
+    left: auto;
+    right: 142px;
+    background-color: rgba(255, 69, 0, 0.2);
+}
+
+.control-layers-reset {
+    height: 28px;
+    width: 26px;
+    bottom: 10%;
+    position: fixed;
+    left: auto;
+    right: .5em;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 1px solid white; */
+    border: none;
+    border-radius: 2px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 0.7);
+}
+
+.control-layers-reset:hover {
+    height: 28px;
+    width: 26px;
+    bottom: 10%;
+    position: fixed;
+    left: auto;
+    right: .5em;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 1px solid white; */
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 1);
+}
+
+.control-layers-icon {
+    height: 15px;
+    width: 15px;
+    margin-left: -5px;
+    margin-top: -10px;
+    padding: 0%;
+    color: white;
+}
+
+
+/* TOOLTIP */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* The actual popup */
+
+.tooltiptext {
+    visibility: hidden;
+    width: 260px;
+    max-width: 360px;
+    max-height: 250px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -135px;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Popup arrow */
+
+
+/* .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: red transparent transparent transparent;
+} */
+
+
+/* Toggle this class - hide and show the popup */
+
+.hide {
+    visibility: hidden;
+}
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+
+/* Add animation (fade in the popup) */
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.ol-popup {
+    position: absolute;
+    background-color: #FFFFFF;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    border-radius: 10px;
+    bottom: 6px;
+    left: -50px;
+    color: whitesmoke;
+    min-width: 280px;
+}
+
+.ol-popup-body {
+    background-color:#FFFFFF;
+    border-radius: 0px 0px 10px 10px;
+    color: #5B5B61;
+    padding-left: 4px;
+}
+
+.ol-popup-title {
+    background-color: #2F86EA;
+    color: whitesmoke;
+    border-radius: 10px 10px 0px 0px;
+    padding: 4px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:after {
+    border-top-color:#FFFFFF;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:before {
+    border-top-color:#FFFFFF;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+
+.ol-popup-closer:after {
+    content: "✖";
+}

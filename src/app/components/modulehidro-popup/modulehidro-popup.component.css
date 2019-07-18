@@ -1,0 +1,283 @@
+/* Últimos datos + serie de tiempo */
+
+.hidro-popup-expanded {
+    height: 100%;
+    width: 100%;
+    padding: 0%;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: blue;
+    margin: 0%;
+    padding: 0%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+
+/* 
+tbody {
+    overflow-y: auto;
+    height: 10px;
+} */
+
+
+/* .table-fixed {
+    width: 100%;
+    background-color: #f3f3f3;
+    tbody {
+        height: 200px;
+        overflow-y: auto;
+        width: 100%;
+    }
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
+        display: block;
+    }
+    tbody {
+        td {
+            float: left;
+        }
+    }
+    thead {
+        tr {
+            th {
+                float: left;
+                background-color: #f39c12;
+                border-color: #e67e22;
+            }
+        }
+    }
+} */
+
+
+/* -------------- Popup -------------- */
+
+.popup {
+    position: relative;
+    display: inline-block;
+    /* cursor: pointer; Es la manito */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* The actual popup */
+
+.popuptext {
+    visibility: hidden;
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -200px;
+    margin-bottom: 10px;
+    width: 400px;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+.popuptext-expanded {
+    /* visibility: hidden; */
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 0px 0px 0px 20px;
+    margin-bottom: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+}
+
+.popupheader {
+    background: #2F86EA;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    border-radius: 17px 17px 0px 0px;
+}
+
+.popupheadertext {
+    /* font-weight: bold; */
+    font-size: 15px;
+    /* line-height: 53px; */
+    /* display: flex; */
+    /* align-items: center; */
+    text-align: left;
+    color: white;
+}
+
+.popupbodytext {
+    background-color: #fff;
+    color: #5F5F5F;
+}
+
+.popupbodytext:hover {
+    background-color: #EDEDED;
+}
+
+.popupbodytext:active {
+    background-color: rgba(47, 134, 234, 0.493);
+    color: white;
+}
+
+.popupbodytext-selected {
+    background-color: #EDEDED;
+    color: #2F86EA;
+}
+
+.popupbodytext-sensor {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+.popupbodytext-value {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+.popupbodytext-units {
+    font-weight: bold;
+    font-size: 10px;
+    text-align: left;
+    vertical-align: bottom;
+    /* border-bottom: 10px solid red; */
+}
+
+.popupbodytext-date {
+    font-size: 10px;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+
+/* Popup arrow */
+
+.popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+
+/* Toggle this class - hide and show the popup */
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+.popupexpandedtext {
+    /* visibility: hidden; */
+    background-color: white;
+    color: #5F5F5F;
+    text-align: center;
+    border-radius: 0px 20px 20px 00px;
+    z-index: 1;
+    /* margin-left: -180px; */
+    margin-bottom: 0px;
+    width: 1000px;
+    height: 430px;
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    left: 33.4%;
+    bottom: 0px;
+    align-content: flex-start
+}
+
+
+/* -----------Tooltip-------------- */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* cursor: pointer; Es la manito */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* The actual tooltip */
+
+.tooltiptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    margin-bottom: 5px
+}
+
+
+/* tooltip arrow */
+
+.tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+
+/* Toggle this class - hide and show the tooltip */
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+
+/* Add animation (fade in) */
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,113 @@
+.dropToolMenu {
+    /* height: 85vh; */
+    /* max-height: 74%; */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* max-height: 35%; */
+    border: 0px;
+    border-radius: 5px 20px 20px 5px;
+}
+
+.roundedInputSearch {
+    border: 2px;
+    border-radius: 5px 20px 20px 5px;
+}
+
+.roundedInputSearchLeft {
+    border: 0px;
+    width: 100%;
+    border-radius: 20px 5px 5px 20px;
+}
+
+.verticalHr {
+    border: none;
+    border-left: 1px solid hsla(200, 10%, 50%, 100);
+    height: 100%;
+    width: 1px;
+}
+
+.itemsWhite {
+    background-color: white;
+    opacity: 1.0
+}
+
+.outer-class {
+    width: 25px;
+    height: 35px;
+}
+
+.inner-class {
+    line-height: 30px;
+}
+
+.col,
+[class*="col-12"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.control-zoom {
+    height: 28px;
+    width: 26px;
+    bottom: 15.2%;
+    position: fixed;
+    left: auto;
+    right: .5em;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 5px solid red; */
+    border: none;
+    border-radius: 2px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 0.7);
+}
+
+.control-zoom:hover {
+    height: 28px;
+    width: 26px;
+    bottom: 15.2%;
+    position: fixed;
+    left: auto;
+    right: .5rem;
+    /* background-color: rgba(255, 69, 0, 0.2); */
+    /* border: 5px solid red; */
+    border: none;
+    border-radius: 2px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgba(74, 116, 168, 1);
+}
+
+.control-zoom-icon {
+    height: 15px;
+    width: 15px;
+    margin-left: -5px;
+    margin-top: -10px;
+    padding: 0%;
+    color: white;
+}
+
+.active {
+    color: #3C93F8!important;
+    background-color: rgba(196, 196, 196, 0.3)!important;
+}
+
+.buttonLeft {
+    border-radius: 20px 0px 0px 20px;
+}
+
+.buttonRight {
+    border-radius: 0px 20px 20px 0px;
+}
+
+.inputDate {
+    width: 90%;
+    border-color: grey!important;
+    /* border-color: rgba(196, 196, 196, 0.8)!important; */
+    border-radius: 20px 20px 20px 20px;
+    /* -webkit-appearance:none!important; */
+    padding-inline-start: 8px!important;
+}
+
+.dropleft .dropdown-toggle::before {
+    content: none!important;
+}

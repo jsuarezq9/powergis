@@ -1,0 +1,31 @@
+.row,
+[class*="row-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.legend-text {
+    color: #5B5B61;
+    /* font-size: 1vw; */
+}
+
+.button-collapse-legend {
+    position: absolute;
+    top: -120px;
+    right: 0px;
+    width: 45px;
+    height: 25px;
+    margin-left: 0px;
+    margin-top: 95px;
+    border-radius: 30px 30px 0px 0px;
+    background-color: white;
+    border: 0px;
+}
+
+.img-collapse-legend-collapsed {
+    margin-left: 0px;
+}
+
+.img-collapse-legend-expanded {
+    margin-left: -10px;
+}

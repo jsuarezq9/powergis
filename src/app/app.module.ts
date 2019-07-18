@@ -1,24 +1,49 @@
-import { MapComponent } from './map/map.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { MapComponent } from './components/map/map.component';
+import { ListElementsComponent } from './components/list-elements/list-elements.component';
+import { HeaderComponent } from './components/header/header.component';
+import { BodyComponent } from './components/body/body.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ModulebaseComponent } from './components/modulebase/modulebase.component';
+import { ModulehidroComponent } from './components/modulehidro/modulehidro.component';
+import { ModuleprecipitationComponent } from './components/moduleprecipitation/moduleprecipitation.component';
+import { LayerNamePipe } from './pipes/layer-name.pipe';
 import { HttpClientModule } from '@angular/common/http';
-import { TimeSeriesService } from './timeseries.service';
-
-
+import { CapitalizePipe } from './pipes/capitalize.pipe';
+import { ModulehidroPopupComponent } from './components/modulehidro-popup/modulehidro-popup.component';
+import { ModulehidroTimeseriesComponent } from './components/modulehidro-timeseries/modulehidro-timeseries.component';
+import { AppComponent } from './app.component';
+import { PlotlyViaWindowModule  } from 'angular-plotly.js';
+import { LegendComponent } from './components/legend/legend.component';
+import { ModuleDespachoComponent } from './components/module-despacho/module-despacho.component';
+import { DespachoPopupComponent } from './components/module-despacho/despacho-popup/despacho-popup.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent
+    MapComponent,
+    ListElementsComponent,
+    HeaderComponent,
+    BodyComponent,
+    SidebarComponent,
+    ModulebaseComponent,
+    ModulehidroComponent,
+    ModuleprecipitationComponent,
+    LayerNamePipe,
+    CapitalizePipe,
+    ModulehidroPopupComponent,
+    ModulehidroTimeseriesComponent,
+    LegendComponent,
+    ModuleDespachoComponent,
+    DespachoPopupComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    PlotlyViaWindowModule,
     HttpClientModule
   ],
-  providers: [TimeSeriesService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

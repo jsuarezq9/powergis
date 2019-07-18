@@ -1,0 +1,30 @@
+<div class="col-12 modules-outer-base shadow" style="padding-left: 5px;">
+    <div class="animated fadeIn moduleFloat dropToolMenu border border-white" >
+        <!-- Búsqueda y añadir capas -->
+        <div class="container mt-3" style="width: 95%;">
+            <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
+                <div class="col-10">
+                    <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
+                </div>
+                <hr>
+                <button class="col btn btn-lg ripple roundedInputSearch" type="button" aria-pressed="mixed">
+                    <i class="ripple fas fa-search"></i>
+                </button>
+            </div> -->
+            <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                <div class="col-1 btn-lg text-center">
+                    <i class="fas fa-layer-group" style="color: #8C8C90"></i>
+                </div>
+                <div class="col-9 btn-lg text-left" style="color: #5B5B61">
+                    Capas
+                </div>
+            </div>
+        </div>
+        <!-- Capas disponibles en mapa -->
+        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 20vh; max-height: 50vh; background-color: white">
+            <br>
+            <app-list-elements (selected)="selectLayer($event)" [element]="element" *ngFor="let element of layers"></app-list-elements>
+            <br>
+        </div>
+    </div>
+</div>

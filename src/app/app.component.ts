@@ -1,360 +1,217 @@
-import { Component, OnInit } from '@angular/core';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import { fromLonLat } from 'ol/proj.js';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { click, pointerMove, altKeyOnly } from 'ol/events/condition';
-import Select from 'ol/interaction/Select.js';
-import OSM from 'ol/source/OSM';
-import VectorSource from 'ol/source/Vector';
-import TileWMS from 'ol/source/TileWMS.js';
-import { Icon, Style, Stroke, Circle, Fill, Text } from 'ol/style';
-import Overlay from 'ol/Overlay';
-import GeoJSON from 'ol/format/GeoJSON.js';
-import { bbox as bboxStrategy, all } from 'ol/loadingstrategy.js';
-import { TimeSeriesService } from './timeseries.service';
-import Chart from 'chart.js/dist/Chart.js';
-import Feature from 'ol/Feature';
-import 'rxjs/add/operator/map';
-//libreria para hacerle filtro a los json
-import * as jsonPath from 'jsonpath/jsonpath';
-import * as moment from 'moment';
+import { Component } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.css']
 })
+export class AppComponent {
 
-export class AppComponent implements OnInit {
-  title = 'PowerGIS';
-  options = {};
-  width = 550;
-  height = 400;
-  chart = [];
-  features = [];
-  info = [];
-  columns = ['Estación', 'Sensor', 'Fecha', 'valor'];
-  //este arreglo esta en el geoserver
-  rasters = ['PT_LAST_01H', 'PT_LAST_02H', 'PT_LAST_03H', 'PT_LAST_06H', 'PT_LAST_12H', 'PT_LAST_24H', 'PT_LAST_03D',
-   'PT_LAST_14D',
-   'PT_LAST_30D',
-   'PT_LAST_60D'
-  ];
-  precipitation = {};
-  map = Map;
-  constructor(private _timeseries: TimeSeriesService) { }
+  // Booleanos para mostrar o no módulos
+  moduleBases: boolean;
+  moduleHidrology: boolean;
+  modulePrecipitation: boolean;
+  moduleDespacho: boolean;
 
-  ngOnInit() {
-    this.initilizeMap();
-    this.getAggregatedData('2019-03-01 05:00', '2019-06-08 07:00');
-  }
+  // Booleanos del estado de los botones de colapsar de cada módulo
+  moduleMemory = '';
+  expandSidebar = false;
+  expandSidemenu = false;
+  BUTTON_COLLAPSE_ID = 'buttonCollapse';
+  BUTTON_COLLAPSE_DIV_ID = 'buttonCollapseDiv';
+  BUTTON_COLLAPSE_LEGEND_DIV_ID = 'buttonCollapseLegendDiv';
 
-  initilizeMap() {
+  // Ids presentes en el html de sidebar en cada boton
+  BUTTON_BASES_ID = 'buttonBases';
+  BUTTON_HIDROLOGY_ID = 'buttonHidrology';
+  BUTTON_PRECIPITATION_ID = 'buttonPrecipitation';
+  BUTTON_DESPACHO_ID = 'buttonDespacho';
 
-    this.map = new Map({
-      target: 'map',
-      view: new View({
-        center: fromLonLat([-74.063644, 3.924335]),
-        zoom: 7
-      }),
-      layer: new TileLayer({
-        source: new OSM()
-      })
-    });
-    const container = document.getElementById('popup');
-    const content = document.getElementById('popup-content');
-    const closer = document.getElementById('popup-closer');
-    const hooverContainer = document.getElementById('popup-hoover');
-    const overlay = new Overlay({
-      element: container,
-      autoPan: false,
-      autoPanAnimation: {
-        duration: 250
-      }
-    });
-    const hoover = new Overlay({
-      element: hooverContainer,
-      autoPan: false,
-      autoPanAnimation: {
-        duration: 250
-      }
-    });
-    closer.onclick = () => {
-      overlay.setPosition(undefined);
-      this.features = [];
-      this.info = [];
-      closer.blur();
-      return false;
-    };
-    const base = new TileLayer({
-      source: new OSM()
-    });
+  // Ids presentes en el html de cada uno de los modulos
+  MODULE_BASES_ID = 'moduleBases';
+  MODULE_HIDROLOGY_ID = 'moduleHidrology';
+  MODULE_PRECIPITATION_ID = 'modulePrecipitation';
+  MODULE_DESPACHO_ID = 'moduleDespacho';
 
-    this.map.addLayer(base);
-    this.map.addOverlay(overlay);
-    this.map.addOverlay(hoover);
+  MODULES_SHOW = 'block';
+  MODULES_HIDE = 'none';
 
-    const selectPointerMove = new Select({
-      condition: pointerMove,
-    });
+  // Leyenda
 
-    this.map.addInteraction(selectPointerMove);
-    this.map.on('singleclick', evt => {
-      this.features = [];
-      this.info = [];
-      const coordinate = evt.coordinate;
-      overlay.setPosition(coordinate);
-      this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
-        this.info.push({
-          sensor: feature.get('id_sensor'),
-          estacion: feature.get('nombre_estacion'),
-          fecha: new Date(feature.values_.fecha_hora).toLocaleString('es-CO'),
-          valor: feature.get('valor'),
-          idestacion: feature.get('id_estacion')
-        });
-
-      }, {
-          layerFiltter: (layer) => {
-            return layer.get('layer_name') === 'vector2';
-          }
-
-        });
-    });
-    let feature_onHover = Feature;
-    this.map.on('pointermove', (evt) => {
-      feature_onHover = this.map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-
-        return feature;
-      });
-      if (feature_onHover) {
-        hoover.setPosition(evt.coordinate);
-        if (feature_onHover.get('nombre')) {
-          hooverContainer.innerHTML = feature_onHover.getProperties().nombre;
-          hooverContainer.style.display = 'block';
-        } else if (feature_onHover.get('nombre_estacion')) {
-          hooverContainer.innerHTML = feature_onHover.get('nombre_estacion');
-          if( jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0]) {
-            hooverContainer.innerHTML +='<p>Precipitación: ' +
-            jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].precipitacion
-              .toFixed(3) +
-            '</p><p>Datos Analizados: ' +
-            jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].cuenta +
-            '</p>' +
-            jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature_onHover.get('id_estacion') + '" )]')[0].color_rgb;
-            hooverContainer.style.display = 'inline-block';
-        }
-      }
-      } else {
-        hooverContainer.style.display = 'none';
-      }
-    });
-    this.map.render();
-  }
-  addWFSLayer() {
-    const vectorSource = new VectorSource({
-      format: new GeoJSON({
-        defaultDataProjection: 'EPSG:4686'
-      }),
-      loader(extent, resolution, projection) {
-        const proj = projection.getCode();
-        const url = 'http://elaacgresf00.enelint.global:8080/geoserver/tem/wfs?service=WFS&' +
-          'version=1.1.0&request=GetFeature&typename=tem:c020101_sin&' +
-          'outputFormat=application/json&srsname=' + proj + '&' +
-          'bbox=' + extent.join(',') + ',' + proj;
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        const onError = () => {
-          vectorSource.removeLoadedExtent(extent);
-        };
-        xhr.onerror = onError;
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            vectorSource.addFeatures(
-              vectorSource.getFormat().readFeatures(xhr.responseText, {
-                featureProjection: projection
-              }));
-          } else {
-            onError();
-          }
-        };
-        xhr.send();
-      },
-      strategy: bboxStrategy
-    });
-
-    const vector = new VectorLayer({
-      source: vectorSource,
-      style: new Style({
-
-        fill: new Fill({
-          color: 'rgba(120, 191, 255, 0.6)'
-        }),
-        stroke: new Stroke({
-          color: 'rgba(0, 0, 255, 0.8)',
-          width: 2
-        })
-      })
-    });
-    // agregar capa vector al mapa
-
-    this.map.addLayer(vector);
-  }
-
-  addRaster(raster ) {
-    this.map.getLayers().forEach(layer => {
-      this.map.removeLayer(layer);
-    });
-    this.map.addLayer(new TileLayer({
-      source: new OSM()
-    }));
-    const rasterArray = raster.split('_');
-    const deltaDate = rasterArray[2];
-    const deltaDateTime = deltaDate.substring( deltaDate.length - 1, deltaDate.length).toLowerCase();
-    const deltaDatePeriod = deltaDate.substring( 0, deltaDate.length - 1);
-
-    const rasterLayer = new TileLayer({
-      source: new TileWMS({
-        url: 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wms',
-        params: {LAYERS: 'dwh:' + raster, TILED: true},
-        serverType: 'geoserver',
-        // Countries have transparency, so do not fade tiles:
-        transition: 1
-      }),
-      name: raster
-    });
-    this.map.addLayer(rasterLayer);
-    const now = moment().format('YYYY-MM-DD hh:mm');
-    const fechaInicio = moment().subtract(deltaDatePeriod, deltaDateTime).format('YYYY-MM-DD hh:mm');
-    this.getAggregatedData(fechaInicio, now);
+  constructor() {
+    this.resetModules();
 
   }
-  addPrecipitationLayer() {
-    const vectorSource2 = new VectorSource({
-      format: new GeoJSON(),
-      loader(extent, resolution, projection) {
-        const proj = projection.getCode();
-        const url = 'http://elaacgresf00.enelint.global:8080/geoserver/dwh/wfs?service=WFS&' +
-          'version=1.1.0&request=GetFeature&typename=dwh:vm_ultimo_dato_estacion&' +
-          'CQL_FILTER=id_sensor=%270240%27&' +
-          'outputFormat=application/json&srsname=' + proj;
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        const onError = () => {
-          vectorSource2.removeLoadedExtent(extent);
-        };
-        xhr.onerror = onError;
-        xhr.onload = () => {
 
-          if (xhr.status === 200) {
-            vectorSource2.addFeatures(
-              vectorSource2.getFormat().readFeatures(xhr.responseText, {
-                featureProjection: projection
-              }));
-          } else {
-            onError();
-          }
-        };
-        xhr.send();
-      },
-      strategy: bboxStrategy
-    });
 
-    const styles = {
-      Default: new Style({
-        image: new Circle({
-          radius: 4, fill: new Fill({ color: 'rgba(120, 191, 255, 0.6)' }),
-          stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
-        })
-      })
-    };
-
-    const setStyle = (feature) => {
-      if(jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]')[0]){
-      try {
-        const color_rgb = jsonPath.query(this.precipitation, '$.data[?(@.id_estacion=="' + feature.get('id_estacion') + '" )]')[0].color_rgb;
-        const colorarray = color_rgb.split(',');
-        const colorR = colorarray[0];
-        const colorG = colorarray[1];
-        const colorB = colorarray[2];
-
-        const styles = {
-          Default: new Style({
-            image: new Circle({
-              radius: 5,
-              fill: new Fill({ color: 'rgba(' + colorR + ',' + colorG + ',' + colorB + ', 0.8)' }),
-              stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
-            })
-          })
-        };
-        return styles.Default;
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-        const style = {
-        Default: new Style({
-          image: new Circle({
-            radius: 5,
-            stroke: new Stroke({ color: 'rgba(0, 0, 255, 0.8)', width: 2 })
-          })
-        })
-      };
-      return style.Default
-
+  resetModules(): void {
+    if (this.moduleBases) {
+      this.moduleMemory = this.MODULE_BASES_ID;
+    } else if (this.moduleHidrology) {
+      this.moduleMemory = this.MODULE_HIDROLOGY_ID;
+    } else if (this.modulePrecipitation) {
+      this.moduleMemory = this.MODULE_PRECIPITATION_ID;
+    } else if (this.moduleDespacho) {
+      this.moduleMemory = this.MODULE_DESPACHO_ID;
     }
-    };
-    // agrego la segunda fuente de datos a una capa vectorlayer
-    const vector2 = new VectorLayer({
-      source: vectorSource2,
-      renderMode: 'vector',
-      style: setStyle
-    });
-    // agrego la capa al mapa
-    this.map.addLayer(vector2);
+    this.moduleBases = false;
+    this.moduleHidrology = false;
+    this.modulePrecipitation = false;
+    this.moduleDespacho = false;
+  }
+
+  rotateCollapseButton(): void {
+    // Asigno clases de rotación del botón en el ícono
+    const activeRotationIcon = this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const notActiveRotationIcon = !this.expandSidemenu ? 'rotate-0' : 'rotate-180';
+    const activePositionIcon = this.expandSidemenu ? 'img-collapse-expanded' : 'img-collapse-collapsed';
+    const notActivePositionIcon = !this.expandSidemenu ? 'img-collapse-expanded' : 'img-collapse-collapsed';
+    const icon = document.getElementById('arrow');
+    icon.classList.add(activeRotationIcon);
+    icon.classList.add(activePositionIcon);
+    icon.classList.remove(notActiveRotationIcon);
+    icon.classList.remove(notActivePositionIcon);
+
+  }
+
+  showCollapseButton(): void {
+    document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_SHOW;
+    document.getElementById(this.BUTTON_COLLAPSE_LEGEND_DIV_ID).style.visibility = 'visible';
+  }
+
+  hideCollapseButton(): void {
+    document.getElementById(this.BUTTON_COLLAPSE_DIV_ID).style.display = this.MODULES_HIDE;
+    document.getElementById(this.BUTTON_COLLAPSE_LEGEND_DIV_ID).style.visibility = 'hidden';
+  }
+
+  getState(show: any): void {
+    // Si viene de los botones
+    // tslint:disable-next-line:max-line-length
+    if (show === this.BUTTON_BASES_ID || show === this.BUTTON_HIDROLOGY_ID || show === this.BUTTON_PRECIPITATION_ID || show === this.BUTTON_DESPACHO_ID) {
+      const EXPANDSIDEMENU_TEMP = this.expandSidemenu;
+      this.expandSidemenu = true;
+      this.resetModules();
+      this.getStateFromButtons(show);
+      // Si es la primera vez, debo mostrar el botón colapsar.
+      if (this.moduleMemory === '') {
+        this.showCollapseButton();
+      }
+      // Si la variable está cambiando, roto el botón colapsar.
+      if (EXPANDSIDEMENU_TEMP !== this.expandSidemenu) {
+        this.rotateCollapseButton();
+      }
+
+    // Si viene de hamburguesa
+    } else if (show.toString().includes('ExpandSidebar')) {
+      this.expandSidebar = !this.expandSidebar;
+      // Para colapsar
+      if (!this.expandSidebar) {
+        // Para colapsar cuando está cerrado el sidemenu
+        if (this.expandSidemenu) {
+          this.expandSidemenu = !this.expandSidemenu;
+          this.resetModules();
+          this.rotateCollapseButton();
+        }
+      // Para abrir
+      } else {
+        // Para abrir cuando está cerrado el sidemenu
+        if (!this.expandSidemenu) {
+          this.getStateFromCollapseButton(show);
+        }
+        this.rotateCollapseButton();
+      }
+
+    } else {
+      // Viene de botón colapsar
+      this.expandSidemenu = !this.expandSidemenu;
+      this.resetModules();
+      this.rotateCollapseButton();
+      this.getStateFromCollapseButton(show);
+    }
+    this.changeState();
+    // Muestro o escondo el div "sidemenu"
+    const displaySidemenu = this.expandSidemenu ? 'flex' : 'none';
+    document.getElementById('sidemenu').style.display = displaySidemenu;
   }
 
 
-  initializeChart(estacion, sensor) {
-    this._timeseries.rawData(estacion, '2019-02-01', '2019-06-05', sensor)
-      .subscribe(res => {
-        const data = res;
-        const dataset = [];
-        data.map(element => {
-          dataset.push(
-            {
-              t: element.fecha_hora,
-              y: element.valor.toFixed(3)
-            });
-        });
-        const conf = {
-          type: 'line',
-          data: {
-            datasets: [{
-              label: 'Scatter Dataset',
-              data: dataset
-            }]
-          },
-          options: {
-            scales: {
-              xAxes: [{
-                type: 'time',
-                position: 'bottom'
-              }]
-            }
-          }
-        };
-        this.chart = new Chart('canvas', conf);
-      });
+  getStateFromButtons(show: any): void {
+    if (show === this.BUTTON_BASES_ID) {
+      this.moduleBases = !this.moduleBases;
+    } else if (show === this.BUTTON_HIDROLOGY_ID) {
+      this.moduleHidrology = !this.moduleHidrology;
+    } else if (show === this.BUTTON_PRECIPITATION_ID) {
+      this.modulePrecipitation = !this.modulePrecipitation;
+    } else if (show === this.BUTTON_DESPACHO_ID) {
+      this.moduleDespacho = !this.moduleDespacho;
+    }
   }
-  getAggregatedData(fechaInicio, fechaFin) {
-    console.log(fechaInicio + ' ' + fechaFin);
-    this._timeseries.aggregatedPrecipitation(fechaInicio, fechaFin)
-      .subscribe((data) => {
-        this.precipitation = { data: data };
-        this.addPrecipitationLayer();
-      },
-        (error) => console.log(error)
-      );
+
+  getStateFromCollapseButton(show: any): void {
+    if (this.expandSidemenu) {
+      if (this.moduleMemory === this.MODULE_BASES_ID) {
+        this.moduleBases = !this.moduleBases;
+      } else if (this.moduleMemory === this.MODULE_HIDROLOGY_ID) {
+        this.moduleHidrology = !this.moduleHidrology;
+      } else if (this.moduleMemory === this.MODULE_PRECIPITATION_ID) {
+        this.modulePrecipitation = !this.modulePrecipitation;
+      } else if (this.moduleMemory === this.MODULE_DESPACHO_ID) {
+        this.moduleDespacho = !this.moduleDespacho;
+      }
+    }
+  }
+
+  changeState(): void {
+    if (this.moduleBases) {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_SHOW;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+    } else if (this.moduleHidrology) {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_SHOW;
+    } else if (this.modulePrecipitation) {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_SHOW;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+    } else if (this.moduleDespacho) {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_SHOW;
+    } else {
+      document.getElementById(this.MODULE_BASES_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_HIDROLOGY_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_PRECIPITATION_ID).style.display = this.MODULES_HIDE;
+      document.getElementById(this.MODULE_DESPACHO_ID).style.display = this.MODULES_HIDE;
+    }
+  }
+
+  getLegend(event: any) {
+    const legendDiv = document.getElementById('legend');
+    legendDiv.classList.toggle('legend-expanded');
+    let isExpanded = false;
+    // tslint:disable-next-line: prefer-for-of
+    for (let index = 0; index < legendDiv.classList.length; index++) {
+      const element = legendDiv.classList[index];
+      if (element === 'legend-expanded') {
+        isExpanded = true;
+      }
+    }
+    if (isExpanded) {
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+    } else {
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'block';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'none';
+    }
   }
 
 }

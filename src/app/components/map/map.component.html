@@ -1,0 +1,26 @@
+<div id="map" class="map"></div>
+<div id="control-scale" class="control-scale"></div>
+<div id="control-zoom" class="control-zoom"></div>
+<div id="control-layers-reset" class="position-fixed">
+    <button (click)="resetLayers();" class="control-layers-reset align-content-center" title="Limpiar mapa">
+        <i class="fas fa-trash-alt control-layers-icon"></i>
+    </button>
+</div>
+<div id="myTooltip" class="tooltip tooltiptext overflow-auto">
+    <div *ngFor="let item of tooltipvalue" class="ml-1 mr-1">
+        <strong>{{item[0].name}}</strong>
+        <div *ngFor="let item2 of item[0].properties">
+            <small>{{item2.key}}: {{item2.value}}</small>
+        </div>
+        <hr class="m-0">
+    </div>
+</div>
+<div id="popup-hoover" class="ol-popup hide">
+    <div id="popupTitle" class="ol-popup-title"></div>
+    <div id = "popupBody" class="ol-popup-body"></div>
+    <div id="popup-content-hoover">
+    </div>
+</div>
+<div id="rasterLegend" class="raster-legend mr-4">
+    <img src="{{this.legend}}" alt="">
+</div>

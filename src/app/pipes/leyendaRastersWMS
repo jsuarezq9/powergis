@@ -1,0 +1,85 @@
+{
+    "Legend": [
+        {
+            "layerName": "PT_LAST_60D",
+            "title": "PT_LAST_60D",
+            "rules": [
+                {
+                    "symbolizers": [
+                        {
+                            "Raster": {
+                                "geometry": "[grid]",
+                                "colormap": {
+                                    "entries": [
+                                        {
+                                            "label": "0  - 78",
+                                            "quantity": "78",
+                                            "color": "#FF9900",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "78  - 154",
+                                            "quantity": "154",
+                                            "color": "#FFCC00",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "154  - 228",
+                                            "quantity": "228",
+                                            "color": "#FFEA00",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "228  - 300",
+                                            "quantity": "300",
+                                            "color": "#97E31C",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "300  - 410",
+                                            "quantity": "410",
+                                            "color": "#0EF192",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "410  - 515",
+                                            "quantity": "515",
+                                            "color": "#00F2FF",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "515  - 640",
+                                            "quantity": "640",
+                                            "color": "#00B3FF",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "640  - 770",
+                                            "quantity": "770",
+                                            "color": "#3B7BC4",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "770  - 940",
+                                            "quantity": "940",
+                                            "color": "#9933FF",
+                                            "opacity": "0.666667"
+                                        },
+                                        {
+                                            "label": "940  - 3380",
+                                            "quantity": "3380",
+                                            "color": "#7030A0",
+                                            "opacity": "0.666667"
+                                        }
+                                    ],
+                                    "type": "ramp"
+                                },
+                                "opacity": "1.0"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
