@@ -1,0 +1,7 @@
+{
+  "/serviciosRestful/*":{
+  "target" : "http://10.152.165.45:8080",
+  "secure" : false,
+  "changeOrigin": true
+  }
+}

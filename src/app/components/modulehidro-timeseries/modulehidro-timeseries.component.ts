@@ -90,11 +90,11 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       autosize: true,
       // autosize: false,
       // width: 500,
-      // height: 300,
+      height: 300,
       margin: {
         l: 50,
         r: 50,
-        b: 100,
+        b: 0,
         t: 50,
         // pad: 5
       },
@@ -185,7 +185,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       // name: `${dataSensor.sensor} [ ${dataSensor.valor.split(' ', 1)[1]} ]`,
       x: dataSensor.fecha,
       y: dataSensor.total,
-      line: { color: '#17BECF' },
+      line: { color: '#17BECF'},
       autosize: true
     };
     this.dataLines.push(sensor);

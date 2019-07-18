@@ -12,44 +12,41 @@ import { environment } from '../../environments/environment';
 })
 export class XmdespachoService {
 
-  host = 'http://10.152.165.45:8080/serviciosRestful/genproyectada.php';
+  host = '/serviciosRestful/genproyectada_sin.php';
   token = environment.XM_TOKEN;
   contentType = 'application/x-www-form-urlencoded';
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'text/plain',
-      Authorization: 'Basic RUdNQToxMjM0',
-      Accept: '*/*',
-      'Cache-Control': 'no-cache',
-      Host: '10.152.165.45:8080',
-      'Accept-Encoding': 'gzip, deflate',
-      'Content-Length': '87',
-      Connection: 'keep-alive',
-      'cache-control': 'no-cache'
+      "Access-Control-Allow-Origin": "*",
+      //"Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+      "Access-Control-Allow-Headers": "*"
     })
   };
 
   constructor(private http: HttpClient) { }
 
-  getDespachoSin(fechaInicio, fechaFin) {
+  getDespachoSin(fechaInicio, fechaFin, planta) {
+
+
 
     const data = JSON.stringify({
-      planta : "FULL",
-      fecha_inicio : "10-07-2019",
-      fecha_fin : "10-07-2019"
+      planta,
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin
     });
     let headers = new HttpHeaders();
-    headers = headers.append("Authorization", "Basic " + btoa("EGMA:1234"));
+    headers = headers.append("Authorization", "Basic " + btoa("POWERGIS:987123"));
     headers = headers.append('Content-type', 'application/json');
     //headers = headers.append('Origin', '127.0.0.1' );
     //headers = headers.append("Connection", "keep-alive" );
-    return  this.http.post(this.host, JSON.stringify(data) , {headers})
-    .pipe(
-      map((res: Response ) => {
-      const data = res;
-      return data;
-    })
-    );
+    return this.http.post(this.host, data , { headers })
+      .pipe(
+        map((res: Response) => {
+          const datas = res;
+          return datas;
+        })
+      );
 
 
 
