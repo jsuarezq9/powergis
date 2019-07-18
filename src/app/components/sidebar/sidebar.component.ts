@@ -29,6 +29,7 @@ export class SidebarComponent implements OnInit {
   rotation: string;
   layerEstaciones: any;
   layerVMEstaciones: any;
+  layerDespacho: any;
   layerRaster: any;
   interval: any;
 
@@ -59,6 +60,13 @@ export class SidebarComponent implements OnInit {
       width: 2})})})
   };
 
+  stylesDespacho = {
+    Emgesa:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.15, anchor: [0.5, 1]}), zIndex: 2}),
+    Otros:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.35, anchor: [0.5, 1]}), zIndex: 2})
+  };
+
   legendHidro: any;
   legendRaster: any;
   legendDiv: any;
@@ -70,9 +78,12 @@ export class SidebarComponent implements OnInit {
               private interaction: ComponentsInteractionService) {}
 
   ngOnInit() {
+    this.layerDespacho = {
+
+    }
     this.layerEstaciones = {
-      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
-      name: 'vm_estaciones_vsg',
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/xm/layers/despacho_nacional.json',
+      name: 'despacho_nacional',
       edit: false,
     };
     this.layerVMEstaciones = {
@@ -174,6 +185,36 @@ export class SidebarComponent implements OnInit {
     // clearInterval(this.interval);
     this.legendHidro.style.display = 'none';
     this.legendRaster.style.display = 'block';
+  }
+
+  addEstacionesDespacho() {
+    this.removeEstaciones();
+    this.removeLegendRaster();
+    this.interaction.setStationsLayer(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
+    this.interval = setInterval(this.runLayersHidroHourly, 3600000);
+  //   // console.log(this.legendHidro);
+  //   //this.legendHidro.style.display = 'flex';
+
+  //   //const legendDiv = document.getElementById('legend');
+  //   // legendDiv.classList.toggle('legend-expanded');
+  //  // let isExpanded = false;
+  //   // tslint:disable-next-line:prefer-for-of
+  //   for (let index = 0; index < legendDiv.classList.length; index++) {
+  //     const element = legendDiv.classList[index];
+  //     if (element === 'legend-expanded') {
+  //       isExpanded = true;
+  //     }
+  //   }
+  //   // console.log(isExpanded);
+  //   if (!isExpanded) {
+  //     document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+  //     legendDiv.classList.add('legend-expanded');
+  //     const legendCollapsed = document.getElementById('legendCollapsed');
+  //     legendCollapsed.style.display = 'none';
+  //     const legendExpanded = document.getElementById('legendExpanded');
+  //     legendExpanded.style.display = 'block';
+   // }
+
   }
 
   removeEstaciones() {

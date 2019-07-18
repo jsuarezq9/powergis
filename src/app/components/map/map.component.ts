@@ -178,6 +178,7 @@ export class MapComponent implements OnInit {
 
       // 2. Mostrar capa estaciones módulo 2
       this.interaction.stationsInteraction.subscribe((layer: any) => {
+
         const type = this.getLayerTypeFromHref(layer);
         const layerStations = this.addStationsWFS(type, layer.name, layer.style);
         const selectPointerMove2 = new Select({
@@ -793,7 +794,10 @@ export class MapComponent implements OnInit {
         return this.geoservice.DWHS;
       } else if (uri.search(this.geoservice.RASTERS) > 0) {
         return this.geoservice.RASTERS;
-      } else {
+
+      }else if (uri.search(this.geoservice.XM) > 0) {
+        return this.geoservice.XM;
+      }else {
         return null;
       }
     }

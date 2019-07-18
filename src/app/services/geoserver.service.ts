@@ -12,6 +12,7 @@ export class GeoserverService {
   RASTERS = 'raster';
   WMS = 'wms';
   WFS = 'wfs';
+  XM='xm';
   RASTER = 'raster';
   APPJSON = 'application/json';
   host = 'http://10.154.80.177';
@@ -73,7 +74,7 @@ export class GeoserverService {
     params = params.append('format_options', 'layout:precipitation');
     return `${this.host}:${this.port}${this.uriInfo}/${type}/wms?
       ?VERSION=1.1.0&SERVICE=WMS&REQUEST=GetLegendGraphic&FORMAT=image/png&
-      TRANSPARENT=false&LAYER=${type}:${name}&format_options=layout:precipitation`;
+      TRANSPARENT=true&LAYER=${type}:${name}&format_options=layout:precipitation`;
   }
 
   getLayers(source: string) {

@@ -43,6 +43,8 @@ setData(dataSensor) {
     marker: {
       color: 'rgb(142,124,195)'
     },
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
     line: { color: '#17BECF'},
     autosize: true
   };
