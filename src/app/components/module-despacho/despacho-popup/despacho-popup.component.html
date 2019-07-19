@@ -1,7 +1,36 @@
-<p>
-  despacho-popup works!
-</p>
-<div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0; background-color:#d3d3d3;">
-  <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
-  <!-- <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>-->
+<!-- POPUP -->
+<div class="" id="myPopupDespacho">
+    <div class="col popupheader" style="height: 8%">
+        <div class="row justify-content-center popupheadertext">
+            <div class="col-md-auto" style="text-align: left;"><strong>{{this.stationCompany | uppercase}}</strong></div>
+            <div class="col" style="text-align: right"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
+            <div class="col" style="text-align: left"><small>{{this.selectedSensor.nombreSensor | titlecase}} [{{this.selectedSensor.unidadSensor}}]</small></div>
+            <div class="col-md-auto" style="text-align: right"><small>{{this.date}}</small></div>
+            <div class="col-md-auto pointer" style="text-align: left" (click)="closeBigPopup()"><strong>X</strong></div>
+        </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-4" style="padding: 0; margin: 0; height: 92%;">
+        <!-- myPopupExpanded -->
+        <div class="popuptext-expanded" id="myPopupExpanded">
+            <div class="container h-100">
+                <div class="row h-100">
+                    <div class="col p-1 h-100">
+                            <div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0; background-color:#d3d3d3;">
+                                    <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
+                                    <!-- <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>-->
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- <p>
+  despacho-popup works!
+</p> -->
+<!-- <div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0; background-color:#d3d3d3;">
+  <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot> -->
+  <!-- <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>-->
+<!-- </div> -->

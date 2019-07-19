@@ -91,12 +91,14 @@ export class ModulehidroPopupComponent implements OnInit {
 
     // Reinicio selección en popup y popup expanded
     const expandedItems = document.getElementsByClassName('expandeditem');
+    // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < expandedItems.length; index++) {
       const element = expandedItems[index];
       element.classList.remove('popupbodytext-selected');
       element.classList.add('popupbodytext');
     }
     const collapsedItems = document.getElementsByClassName('collapseditem');
+    // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < collapsedItems.length; index++) {
       const element = collapsedItems[index];
       element.classList.remove('popupbodytext-selected');

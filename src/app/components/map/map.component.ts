@@ -54,6 +54,7 @@ export class MapComponent implements OnInit {
   selectedLayersAttributes = {};
   legendRaster: any;
   popup: any;
+  popupDespacho: any;
   features = [];
   info = [];
   tooltip: any;
@@ -94,6 +95,7 @@ export class MapComponent implements OnInit {
       this.legendRaster = document.getElementById('rasterLegend');
       this.tooltip = document.getElementById('myTooltip');
       this.popup = document.getElementById('myPopup');
+      this.popupDespacho = document.getElementById('myPopupDespacho');
       const overlay = new Overlay({
         element: this.tooltip,
         autoPan: true
@@ -261,7 +263,21 @@ export class MapComponent implements OnInit {
       this.map.addControl(new ScaleLine({
         target: document.getElementById('control-scale')
       }));
-    }
+
+     // Modulo 4 Despacho Subscribes
+      this.interaction.DespachoInteraction.subscribe((layer: any) => {
+        const type = this.getLayerTypeFromHref(layer);
+        const layerStations = this.addStationsDespachoWFS(type, layer.name, layer.style);
+        const selectPointerMove2 = new Select({
+          condition: pointerMove,
+          style: layer.selectedstyle.hidroSelected,
+          layer: layerStations,
+        });
+        this.map.addInteraction(selectPointerMove2);
+        this.addPopupDespacho();
+      });
+}
+
 
 
     // MODULO 3 funciones
@@ -582,13 +598,44 @@ export class MapComponent implements OnInit {
     // MODULO 2 funciones -----------------------------------------------
     addStationsWFS(type: string, name: string, styleIn: any) {
       const vectorSource = this.requestLayerWFS(type, name);
+      console.log(vectorSource);
       const vector = this.styleStationsLayer(vectorSource, name, styleIn);
+      return vector;
+    }
+
+    addStationsDespachoWFS(type: string, name: string, styleIn: any) {
+      const vectorSource = this.requestLayerWFS(type, name);
+      const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
+      return vector;
+    }
+
+    styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
+      let vector: any;
+      let setStyle: any;
+      console.log(vectorSource);
+      if (styleIn) {
+        setStyle = (feature) => {
+          if (feature.get('tipo_gener') === 'TERMICA' ) {
+              return styleIn.Emgesa;
+          } else {
+              return styleIn.Otros;
+          }
+        };
+      } else {
+        setStyle = (feature) => {};
+      }
+      vector = new lVector({
+        source: vectorSource,
+        style: setStyle
+      });
+      this.saveLayer(name, vector);
       return vector;
     }
 
     styleStationsLayer(vectorSource: any, name: any, styleIn?: any) {
       let vector: any;
       let setStyle: any;
+      console.log(vectorSource);
       if (styleIn) {
         setStyle = (feature) => {
           if (feature.get('nombre_entidad') === 'EMGESA' ) {
@@ -615,6 +662,52 @@ export class MapComponent implements OnInit {
       this.saveLayer(name, vector);
       return vector;
     }
+    // Agregando popup modulo 4 despacho
+    addPopupDespacho() {
+       // OVERLAY
+       const overlay = new Overlay({
+        element: this.popupDespacho,
+        autoPan: true
+      });
+
+      // POPUP
+       this.map.on('singleclick', (evt: any) => {
+        const info = [];
+        const coordinate = evt.coordinate;
+        overlay.setPosition(coordinate);
+        this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+          if ( feature.id_.substr(0, 17) === 'despacho_nacional') {
+            console.log(feature.values_);
+            const item = {
+              nombreEntidad: feature.values_.nombre_entidad,
+              idEstacion: feature.values_.id_estacion,
+              nombreEstacion: feature.values_.nombre_estacion,
+              estadoEstacion: feature.values_.estado_estacion
+            };
+            info.push(item);
+          } else {
+            console.log('No es la capa de despacho');
+          }
+        }
+        // , {
+        //   layerFiltter: (layer) => {
+        //     return layer.get('layer_name') === 'vector2';
+        //   }
+        // }
+        );
+        if (info.length > 0) {
+          this.map.addOverlay(overlay);
+          if (!this.popupDespacho.classList.contains('show')) {
+            this.popupDespacho.classList.add('show');
+          }
+          // this.popup.classList.add('show');
+
+        } else {
+          this.popupDespacho.classList.remove('show');
+        }
+        this.createPopup(info[0]);
+    });
+  }
 
     addPopupStations() {
       // OVERLAY
@@ -630,6 +723,7 @@ export class MapComponent implements OnInit {
         overlay.setPosition(coordinate);
         this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           if ( feature.id_.split('.fid', 1)[0] === 'vm_estaciones_vsg') {
+            console.log(feature.values_);
             const item = {
               nombreEntidad: feature.values_.nombre_entidad,
               idEstacion: feature.values_.id_estacion,
@@ -694,6 +788,7 @@ export class MapComponent implements OnInit {
         loader(extent, resolution, projection) {
           const proj = projection.getCode();
           let url: string;
+          console.log('pasa por aqui 2');
           if (param) {
             // tslint:disable-next-line: max-line-length
             url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=2.0.0&request=GetFeature&typename=${type}:${name}&${param}outputFormat=application/json&srsname=${proj}`;

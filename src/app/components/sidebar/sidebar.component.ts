@@ -79,11 +79,13 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.layerDespacho = {
-
-    }
-    this.layerEstaciones = {
       href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/xm/layers/despacho_nacional.json',
       name: 'despacho_nacional',
+      edit: false,
+    };
+    this.layerEstaciones = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/dwh/layers/vm_estaciones_vsg.json',
+      name: 'vm_estaciones_vsg',
       edit: false,
     };
     this.layerVMEstaciones = {
@@ -190,8 +192,8 @@ export class SidebarComponent implements OnInit {
   addEstacionesDespacho() {
     this.removeEstaciones();
     this.removeLegendRaster();
-    this.interaction.setStationsLayer(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
-    this.interval = setInterval(this.runLayersHidroHourly, 3600000);
+    this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
+    // this.interval = setInterval(this.runLayersHidroHourly, 3600000);
   //   // console.log(this.legendHidro);
   //   //this.legendHidro.style.display = 'flex';
 
