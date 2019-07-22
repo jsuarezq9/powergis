@@ -2,15 +2,15 @@
 <div class="" id="myPopupDespacho">
     <div class="col popupheader" style="height: 8%">
         <div class="row justify-content-center popupheadertext">
-            <div class="col-md-auto" style="text-align: left;"><strong>{{this.stationCompany | uppercase}}</strong></div>
-            <div class="col" style="text-align: right"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
+            <div class="col-md-auto" style="text-align: left;"><small><strong>{{this.plantCompany | uppercase}}</strong></small></div>
+            <div class="col" style="text-align: right"><small>{{this.plantType}}</small></div>
             <div class="col" style="text-align: left"><small>{{this.selectedSensor.nombreSensor | titlecase}} [{{this.selectedSensor.unidadSensor}}]</small></div>
-            <div class="col-md-auto" style="text-align: right"><small>{{this.date}}</small></div>
+            <div class="col-md-auto" style="text-align: right"><small>{{this.today}}</small></div>
             <div class="col-md-auto pointer" style="text-align: left" (click)="closeBigPopup()"><strong>X</strong></div>
         </div>
     </div>
     <div class="w-100"></div>
-    <div class="col-4" style="padding: 0; margin: 0; height: 92%;">
+    <div class="col col-xs-6" style="padding: 0; margin: 0; height: 92%;">
         <!-- myPopupExpanded -->
         <div class="popuptext-expanded" id="myPopupExpanded">
             <div class="container h-100">

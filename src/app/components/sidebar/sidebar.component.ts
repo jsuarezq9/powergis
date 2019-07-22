@@ -64,7 +64,7 @@ export class SidebarComponent implements OnInit {
     Emgesa:  new Style({
       image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.15, anchor: [0.5, 1]}), zIndex: 2}),
     Otros:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.35, anchor: [0.5, 1]}), zIndex: 2})
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.35, anchor: [0.5, 1]}), zIndex: 0})
   };
 
   legendHidro: any;
@@ -193,29 +193,6 @@ export class SidebarComponent implements OnInit {
     this.removeEstaciones();
     this.removeLegendRaster();
     this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
-    // this.interval = setInterval(this.runLayersHidroHourly, 3600000);
-  //   // console.log(this.legendHidro);
-  //   //this.legendHidro.style.display = 'flex';
-
-  //   //const legendDiv = document.getElementById('legend');
-  //   // legendDiv.classList.toggle('legend-expanded');
-  //  // let isExpanded = false;
-  //   // tslint:disable-next-line:prefer-for-of
-  //   for (let index = 0; index < legendDiv.classList.length; index++) {
-  //     const element = legendDiv.classList[index];
-  //     if (element === 'legend-expanded') {
-  //       isExpanded = true;
-  //     }
-  //   }
-  //   // console.log(isExpanded);
-  //   if (!isExpanded) {
-  //     document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
-  //     legendDiv.classList.add('legend-expanded');
-  //     const legendCollapsed = document.getElementById('legendCollapsed');
-  //     legendCollapsed.style.display = 'none';
-  //     const legendExpanded = document.getElementById('legendExpanded');
-  //     legendExpanded.style.display = 'block';
-   // }
 
   }
 
@@ -224,6 +201,7 @@ export class SidebarComponent implements OnInit {
     this.interaction.setLayer(this.layerEstaciones, false, false);
     this.interaction.setLayer(this.layerVMEstaciones, false, false);
     this.interaction.setLayer(this.layerRaster, false, false);
+    this.interaction.setLayer(this.layerDespacho, false, false);
     this.interaction.setSelectLayer(this.layerVMEstaciones, true, false);
     this.legendHidro.style.display = 'none';
   }

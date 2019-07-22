@@ -332,12 +332,10 @@ export class MapComponent implements OnInit {
     }
 
     getAggregatedData(fechaInicio, fechaFin, type: any, name: any) {
-      console.log(fechaInicio+" "+fechaFin);
       this.datawarehouse.aggregatedPrecipitation(fechaInicio, fechaFin)
       .subscribe((data: any) => {
           this.precipitation = { data };
           this.addPrecipitationWFS(type, name);
-          console.log(data);
         },
           (error) => console.log(error)
         );
@@ -612,10 +610,9 @@ export class MapComponent implements OnInit {
     styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
       let vector: any;
       let setStyle: any;
-      console.log(vectorSource);
       if (styleIn) {
         setStyle = (feature) => {
-          if (feature.get('tipo_gener') === 'TERMICA' ) {
+          if (feature.get('id_agente') === 35 ) {
               return styleIn.Emgesa;
           } else {
               return styleIn.Otros;
@@ -677,12 +674,11 @@ export class MapComponent implements OnInit {
         overlay.setPosition(coordinate);
         this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           if ( feature.id_.substr(0, 17) === 'despacho_nacional') {
-            console.log(feature.values_);
             const item = {
-              nombreEntidad: feature.values_.nombre_entidad,
-              idEstacion: feature.values_.id_estacion,
-              nombreEstacion: feature.values_.nombre_estacion,
-              estadoEstacion: feature.values_.estado_estacion
+              idDedec: feature.values_.id_dedec,
+              nombreAge: feature.values_.nombre_age,
+              tipoGener: feature.values_.tipo_gener,
+              tipoPlant: feature.values_.id_agente
             };
             info.push(item);
           } else {
@@ -723,7 +719,6 @@ export class MapComponent implements OnInit {
         overlay.setPosition(coordinate);
         this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
           if ( feature.id_.split('.fid', 1)[0] === 'vm_estaciones_vsg') {
-            console.log(feature.values_);
             const item = {
               nombreEntidad: feature.values_.nombre_entidad,
               idEstacion: feature.values_.id_estacion,
@@ -783,12 +778,12 @@ export class MapComponent implements OnInit {
 
     // GENERALES
     requestLayerWFS(type: string, name: string, param ?: any) {
+      console.log(name);
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
         loader(extent, resolution, projection) {
           const proj = projection.getCode();
           let url: string;
-          console.log('pasa por aqui 2');
           if (param) {
             // tslint:disable-next-line: max-line-length
             url = `http://elaacgresf00.enelint.global:8080/geoserver/${type}/wfs?service=WFS&version=2.0.0&request=GetFeature&typename=${type}:${name}&${param}outputFormat=application/json&srsname=${proj}`;
@@ -890,9 +885,9 @@ export class MapComponent implements OnInit {
       } else if (uri.search(this.geoservice.RASTERS) > 0) {
         return this.geoservice.RASTERS;
 
-      }else if (uri.search(this.geoservice.XM) > 0) {
+      } else if (uri.search(this.geoservice.XM) > 0) {
         return this.geoservice.XM;
-      }else {
+      } else {
         return null;
       }
     }
