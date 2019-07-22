@@ -33,6 +33,7 @@ import * as jsonPath from 'jsonpath/jsonpath';
 import { DatawarehouseService } from '../../services/datawarehouse.service';
 import { forkJoin } from 'rxjs';
 import { count } from 'rxjs/operators';
+import { element } from '@angular/core/src/render3';
 
 
 @Component({
@@ -267,7 +268,7 @@ export class MapComponent implements OnInit {
      // Modulo 4 Despacho Subscribes
       this.interaction.DespachoInteraction.subscribe((layer: any) => {
         const type = this.getLayerTypeFromHref(layer);
-        const layerStations = this.addStationsDespachoWFS(type, layer.name, layer.style);
+        const layerStations = this.addStationsDespachoWFS(type, layer.name, layer.style, layer.query);
         const selectPointerMove2 = new Select({
           condition: pointerMove,
           style: layer.selectedstyle.hidroSelected,
@@ -596,16 +597,43 @@ export class MapComponent implements OnInit {
     // MODULO 2 funciones -----------------------------------------------
     addStationsWFS(type: string, name: string, styleIn: any) {
       const vectorSource = this.requestLayerWFS(type, name);
-      console.log(vectorSource);
       const vector = this.styleStationsLayer(vectorSource, name, styleIn);
       return vector;
     }
 
-    addStationsDespachoWFS(type: string, name: string, styleIn: any) {
-      const vectorSource = this.requestLayerWFS(type, name);
+    addStationsDespachoWFS(type: string, name: string, styleIn: any, query?: any) {
+      console.log(query);
+      let vectorSource;
+      if (query) {
+        const CQLfilter = `CQL_FILTER=tipo_gener=%27HIDRAULICA%27`;
+        vectorSource = this.requestLayerWFS(type, name, CQLfilter);
+      } else {
+        vectorSource = this.requestLayerWFS(type, name);
+      }
       const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
+      // this.filterDespacho(vectorSource, name);
       return vector;
     }
+
+    // filterDespacho(vectorSource: any, name: any) {
+    //   const info = [];
+    //   let featureSource = vectorSource;
+    //   featureSource = vectorSource.idIndex_;
+    //   console.log(this.layers[name]);
+    //   // tslint:disable-next-line:no-shadowed-variable
+    //   // const item = {
+    //   //   idDedec: featureSource.get('id_dedec'),
+    //   //   nombreAge: featureSource.get('nombre_age'),
+    //   //   tipoGener: featureSource.get('tipo_gener'),
+    //   //   tipoPlant: featureSource.get('id_agente')
+    //   // };
+    //   // .forEach(element => {
+    //   //   x.push(element.hora);
+    //   //   y.push(element.mw);
+    //   // // });
+    //   // console.log(item);
+    //   // info.push(item);
+    // }
 
     styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
       let vector: any;
@@ -632,7 +660,6 @@ export class MapComponent implements OnInit {
     styleStationsLayer(vectorSource: any, name: any, styleIn?: any) {
       let vector: any;
       let setStyle: any;
-      console.log(vectorSource);
       if (styleIn) {
         setStyle = (feature) => {
           if (feature.get('nombre_entidad') === 'EMGESA' ) {
@@ -701,6 +728,7 @@ export class MapComponent implements OnInit {
         } else {
           this.popupDespacho.classList.remove('show');
         }
+        console.log(info[0]);
         this.createPopup(info[0]);
     });
   }
@@ -778,7 +806,6 @@ export class MapComponent implements OnInit {
 
     // GENERALES
     requestLayerWFS(type: string, name: string, param ?: any) {
-      console.log(name);
       const vectorSource = new VectorSource({
         format: new GeoJSON(),
         loader(extent, resolution, projection) {

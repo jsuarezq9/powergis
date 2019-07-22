@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import * as helper from '../../../environments/helper';
+
 
 @Component({
   selector: 'app-module-despacho',
@@ -10,10 +12,24 @@ export class ModuleDespachoComponent implements OnInit {
 
   layersInHidro = [];
   layersInfo = [];
+  filterTechnology = [];
+  filterAgente = [];
+  layerDespacho: any;
 
   constructor(private interaction: ComponentsInteractionService) { }
 
   ngOnInit() {
+
+    this.filterTechnology = helper.filterTechnology;
+
+    this.filterAgente = helper.filterAgente;
+
+    this.layerDespacho = {
+      href: 'http://10.154.80.177:8080/geoserver/rest/workspaces/xm/layers/despacho_nacional.json',
+      name: 'despacho_nacional',
+      edit: false,
+    };
+
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
       this.layersInfo = layersArray;
@@ -37,5 +53,16 @@ export class ModuleDespachoComponent implements OnInit {
     this.interaction.setActiveBaseLayers.subscribe((layer: any) => {
       this.layersInHidro = [];
     });
+  }
+
+  selectTech(event) {
+    console.log(event);
+    console.log(event.target.defaultValue);
+    this.interaction.setFilterPlantsDespacho(event.target.defaultValue);
+    // this.interaction.setStationsDespacho();
+    // this.technology = {
+    //   layer: select,
+    //   e: event
+    // };
   }
 }

@@ -27,6 +27,7 @@ export class DespachoPopupComponent implements OnInit {
   popupExpanded: any;
   selectedSensor: any;
   today: any;
+  technology: any;
 
   constructor( private interaction: ComponentsInteractionService, private dwhService: XmdespachoService) {
 }
@@ -107,4 +108,5 @@ initializePopup() {
   const popupModule = document.getElementById('moduleHidroPopup');
   popupModule.style.display = 'block';
 }
+
 }

@@ -1,5 +1,5 @@
 <div class="col-12 modules-outer-hidro shadow" style="padding-left: 5px">
-  <div class="animated fadeIn moduleFloat dropToolMenu border border-white" style="min-height: 100%; max-height: 50%">
+  <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%">
       <!-- Búsqueda y añadir capas -->
       <div class="container mt-3" style="width: 95%;">
           <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
@@ -20,16 +20,23 @@
               </div>
           </div>
       </div>
-      <!-- Capas disponibles en mapa -->
-      <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
-          <div class="row m-1 border border-primary rounded text-justify text-center" *ngFor="let layer of layersInHidro" [id]="layer.name" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
-              <div class="custom-control custom-switch">
-                  <div class="text-justify text-center" style="margin-top: 6px">
-                      {{layer.title}}
-                  </div> 
-              </div>
-          </div>
-      </div>
+      <!-- Seleccionar la tecnología -->
+      <div class="mt-2 shadow-sm">
+        <div class="row m-1 border rounded text-justify text-center itemsWhite" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
+            <div class="custom-control custom-switch text-center ml-2"  *ngFor = "let item of filterTechnology" style="font-style: normal; display: flex; align-items: center;">
+                <input (click)="selectTech($event)" type="checkbox" [id]="item.name" [value]="item.name" class="custom-control-input">
+                <label class="custom-control-label inner-class textwrapping" [for]="item.name">{{item.title}}</label>
+            </div>
+        </div>
+        <div class="dropdown itemsWhite rounded  align-drop"> 
+            <div class="col btn-lg mb-2 text-center text-justify border rounded pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPreestablecido"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span id="buttonPreestablecido">Agente</span>
+            </div>
+            <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonPreestablecido" style="width: 100%; max-height: 180px;" id="drop1">
+                <a class="dropdown-item pointer" *ngFor="let item of filterAgente"  id="{{item.name}}"  aria-labelledby="buttonPreestablecido"><small>{{item.title}}</small></a>
+            </div>
+        </div>
+     </div>
       
   </div>
 </div>

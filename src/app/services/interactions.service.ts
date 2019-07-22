@@ -11,6 +11,7 @@ export class ComponentsInteractionService {
   public removeRainLayer: Subject<any> = new Subject();
   public layerTitlesInteraction: Subject<any> = new Subject();
   public setActiveBaseLayers: Subject<any> = new Subject();
+  public setFilterPlants: Subject<any> = new Subject();
   public mapviewInteraction: Subject<any> = new Subject();
   public stationsInteraction: Subject<any> = new Subject();
   public DespachoInteraction: Subject<any> = new Subject();
@@ -65,10 +66,15 @@ export class ComponentsInteractionService {
     this.stationsInteraction.next(layer);
   }
 
-  setStationsDespacho(layer: any, styleIn: any, selectedStyleIn: any): any {
+  setStationsDespacho(layer: any, styleIn: any, selectedStyleIn: any, query?: any): any {
     layer.style = styleIn;
     layer.selectedstyle = selectedStyleIn;
+    layer.query = query;
     this.DespachoInteraction.next(layer);
+  }
+
+  setFilterPlantsDespacho(query: any): any {
+    this.setFilterPlants.next(query);
   }
 
   setPrecipitationLayer(layer: any, query: boolean, iniDate?: any, finDate?: any): any {

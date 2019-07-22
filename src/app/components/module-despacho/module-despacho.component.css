@@ -45,7 +45,7 @@
     padding-left: 0;
 }
 
-activeCapasTitle {
+.activeCapasTitle {
     font-family: Roboto;
     font-style: normal;
     font-weight: 500;
@@ -54,4 +54,23 @@ activeCapasTitle {
     display: flex;
     align-items: center;
     color: #5B5B61;
+}
+
+.outer-class {
+    width: 25px;
+    height: 35px;
+}
+
+.inner-class {
+    line-height: 30px;
+    font-size: 1vw;
+}
+.itemsWhite {
+    background-color: white;
+    opacity: 1.0
+}
+
+.align-drop {
+    width: 384px;
+    margin-left: 5px;
 }

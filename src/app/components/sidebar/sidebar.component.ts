@@ -101,6 +101,11 @@ export class SidebarComponent implements OnInit {
     this.legendDiv = document.getElementById('buttonCollapseLegendDiv');
     this.legendHidro = document.getElementById('legendModuleHidro');
     this.legendRaster = document.getElementById('rasterLegend');
+
+    this.interaction.setFilterPlants.subscribe((query: any) => {
+      this.interaction.setLayer(this.layerDespacho, false, false);
+      this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro, query);
+    });
   }
 
   collapseAll(event: any) {

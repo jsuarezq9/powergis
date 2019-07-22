@@ -44,3 +44,7 @@
     padding-right: 0;
     padding-left: 0;
 }
+
+.dropleft .dropdown-toggle::before {
+    content: none!important;
+}
