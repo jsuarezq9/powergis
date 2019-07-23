@@ -45,7 +45,7 @@ export class LegendComponent implements OnInit {
       }
 
       this.getLegend();
-      // console.log('LEGENDCOMP', this.layersInLegend);
+      console.log('LEGENDCOMP', this.layersInLegend);
 
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();
@@ -53,6 +53,8 @@ export class LegendComponent implements OnInit {
     // Eliminando desde el botón limpiar la ayuda del layend
     this.interaction.setActiveBaseLayers.subscribe((layer: any) => {
       this.layersInLegend = [];
+      document.getElementById('buttonCollapseLegend').style.display = 'none';
+      document.getElementById('legendExpanded').style.display = 'none';
     });
 
 

@@ -97,6 +97,7 @@ export class MapComponent implements OnInit {
       this.tooltip = document.getElementById('myTooltip');
       this.popup = document.getElementById('myPopup');
       this.popupDespacho = document.getElementById('myPopupDespacho');
+
       const overlay = new Overlay({
         element: this.tooltip,
         autoPan: true

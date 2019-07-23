@@ -29,3 +29,13 @@
 .img-collapse-legend-expanded {
     margin-left: -10px;
 }
+
+.show {
+    /* visibility: visible; */
+    display: block;
+}
+
+.hide {
+    /* visibility: hidden; */
+    display: none;
+}

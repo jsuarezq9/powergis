@@ -102,6 +102,7 @@ export class SidebarComponent implements OnInit {
     this.legendHidro = document.getElementById('legendModuleHidro');
     this.legendRaster = document.getElementById('rasterLegend');
 
+
     this.interaction.setFilterPlants.subscribe((filter: any) => {
       this.interaction.setLayer(this.layerDespacho, false, false);
       this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro, filter);
@@ -179,8 +180,18 @@ export class SidebarComponent implements OnInit {
       legendCollapsed.style.display = 'none';
       const legendExpanded = document.getElementById('legendExpanded');
       legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
+    } else {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
     }
-
   }
 
   addEstacionesPrecipitation() {

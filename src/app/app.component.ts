@@ -211,6 +211,8 @@ export class AppComponent {
       legendCollapsed.style.display = 'block';
       const legendExpanded = document.getElementById('legendExpanded');
       legendExpanded.style.display = 'none';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
     }
   }
 
