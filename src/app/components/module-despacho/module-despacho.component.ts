@@ -55,14 +55,14 @@ export class ModuleDespachoComponent implements OnInit {
     });
   }
 
-  selectTech(event) {
-    console.log(event);
-    console.log(event.target.defaultValue);
-    this.interaction.setFilterPlantsDespacho(event.target.defaultValue);
-    // this.interaction.setStationsDespacho();
-    // this.technology = {
-    //   layer: select,
-    //   e: event
-    // };
+  selectTech(item, agente?: any) {
+    console.log(agente);
+    if (!agente) {
+      const CQLfilter = `CQL_FILTER=tipo_gener=%27${item.name}%27&`;
+      this.interaction.setFilterPlantsDespacho(CQLfilter);
+    } else {
+      const CQLfilter = `CQL_FILTER=nombre_age=%27${item.id}%27&`;
+      this.interaction.setFilterPlantsDespacho(CQLfilter);
+    }
   }
 }

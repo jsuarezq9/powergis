@@ -12,6 +12,7 @@
   }];
 
   export const filterAgente = [{
+    id: 18,
     name: 'AES CHIVOR & CIA. S.C.A. E.S.P.',
     title: 'AES CHIVOR & CIA. S.C.A. E.S.P.'
   },
@@ -20,10 +21,12 @@
     title: 'COMPAÑÍA ELÉCTRICA DE SOCHAGOTA  S.A. E.S.P.'
   },
   {
+    id: 35,
     name: 'EMGESA S.A. E.S.P.',
     title: 'EMGESA S.A. E.S.P.'
   },
   {
+    id: 39,
     name: 'EMPRESA DE ENERGIA DEL PACIFICO S.A. E.S.P..',
     title: 'EMPRESA DE ENERGIA DEL PACIFICO S.A. E.S.P.'
   },
@@ -36,18 +39,22 @@
     title: 'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.'
   },
   {
+    id: 51,
     name: 'GENERADORA Y COMERCIALIZADORA DE ENERGIA DEL CARIBE S.A. E.S.P.',
     title: 'GENERADORA Y COMERCIALIZADORA DE ENERGIA DEL CARIBE S.A. E.S.P.'
   },
   {
+    id: 64,
     name: 'GESTION ENERGETICA S.A. E.S.P.',
     title: 'GESTION ENERGETICA S.A. E.S.P.'
   },
   {
+    id: 63,
     name: 'HIDROELECTRICA DEL ALTO PORCE S.A.S. E.S.P.',
     title: 'HIDROELECTRICA DEL ALTO PORCE S.A.S. E.S.P.'
   },
   {
+    id: 69,
     name: 'ISAGEN S.A. E.S.P.',
     title: 'ISAGEN S.A. E.S.P.'
   },
@@ -60,6 +67,7 @@
     title: 'PROELECTRICA & CIA. S.C.A. E.S.P.'
   },
   {
+    id: 82,
     name: 'TERMOBARRANQUILLA S.A. E.S.P.',
     title: 'TERMOBARRANQUILLA S.A. E.S.P.'
   },
@@ -92,6 +100,7 @@
     title: 'TERMOYOPAL GENERACION 2 S.A.S E.S.'
   },
   {
+    id: 1,
     name: 'ZONA FRANCA CELSIA S.A E.S.P.',
     title: 'ZONA FRANCA CELSIA S.A E.S.P.'
   },];

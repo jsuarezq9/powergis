@@ -73,7 +73,7 @@ export class ComponentsInteractionService {
     this.DespachoInteraction.next(layer);
   }
 
-  setFilterPlantsDespacho(query: any): any {
+  setFilterPlantsDespacho( query: any): any {
     this.setFilterPlants.next(query);
   }
 

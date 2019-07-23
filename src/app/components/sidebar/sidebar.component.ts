@@ -102,9 +102,9 @@ export class SidebarComponent implements OnInit {
     this.legendHidro = document.getElementById('legendModuleHidro');
     this.legendRaster = document.getElementById('rasterLegend');
 
-    this.interaction.setFilterPlants.subscribe((query: any) => {
+    this.interaction.setFilterPlants.subscribe((filter: any) => {
       this.interaction.setLayer(this.layerDespacho, false, false);
-      this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro, query);
+      this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro, filter);
     });
   }
 

@@ -1,7 +1,7 @@
 <div class="col-12 modules-outer-hidro shadow" style="padding-left: 5px">
-  <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%">
+  <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 100%">
       <!-- Búsqueda y añadir capas -->
-      <div class="container mt-3" style="width: 95%;">
+      <div class="container mt-3 mb-3" style="width: 95%;">
           <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
               <div class="col-10">
                   <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
@@ -21,21 +21,24 @@
           </div>
       </div>
       <!-- Seleccionar la tecnología -->
-      <div class="mt-2 shadow-sm">
-        <div class="row m-1 border rounded text-justify text-center itemsWhite" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
-            <div class="custom-control custom-switch text-center ml-2"  *ngFor = "let item of filterTechnology" style="font-style: normal; display: flex; align-items: center;">
-                <input (click)="selectTech($event)" type="checkbox" [id]="item.name" [value]="item.name" class="custom-control-input">
-                <label class="custom-control-label inner-class textwrapping" [for]="item.name">{{item.title}}</label>
+
+      <div class="row m-2 rounded-pill shadow-sm align-items-center itemsWhite">
+            <div class="dropdown w-50"> 
+                <div class="col btn-lg buttonLeft text-center border-right pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonTecnolgia"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span id="buttonTecnolgia">Tecnologia</span>
+                </div>
+                <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonTecnolgia" style="width: 100%; max-height: 180px;" id="drop1">
+                    <a class="dropdown-item pointer" *ngFor="let item of filterTechnology" (click)="selectTech(item)"  id="{{item.name}}"  aria-labelledby="buttonTecnologia"><small>{{item.title}}</small></a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown itemsWhite rounded  align-drop"> 
-            <div class="col btn-lg mb-2 text-center text-justify border rounded pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonPreestablecido"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span id="buttonPreestablecido">Agente</span>
+            <div class="dropdown w-50"> 
+                <div class="col btn-lg buttonRight text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonAgente"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span id="buttonAgente">Agente</span>
+                </div>
+                <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonAgente" style="width: 200%; max-height: 180px;" id="drop2">
+                    <a class="dropdown-item pointer" *ngFor="let item of filterAgente" (click)="selectTech(item, 'agente')" id="{{item.name}}"  aria-labelledby="buttonAgente"><small>{{item.title}}</small></a>
+                </div>
             </div>
-            <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonPreestablecido" style="width: 100%; max-height: 180px;" id="drop1">
-                <a class="dropdown-item pointer" *ngFor="let item of filterAgente"  id="{{item.name}}"  aria-labelledby="buttonPreestablecido"><small>{{item.title}}</small></a>
-            </div>
-        </div>
      </div>
       
   </div>

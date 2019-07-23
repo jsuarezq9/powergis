@@ -605,35 +605,15 @@ export class MapComponent implements OnInit {
       console.log(query);
       let vectorSource;
       if (query) {
-        const CQLfilter = `CQL_FILTER=tipo_gener=%27HIDRAULICA%27`;
-        vectorSource = this.requestLayerWFS(type, name, CQLfilter);
+        vectorSource = this.requestLayerWFS(type, name, query);
       } else {
         vectorSource = this.requestLayerWFS(type, name);
       }
+      console.log(vectorSource);
       const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
-      // this.filterDespacho(vectorSource, name);
       return vector;
     }
 
-    // filterDespacho(vectorSource: any, name: any) {
-    //   const info = [];
-    //   let featureSource = vectorSource;
-    //   featureSource = vectorSource.idIndex_;
-    //   console.log(this.layers[name]);
-    //   // tslint:disable-next-line:no-shadowed-variable
-    //   // const item = {
-    //   //   idDedec: featureSource.get('id_dedec'),
-    //   //   nombreAge: featureSource.get('nombre_age'),
-    //   //   tipoGener: featureSource.get('tipo_gener'),
-    //   //   tipoPlant: featureSource.get('id_agente')
-    //   // };
-    //   // .forEach(element => {
-    //   //   x.push(element.hora);
-    //   //   y.push(element.mw);
-    //   // // });
-    //   // console.log(item);
-    //   // info.push(item);
-    // }
 
     styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
       let vector: any;
@@ -728,7 +708,6 @@ export class MapComponent implements OnInit {
         } else {
           this.popupDespacho.classList.remove('show');
         }
-        console.log(info[0]);
         this.createPopup(info[0]);
     });
   }

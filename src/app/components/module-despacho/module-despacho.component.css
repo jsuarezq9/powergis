@@ -74,3 +74,11 @@
     width: 384px;
     margin-left: 5px;
 }
+
+.buttonLeft {
+    border-radius: 20px 0px 0px 20px;
+}
+
+.buttonRight {
+    border-radius: 0px 20px 20px 0px;
+}
