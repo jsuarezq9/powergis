@@ -56,12 +56,11 @@ export class ModuleDespachoComponent implements OnInit {
   }
 
   selectTech(item, agente?: any) {
-    console.log(agente);
     if (!agente) {
       const CQLfilter = `CQL_FILTER=tipo_gener=%27${item.name}%27&`;
       this.interaction.setFilterPlantsDespacho(CQLfilter);
     } else {
-      const CQLfilter = `CQL_FILTER=nombre_age=%27${item.id}%27&`;
+      const CQLfilter = `CQL_FILTER=id_agente=%27${item.id}%27&`;
       this.interaction.setFilterPlantsDespacho(CQLfilter);
     }
   }

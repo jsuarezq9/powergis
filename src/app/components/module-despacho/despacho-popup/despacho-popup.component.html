@@ -3,8 +3,8 @@
     <div class="col popupheader" style="height: 8%">
         <div class="row justify-content-center popupheadertext">
             <div class="col-md-auto" style="text-align: left;"><small><strong>{{this.plantCompany | uppercase}}</strong></small></div>
+            <div class="col" style="text-align: right"><small>{{this.plantId}}</small></div>
             <div class="col" style="text-align: right"><small>{{this.plantType}}</small></div>
-            <div class="col" style="text-align: left"><small>{{this.selectedSensor.nombreSensor | titlecase}} [{{this.selectedSensor.unidadSensor}}]</small></div>
             <div class="col-md-auto" style="text-align: right"><small>{{this.today}}</small></div>
             <div class="col-md-auto pointer" style="text-align: left" (click)="closeBigPopup()"><strong>X</strong></div>
         </div>

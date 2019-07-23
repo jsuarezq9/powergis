@@ -117,13 +117,11 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     const today = moment().format('YYYY-MM-DD HH:mm:ss');
     this.interaction.timeSeriesInteraction.subscribe(sensor => {
       this.selectedSensor = sensor;
-      console.log('Info en Modulehidro timeseries', sensor);
       this.renderTimeSeries(initial, today, sensor.idEstacion, sensor.idSensor);
     });
   }
 
   renderTimeSeries(initial, final, idStation, idSensor) {
-    console.log('Rendertimeseries', initial, final, idStation, idSensor);
     this.formingRequest(initial, final, idStation, idSensor);
     // const existsSensor = this.data[idSensor] !== undefined ? true : false;
     // let existsDate: boolean;
@@ -166,9 +164,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
 
   formingRequest(initial, final, idStation, idSensor) {
-    console.log('Formando solicitud');
     this.dwhService.getSensorByStation(initial, final, idStation, idSensor).subscribe(response => {
-      console.log('RESPONSE[idSensor]', response[idSensor]);
       this.data[idSensor] = response;
       this.actualData = response;
       this.setData(response[idSensor]);
@@ -176,7 +172,6 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
 
   setData(dataSensor) {
-    console.log('SENSOR DATA', this.dataLines, dataSensor);
     this.dataLines = [];
     const sensor = {
       type: 'scatter',

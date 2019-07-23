@@ -602,14 +602,12 @@ export class MapComponent implements OnInit {
     }
 
     addStationsDespachoWFS(type: string, name: string, styleIn: any, query?: any) {
-      console.log(query);
       let vectorSource;
       if (query) {
         vectorSource = this.requestLayerWFS(type, name, query);
       } else {
         vectorSource = this.requestLayerWFS(type, name);
       }
-      console.log(vectorSource);
       const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
       return vector;
     }

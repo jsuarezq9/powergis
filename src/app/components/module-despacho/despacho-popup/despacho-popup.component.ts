@@ -30,6 +30,14 @@ export class DespachoPopupComponent implements OnInit {
   technology: any;
 
   constructor( private interaction: ComponentsInteractionService, private dwhService: XmdespachoService) {
+    this.layout = {
+      xaxis: {
+        title: 'Hora',
+      },
+      yaxis: {
+        title: 'mw',
+      }
+    };
 }
 
 ngOnInit() {
@@ -85,7 +93,7 @@ setData(dataSensor) {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
     line: { color: '#17BECF'},
-    autosize: true
+    autosize: true,
   };
   this.dataLines.push(sensor);
 }
