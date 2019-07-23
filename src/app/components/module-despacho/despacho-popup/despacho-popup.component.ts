@@ -12,10 +12,10 @@ import * as moment from 'moment';
 })
 export class DespachoPopupComponent implements OnInit {
 
-  dataLines: any[];
-  layout = {};
-  debug = true;
-  useResizeHandler = true;
+  public dataLines: any[];
+  public layout = {};
+  public debug = true;
+  public useResizeHandler = true;
   info: any[];
   showInfo: boolean;
   plantCompany: any;
@@ -31,6 +31,12 @@ export class DespachoPopupComponent implements OnInit {
 
   constructor( private interaction: ComponentsInteractionService, private dwhService: XmdespachoService) {
     this.layout = {
+      title: false,
+      connectgaps: true,
+      autosize: true,
+      // autosize: false,
+      // width: 500,
+      // height: 400,
       xaxis: {
         title: 'Hora',
       },

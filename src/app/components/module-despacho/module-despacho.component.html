@@ -25,7 +25,7 @@
       <div class="row m-2 rounded-pill shadow-sm align-items-center itemsWhite">
             <div class="dropdown w-50"> 
                 <div class="col btn-lg buttonLeft text-center border-right pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonTecnolgia"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span id="buttonTecnolgia">Tecnologia</span>
+                    <span id="buttonTecnolgia">Tecnología</span>
                 </div>
                 <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonTecnolgia" style="width: 100%; max-height: 180px;" id="drop1">
                     <a class="dropdown-item pointer" *ngFor="let item of filterTechnology" (click)="selectTech(item)"  id="{{item.name}}"  aria-labelledby="buttonTecnologia"><small>{{item.title}}</small></a>
@@ -35,7 +35,7 @@
                 <div class="col btn-lg buttonRight text-center pointer dropdown-toggle" style="font-size: 1.2vw" id="buttonAgente"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span id="buttonAgente">Agente</span>
                 </div>
-                <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonAgente" style="width: 200%; max-height: 180px;" id="drop2">
+                <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonAgente" style="width: 250%; max-height: 180px;" id="drop2">
                     <a class="dropdown-item pointer" *ngFor="let item of filterAgente" (click)="selectTech(item, 'agente')" id="{{item.name}}"  aria-labelledby="buttonAgente"><small>{{item.title}}</small></a>
                 </div>
             </div>
