@@ -746,6 +746,7 @@ export class MapComponent implements OnInit {
           this.map.addOverlay(overlay);
           if (!this.popup.classList.contains('show')) {
             this.popup.classList.add('show');
+            this.popupDespacho.classList.remove('show');
           }
           // this.popup.classList.add('show');
 

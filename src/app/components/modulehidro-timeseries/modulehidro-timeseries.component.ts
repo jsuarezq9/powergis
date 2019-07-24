@@ -11,7 +11,7 @@ import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 })
 
 export class ModulehidroTimeseriesComponent implements OnInit {
-
+  datafecha: Date;
   selectedSensor: any;
   actualYear: number;
   firstDateYear: Date;
@@ -120,7 +120,14 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       this.renderTimeSeries(initial, today, sensor.idEstacion, sensor.idSensor);
     });
   }
-
+  onValueChangeA(value: Date): void {
+    this.fecha_inicio = value;
+    console.log(this.fecha_inicio);
+  }
+  onValueChangeB(value: Date): void {
+    this.fecha_fin = value;
+    console.log(this.fecha_fin);
+  }
   renderTimeSeries(initial, final, idStation, idSensor) {
     this.formingRequest(initial, final, idStation, idSensor);
     // const existsSensor = this.data[idSensor] !== undefined ? true : false;
@@ -190,17 +197,18 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     // this.interaction.setSensor(item);
     // Warning
     if (!inicio || !final) {
-      document.getElementById(`warningText2`).style.display = 'block';
+      // document.getElementById(`warningText2`).style.display = 'block';
     } else {
-      document.getElementById(`warningText2`).style.display = 'none';
-      this.fi = document.getElementById('fechaInicio');
-      this.ff = document.getElementById('fechaFin');
-
+      // document.getElementById(`warningText2`).style.display = 'none';
+      // this.fi = document.getElementById('fechaInicio');
+      // this.ff = document.getElementById('fechaFin');
+      console.log(inicio);
+      console.log(final);
       const today = moment().format('YYYY-MM-DD HH:mm:ss');
-      console.log('Fechas input', inicio, final);
-      console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
-      const a = moment(this.fi.value).format('YYYY-MM-DD HH:mm:ss');
-      const b = moment(this.ff.value).format('YYYY-MM-DD HH:mm:ss');
+      // console.log('Fechas input', inicio, final);
+      // console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
+      const a = moment(inicio).format('YYYY-MM-DD');
+      const b = moment(final).format('YYYY-MM-DD HH:mm:ss');
       console.log('Fechas ffff', a, b);
       console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor);
       console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion);

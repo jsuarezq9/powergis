@@ -11,3 +11,7 @@
     margin-right: 0;
     margin-left: 0;
 }
+
+. pickerColor {
+    background-color: rgb(24, 36, 49);
+}

@@ -18,6 +18,9 @@ import { PlotlyViaWindowModule  } from 'angular-plotly.js';
 import { LegendComponent } from './components/legend/legend.component';
 import { ModuleDespachoComponent } from './components/module-despacho/module-despacho.component';
 import { DespachoPopupComponent } from './components/module-despacho/despacho-popup/despacho-popup.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,10 @@ import { DespachoPopupComponent } from './components/module-despacho/despacho-po
   imports: [
     BrowserModule,
     PlotlyViaWindowModule,
-    HttpClientModule
+    HttpClientModule,
+    BsDatepickerModule.forRoot(),
+    BrowserAnimationsModule,
+    TimepickerModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -45,7 +45,7 @@ export class LegendComponent implements OnInit {
       }
 
       this.getLegend();
-      console.log('LEGENDCOMP', this.layersInLegend);
+      // console.log('LEGENDCOMP', this.layersInLegend);
 
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();
