@@ -8,7 +8,7 @@
   },
   {
     name: 'FOTOVOLTAICA',
-    title: 'Fotovoltáica'
+    title: 'Fotovoltaica'
   }];
 
   export const filterAgente = [{
