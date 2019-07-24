@@ -69,9 +69,10 @@ ngOnInit() {
       this.plantType = popup.tipoGener;
       this.plantId = popup.idDedec;
       this.stationState = popup.estadoEstacion;
-      this.dwhService.getDespachoSin(this.today, this.today, this.plantId).subscribe(response => {
+      this.dwhService.getDespachoSin(this.plantId).subscribe(response => {
         // tslint:disable-next-line:no-string-literal
-        this.setData(response['description']);
+        console.log(response);
+        this.setData(response);
         });
     }
 
@@ -85,7 +86,7 @@ setData(dataSensor) {
   const y = [];
   dataSensor.forEach(element => {
     x.push(element.hora);
-    y.push(element.mw);
+    y.push(element.valores);
   });
   const sensor = {
     type: 'bar',

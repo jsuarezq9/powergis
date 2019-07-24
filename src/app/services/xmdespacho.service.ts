@@ -12,8 +12,8 @@ import { environment } from '../../environments/environment';
 })
 export class XmdespachoService {
 
-  host = '/serviciosRestful/genproyectada_sin.php';
-  token = environment.XM_TOKEN;
+  host = 'http://10.154.80.177/e1011/vm_datos_xm?central=eq.';
+  token = environment.PRO_TOKEN;
   contentType = 'application/x-www-form-urlencoded';
   httpOptions = {
     headers: new HttpHeaders({
@@ -26,23 +26,21 @@ export class XmdespachoService {
 
   constructor(private http: HttpClient) { }
 
-  getDespachoSin(fechaInicio, fechaFin, planta) {
-
-
-
+  getDespachoSin(planta) {
     const data = JSON.stringify({
       planta,
-      fecha_inicio: fechaInicio,
-      fecha_fin: fechaFin
+      // fecha_inicio: fechaInicio,
+      // fecha_fin: fechaFin
     });
     let headers = new HttpHeaders();
-    headers = headers.append("Authorization", "Basic " + btoa("POWERGIS:987123"));
+    headers = headers.append("Authorization", "Bearer " + this.token);
     headers = headers.append('Content-type', 'application/json');
-    //headers = headers.append('Origin', '127.0.0.1' );
-    //headers = headers.append("Connection", "keep-alive" );
-    return this.http.post(this.host, data , { headers })
+    //  headers = headers.append('Origin', '127.0.0.1' );
+    //  headers = headers.append("Connection", "keep-alive" );
+    return this.http.get(this.host + planta, { headers })
       .pipe(
         map((res: Response) => {
+          console.log(res);
           const datas = res;
           return datas;
         })
