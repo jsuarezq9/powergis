@@ -47,6 +47,9 @@ export class DespachoPopupComponent implements OnInit {
 }
 
 ngOnInit() {
+  const popupModuleHidro = document.getElementById('moduleHidroPopup');
+  popupModuleHidro.style.display = 'none';
+
   this.today = moment().format('DD-MM-YYYY');
   // this.dwhService.getDespachoSin(today, today, 'PROELECT').subscribe(response => {
   // this.setData(response['description']);
@@ -62,7 +65,7 @@ ngOnInit() {
   this.selectedSensor = {};
 
   // Recibir respuesta de servicio de interaccion de las plantas
-  this.interaction.popupInteraction.subscribe((popup: any) => {
+  this.interaction.popupDespachoInteraction.subscribe((popup: any) => {
     if ( popup !== undefined) {
       this.initializePopup();
       this.plantCompany = popup.nombreAge;
@@ -112,7 +115,7 @@ closeBigPopup() {
   // const popupExpanded = document.getElementById('myPopupDespacho');
   this.popupExpanded.classList.remove('show');
   this.popupExpanded.style.display = 'none';
-  const popupModule = document.getElementById('moduleHidroPopup');
+  const popupModule = document.getElementById('moduleDespachoPopup');
   popupModule.style.display = 'none';
 }
 
@@ -120,8 +123,9 @@ closeBigPopup() {
 initializePopup() {
   // this.popupExpanded = document.getElementById('myPopupDespacho');
   this.popupExpanded.style.display = 'block';
-  const popupModule = document.getElementById('moduleHidroPopup');
+  const popupModule = document.getElementById('moduleDespachoPopup');
   popupModule.style.display = 'block';
+  popupModule.classList.add('hide');
 }
 
 }

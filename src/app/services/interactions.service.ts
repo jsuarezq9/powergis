@@ -18,6 +18,7 @@ export class ComponentsInteractionService {
   public precipitationInteraction: Subject<any> = new Subject();
   public precipitationRainInteraction: Subject<any> = new Subject();
   public rastersInteraction: Subject<any> = new Subject();
+  public popupDespachoInteraction: Subject<any> = new Subject();
   public popupInteraction: Subject<any> = new Subject();
   public tooltipInteraction: Subject<any> = new Subject();
   public timeSeriesInteraction: Subject<any> = new Subject();
@@ -96,6 +97,10 @@ export class ComponentsInteractionService {
 
   setPopup(info: any): void {
     this.popupInteraction.next(info);
+  }
+
+  setPopupDespacho(info: any): void {
+    this.popupDespachoInteraction.next(info);
   }
 
   setTooltip(info: any): void {

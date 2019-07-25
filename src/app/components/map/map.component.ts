@@ -620,7 +620,19 @@ export class MapComponent implements OnInit {
       if (styleIn) {
         setStyle = (feature) => {
           if (feature.get('id_agente') === 35 ) {
-              return styleIn.Emgesa;
+            switch (feature.get('tipo_gener')) {
+              case 'HIDRAULICA':
+                return styleIn.EmgesaHidraulica;
+              case 'TERMICA':
+                return styleIn.EmgesaTermica;
+
+              case 'FOTOVOLTAICA':
+                return styleIn.EmgesaFotovoltaica;
+              case 'EOLICA':
+                return styleIn.EmgesaEolica;
+              default:
+                break;
+            }
           } else {
               return styleIn.Otros;
           }
@@ -701,13 +713,15 @@ export class MapComponent implements OnInit {
           this.map.addOverlay(overlay);
           if (!this.popupDespacho.classList.contains('show')) {
             this.popupDespacho.classList.add('show');
+            this.popup.classList.remove('show');
+            console.log('paso por aqui 1');
           }
           // this.popup.classList.add('show');
 
         } else {
           this.popupDespacho.classList.remove('show');
         }
-        this.createPopup(info[0]);
+        this.createPopupDespacho(info[0]);
     });
   }
 
@@ -747,6 +761,11 @@ export class MapComponent implements OnInit {
           if (!this.popup.classList.contains('show')) {
             this.popup.classList.add('show');
             this.popupDespacho.classList.remove('show');
+            this.popupDespacho.classList.add('hide');
+            console.log('paso por aqui 2');
+          } else {
+            this.popup.classList.remove('show');
+            console.log('leeeee');
           }
           // this.popup.classList.add('show');
 
@@ -761,24 +780,29 @@ export class MapComponent implements OnInit {
     createPopup(info) {
       this.interaction.setPopup(info);
     }
+    createPopupDespacho(info) {
+      this.interaction.setPopupDespacho(info);
+    }
 
     initializePopup() {
       // Muestro el popup
-      this.popup.classList.toggle('show');
-
+      // this.popup.classList.toggle('show');
+      console.log('esto es ua mierda');
       // Escondo el popupExpanded y el popupModule
       const popupExpanded = document.getElementById('myPopupExpandedContainer');
       popupExpanded.style.display = 'none';
       const popupModule = document.getElementById('moduleHidroPopup');
       popupModule.style.display = 'none';
+      const popupModuleDespacho = document.getElementById('moduleDespachoPopup');
+      popupModuleDespacho.style.display = 'none';
 
-      // Reinicio la selección de sensor del popup
-      const rows = document.getElementsByClassName('popupbodytext-selected');
-      // tslint:disable-next-line: prefer-for-of
-      for (let index = 0; index < rows.length; index++) {
-        rows[index].classList.add('popupbodytext');
-        rows[index].classList.remove('popupbodytext-selected');
-      }
+      // // Reinicio la selección de sensor del popup
+      // const rows = document.getElementsByClassName('popupbodytext-selected');
+      // // tslint:disable-next-line: prefer-for-of
+      // for (let index = 0; index < rows.length; index++) {
+      //   rows[index].classList.add('popupbodytext');
+      //   rows[index].classList.remove('popupbodytext-selected');
+      // }
     }
     // FIN MODULO 2
 

@@ -61,10 +61,16 @@ export class SidebarComponent implements OnInit {
   };
 
   stylesDespacho = {
-    Emgesa:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionEmgesaActiva.png', scale: 0.15, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaHidraulica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaHidraulica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaTermica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaTermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaFotovoltaica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaFotovoltaica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaEolica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaEolica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
     Otros:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.35, anchor: [0.5, 1]}), zIndex: 0})
+      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.37, anchor: [0.5, 1]}), zIndex: 0})
   };
 
   legendHidro: any;

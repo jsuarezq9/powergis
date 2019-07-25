@@ -1,12 +1,13 @@
 <!-- POPUP -->
-<div class="popup popuptext" id="myPopup">
+<div class="popup popuptext" id="myPopup" style="z-index: 3;" >
   <div class="container" style="width:fit-content;">
       <div class="row">
           <div class="col popupheader">
               <div class="row justify-content-center popupheadertext">
                   <div class="col-md-auto" style="text-align: left;"><strong>{{this.stationCompany | uppercase}}</strong></div>
-                  <div class="col" style="text-align: center"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
+                  <div class="col-md-auto" style="text-align: center"><small>{{this.stationName}}&nbsp;{{this.stationId}}</small></div>
                   <div class="col-md-auto" style="text-align: right"><small>{{this.date}}</small></div>
+                  <div class="col-md-auto pointer" style="text-align: left" (click)="closeLittlePopup()"><strong>X</strong></div>
               </div>
           </div>
           <div class="w-100"></div>

@@ -125,3 +125,6 @@ activeBorderCapas {
     box-sizing: border-box !important;
     border-radius: 30px !important;
 }
+.hide {
+    visibility: hidden;
+}

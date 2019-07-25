@@ -79,6 +79,10 @@ export class ModulehidroPopupComponent implements OnInit {
 
   }
 
+  closeLittlePopup() {
+    this.popup.style.display = 'none';
+  }
+
   closeBigPopup() {
     // Escondo el popupExpanded y el popupModule
     const popupExpanded = document.getElementById('myPopupExpandedContainer');
@@ -131,11 +135,17 @@ export class ModulehidroPopupComponent implements OnInit {
 
   initializePopup() {
     // Escondo el popupExpanded y el popupModule
+    this.popup.style.display = 'block';
     const popupExpanded = document.getElementById('myPopupExpandedContainer');
     popupExpanded.style.display = 'none';
     const popupModule = document.getElementById('moduleHidroPopup');
-    popupModule.style.display = 'none';
-
+    popupModule.style.display = 'block';
+    popupModule.classList.add('hide');
+    // const popupModuleDespacho = document.getElementById('moduleDespachoPopup');
+    // popupModuleDespacho.style.display = 'none';
+    // const popupModuleDespacho = document.getElementById('moduleDespachoPopup');
+    // popupModule.style.display = 'block';
+    // popupModule.classList.add('hide');
     // Reinicio la selección de sensor del popup
     const rows = document.getElementsByClassName('popupbodytext-selected');
     // tslint:disable-next-line: prefer-for-of
