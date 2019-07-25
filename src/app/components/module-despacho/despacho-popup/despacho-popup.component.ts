@@ -114,6 +114,7 @@ closeBigPopup() {
 
   // const popupExpanded = document.getElementById('myPopupDespacho');
   this.popupExpanded.classList.remove('show');
+  this.popupExpanded.classList.add('hide');
   this.popupExpanded.style.display = 'none';
   const popupModule = document.getElementById('moduleDespachoPopup');
   popupModule.style.display = 'none';
@@ -123,8 +124,10 @@ closeBigPopup() {
 initializePopup() {
   // this.popupExpanded = document.getElementById('myPopupDespacho');
   this.popupExpanded.style.display = 'block';
+  this.popupExpanded.classList.remove('hide');
   const popupModule = document.getElementById('moduleDespachoPopup');
   popupModule.style.display = 'block';
+  popupModule.classList.remove('show');
   popupModule.classList.add('hide');
 }
 

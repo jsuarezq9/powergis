@@ -760,12 +760,7 @@ export class MapComponent implements OnInit {
           this.map.addOverlay(overlay);
           if (!this.popup.classList.contains('show')) {
             this.popup.classList.add('show');
-            this.popupDespacho.classList.remove('show');
-            this.popupDespacho.classList.add('hide');
             console.log('paso por aqui 2');
-          } else {
-            this.popup.classList.remove('show');
-            console.log('leeeee');
           }
           // this.popup.classList.add('show');
 
@@ -787,7 +782,6 @@ export class MapComponent implements OnInit {
     initializePopup() {
       // Muestro el popup
       // this.popup.classList.toggle('show');
-      console.log('esto es ua mierda');
       // Escondo el popupExpanded y el popupModule
       const popupExpanded = document.getElementById('myPopupExpandedContainer');
       popupExpanded.style.display = 'none';
