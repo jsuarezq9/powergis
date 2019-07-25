@@ -91,6 +91,8 @@ export class ModulehidroPopupComponent implements OnInit {
     popupExpanded.style.display = 'none';
     const popupModule = document.getElementById('moduleHidroPopup');
     popupModule.style.display = 'none';
+    popupModule.classList.remove('show');
+    popupModule.classList.add('hide');
   }
 
   changeSelection(event: any, item: any) {
