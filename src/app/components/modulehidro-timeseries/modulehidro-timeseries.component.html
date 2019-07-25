@@ -1,34 +1,23 @@
 <div class="justify-content-md-center align-items-center h-100 pb-5">
-  <!-- <div class="col-3 text-center">
+    <!-- <div class="col-3 text-center">
       <img src="./assets/icons/sidemenu/IconoIntervaloModulo3.png" alt="Intervalo" style="height: 20px; font-size: 40px"> Intervalo
   </div> -->
-  <div class="mb-2 popupbodytext">Personalizado</div> 
+    <div class="mb-2 popupbodytext">Personalizado</div>
     <div class="form-inline align-items-center">
         <div class="form-group mb-2 align-items-center">
-                <div class="ml-2 mr-2 popupbodytext">Fecha inicial </div>
-                <input type="text"
-                    placeholder=""
-                    class="form-control"
-                    bsDatepicker
-                    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue', adaptivePosition: true  }"
-                    (bsValueChange)="onValueChangeA($event)">
+            <div class="ml-2 mr-2 popupbodytext">Fecha inicial </div>
+            <input type="text" placeholder="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue', adaptivePosition: true  }" (bsValueChange)="onValueChangeA($event)">
         </div>
         <div class="form-group mb-2 align-items-center">
-                <div class="mr-2 ml-2 popupbodytext">Fecha Final </div>
-                <input type="text"
-                    placeholder=""
-                    class="form-control"
-                    bsDatepicker
-                    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD HH:mm:ss', containerClass: 'theme-dark-blue', adaptivePosition: true  }"
-                    (bsValueChange)="onValueChangeB($event)">
+            <div class="mr-2 ml-2 popupbodytext">Fecha Final </div>
+            <input type="text" placeholder="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD HH:mm:ss', containerClass: 'theme-dark-blue', adaptivePosition: true  }" (bsValueChange)="onValueChangeB($event)">
         </div>
         <div class="form-group mb-2 align-items-center">
             <button class="btn btn-primary btn-block ml-2 align-items-center" id="recargar" style="background-color: #2F86EA" (click)="refreshData(this.fecha_inicio,this.fecha_fin)">Consultar</button>
         </div>
     </div>
-  <div class="w-100"></div>
-  <div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0;">
-    <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug"
-      [useResizeHandler]="useResizeHandler"></plotly-plot>
-  </div>
+    <div class="w-100"></div>
+    <div class="col bg-light align-self-center justify-content-center" style="height: 88%; padding: 0;">
+        <plotly-plot [data]="dataLines" [layout]="layout" [revision]="0" [debug]="debug" [useResizeHandler]="useResizeHandler"></plotly-plot>
+    </div>
 </div>

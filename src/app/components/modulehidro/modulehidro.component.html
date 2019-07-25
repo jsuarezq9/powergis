@@ -1,8 +1,8 @@
 <div class="col-12 modules-outer-hidro shadow" style="padding-left: 5px">
-  <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%">
-      <!-- Búsqueda y añadir capas -->
-      <div class="container mt-3" style="width: 95%;">
-          <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
+    <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%">
+        <!-- Búsqueda y añadir capas -->
+        <div class="container mt-3" style="width: 95%;">
+            <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
               <div class="col-10">
                   <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
               </div>
@@ -11,25 +11,25 @@
               <i class="ripple fas fa-search"></i>
           </button>
           </div> -->
-          <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
-              <div class="col-1 btn-lg text-left">
-                  <i class="fas fa-layer-group"></i>
-              </div>
-              <div class="col-9 btn-lg text-left">
-                  Capas
-              </div>
-          </div>
-      </div>
-      <!-- Capas disponibles en mapa -->
-      <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
-          <div class="row m-1 border border-primary rounded text-justify text-center" *ngFor="let layer of layersInHidro" [id]="layer.name" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
-              <div class="custom-control custom-switch">
-                  <div class="text-justify text-center" style="margin-top: 6px">
-                      {{layer.title}}
-                  </div>
-              </div>
-          </div>
-      </div>
+            <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                <div class="col-1 btn-lg text-left">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="col-9 btn-lg text-left" style="font-size: 1.2vw">
+                    Capas
+                </div>
+            </div>
+        </div>
+        <!-- Capas disponibles en mapa -->
+        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
+            <div class="row m-1 border border-primary rounded text-justify text-center" *ngFor="let layer of layersInHidro" [id]="layer.name" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
+                <div class="custom-control custom-switch">
+                    <div class="text-justify text-center" style="margin-top: 6px">
+                        {{layer.title}}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  </div>
+    </div>
 </div>
