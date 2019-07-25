@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { GeoserverService } from '../../services/geoserver.service';
 import { ComponentsInteractionService } from '../../services/interactions.service';
-
+import * as helper from './helper';
 import { Icon, Style, Stroke, Circle, Fill } from 'ol/style';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
@@ -60,18 +60,7 @@ export class SidebarComponent implements OnInit {
       width: 2})})})
   };
 
-  stylesDespacho = {
-    EmgesaHidraulica:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaHidraulica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
-    EmgesaTermica:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaTermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
-    EmgesaFotovoltaica:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaFotovoltaica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
-    EmgesaEolica:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaEolica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
-    Otros:  new Style({
-      image: new Icon({ src: './assets/icons/estaciones/IconoEstacionOtrosActiva.png', scale: 0.37, anchor: [0.5, 1]}), zIndex: 0})
-  };
+  stylesDespacho = helper.stylesDespacho;
 
   legendHidro: any;
   legendRaster: any;

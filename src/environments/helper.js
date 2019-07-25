@@ -17,7 +17,7 @@
     title: 'AES CHIVOR & CIA. S.C.A. E.S.P.'
   },
   {
-    id: 1,
+    id: 110,
     name: 'COMPAÑÍA ELÉCTRICA DE SOCHAGOTA  S.A. E.S.P.',
     title: 'COMPAÑÍA ELÉCTRICA DE SOCHAGOTA  S.A. E.S.P.'
   },
@@ -112,7 +112,7 @@
     title: 'TERMOYOPAL GENERACION 2 S.A.S E.S.'
   },
   {
-    id: 1,
+    id: 19,
     name: 'ZONA FRANCA CELSIA S.A E.S.P.',
     title: 'ZONA FRANCA CELSIA S.A E.S.P.'
   },];

@@ -625,7 +625,6 @@ export class MapComponent implements OnInit {
                 return styleIn.EmgesaHidraulica;
               case 'TERMICA':
                 return styleIn.EmgesaTermica;
-
               case 'FOTOVOLTAICA':
                 return styleIn.EmgesaFotovoltaica;
               case 'EOLICA':
@@ -634,7 +633,68 @@ export class MapComponent implements OnInit {
                 break;
             }
           } else {
-              return styleIn.Otros;
+            switch (feature.get('tipo_gener')) {
+              case 'HIDRAULICA':
+                switch (feature.get('id_agente')) {
+
+                  case 38:
+                    return styleIn.AgenteEPMHidraulica;
+                  case 18:
+                    return styleIn.AgenteAESHidraulica;
+                  case 34:
+                    return styleIn.AgenteEmurraHidraulica;
+                  case 39:
+                    return styleIn.AgenteENPCHidraulica;
+                  case 69:
+                    return styleIn.AgenteISAHidraulica;
+                  case 70:
+                    return styleIn.AgenteLacasHidraulica;
+                  case 63:
+                    return styleIn.AgentePorceHidraulica;
+                  default:
+                    break;
+                }
+                break;
+              case 'TERMICA':
+                  switch (feature.get('id_agente')) {
+                    case 38:
+                      return styleIn.AgenteEPMTermica;
+                    case 93:
+                      return styleIn.AgenteValleTermica;
+                    case 98:
+                      return styleIn.AgenteYopalTermica;
+                    case 96:
+                      return styleIn.AgenteTasajeroTermica;
+                    case 86:
+                      return styleIn.AgenteTasajeroTermica;
+                    case 77:
+                      return styleIn.AgenteProlecTermica;
+                    case 109:
+                      return styleIn.AgenteNorteTermica;
+                    case 69:
+                      return styleIn.AgenteISATermica;
+                    case 51:
+                      return styleIn.AgenteGCaribeTermica;
+                    case 110:
+                      return styleIn.AgenteESOCHTermica;
+                    case 39:
+                      return styleIn.AgenteENPCTermica;
+                    case 85:
+                      return styleIn.AgenteCaliTermica;
+                    case 19:
+                      return styleIn.AgenteCELTermica;
+                    case 84:
+                      return styleIn.AgenteCandelariaTermica;
+                    case 82:
+                        return styleIn.AgenteBquillaTermica;
+                    default:
+                        return styleIn.Otros;
+                  }
+                  break;
+              default:
+                break;
+            }
+            return styleIn.Otros;
           }
         };
       } else {
@@ -714,7 +774,6 @@ export class MapComponent implements OnInit {
           if (!this.popupDespacho.classList.contains('show')) {
             this.popupDespacho.classList.add('show');
             this.popup.classList.remove('show');
-            console.log('paso por aqui 1');
           }
           // this.popup.classList.add('show');
 
@@ -760,7 +819,6 @@ export class MapComponent implements OnInit {
           this.map.addOverlay(overlay);
           if (!this.popup.classList.contains('show')) {
             this.popup.classList.add('show');
-            console.log('paso por aqui 2');
           }
           // this.popup.classList.add('show');
 
