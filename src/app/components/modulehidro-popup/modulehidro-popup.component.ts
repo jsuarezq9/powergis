@@ -76,6 +76,8 @@ export class ModulehidroPopupComponent implements OnInit {
     popupExpanded.style.display = 'flex';
     const popupModule = document.getElementById('moduleHidroPopup');
     popupModule.style.display = 'block';
+    popupModule.classList.remove('hide');
+    popupModule.classList.add('show');
 
   }
 

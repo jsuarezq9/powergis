@@ -12,6 +12,8 @@
     margin-left: 0;
 }
 
-. pickerColor {
-    background-color: rgb(24, 36, 49);
+.popupbodytext {
+    background-color: #fff;
+    color: #5F5F5F;
+    font-weight: bold;
 }
