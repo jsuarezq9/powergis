@@ -208,7 +208,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       // console.log('Fechas input', inicio, final);
       // console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
       const a = moment(inicio).format('YYYY-MM-DD');
-      const b = moment(final).format('YYYY-MM-DD HH:mm:ss');
+      const b = moment(final).format('YYYY-MM-DD 23:00:00');
       console.log('Fechas ffff', a, b);
       console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor);
       console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion);

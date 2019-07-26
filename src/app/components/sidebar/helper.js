@@ -13,7 +13,7 @@ export const stylesDespacho = {
     AgenteEPMTermica:  new Style({
         image: new Icon({ src: './assets/icons/estaciones/EPMTermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
     AgenteEPMHidraulica:  new Style({
-        image: new Icon({ src: './assets/icons/estaciones/EMPHidrica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
+        image: new Icon({ src: './assets/icons/estaciones/EmpH.png', scale: 0.37, anchor: [0.5, 1]}), zIndex: 0}),
     AgenteValleTermica:  new Style({
         image: new Icon({ src: './assets/icons/estaciones/VALLETermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
     AgenteYopalTermica:  new Style({
