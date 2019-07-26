@@ -20,6 +20,32 @@
             <img class="w-75" src="./assets/icons/sidemenu/LegendOtrosInactiva.png" alt=""> Estación inactiva otros
         </div>
     </div>
+    <div class="row pb-2 border-bottom justify-content-md-center" id="legendModulePreci" style="display: none;">
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/preciSinDatos.png" alt=""> Estación sin datos
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/preciSinLluvia.png" alt=""> Estación sin lluvia
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-75" src="./assets/icons/sidemenu/preciConLluvia.png" alt=""> Estación con lluvia
+        </div>
+    </div>
+    <div class="row pb-2 border-bottom justify-content-md-center" id="legendModuleDespacho" style="display: none; z-index: 0;">
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-50" src="./assets/icons/sidemenu/emgesaHidraulica.png" alt=""> Planta Hidráulica EMGESA
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-50" src="./assets/icons/sidemenu/emgesaTermica.png" alt=""> Planta Térmica EMGESA
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-50" src="./assets/icons/sidemenu/plantaOtrosHidraulica.png" alt=""> Planta Hidráulica otros
+        </div>
+        <div class="col-3 text-wrap text-center" style="font-size: 10px">
+            <img class="w-50" src="./assets/icons/sidemenu/plantaOtroTermica.png" alt=""> Planta Térmica otros
+        </div>
+    </div>
+
     <!-- Capas base -->
     <div class="row pt-2 justify-content-md-center">
         <div class="col-3 text-wrap text-center" *ngFor="let layer of layersInLegend" style="font-size: 10px" [id]="layer.name">

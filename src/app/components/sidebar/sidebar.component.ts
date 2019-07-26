@@ -75,6 +75,8 @@ export class SidebarComponent implements OnInit {
       image: new Icon({ src: './assets/icons/estaciones/azulHidraulica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
   };
   legendHidro: any;
+  legendPreci: any;
+  legendDespacho: any;
   legendRaster: any;
   legendDiv: any;
   legendExp: any;
@@ -107,6 +109,8 @@ export class SidebarComponent implements OnInit {
     };
     this.legendDiv = document.getElementById('buttonCollapseLegendDiv');
     this.legendHidro = document.getElementById('legendModuleHidro');
+    this.legendPreci = document.getElementById('legendModulePreci');
+    this.legendDespacho = document.getElementById('legendModuleDespacho');
     this.legendRaster = document.getElementById('rasterLegend');
 
 
@@ -167,6 +171,8 @@ export class SidebarComponent implements OnInit {
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
     this.interval = setInterval(this.runLayersHidroHourly, 3600000);
     // console.log(this.legendHidro);
+    this.legendDespacho.style.display = 'none';
+    this.legendPreci.style.display = 'none';
     this.legendHidro.style.display = 'flex';
 
     const legendDiv = document.getElementById('legend');
@@ -209,7 +215,41 @@ export class SidebarComponent implements OnInit {
     this.interval = setInterval(this.runLayersPrecipitationHourly, 3600000);
     // clearInterval(this.interval);
     this.legendHidro.style.display = 'none';
+    this.legendDespacho.style.display = 'none';
     this.legendRaster.style.display = 'block';
+    // console.log(this.legendHidro);
+    this.legendPreci.style.display = 'flex';
+
+    const legendDiv = document.getElementById('legend');
+    // legendDiv.classList.toggle('legend-expanded');
+    let isExpanded = false;
+    // tslint:disable-next-line:prefer-for-of
+    for (let index = 0; index < legendDiv.classList.length; index++) {
+      const element = legendDiv.classList[index];
+      if (element === 'legend-expanded') {
+        isExpanded = true;
+      }
+    }
+    // console.log(isExpanded);
+    if (!isExpanded) {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
+    } else {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
+    }
   }
 
   addEstacionesDespacho() {
@@ -217,6 +257,42 @@ export class SidebarComponent implements OnInit {
     this.removeLegendRaster();
     this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
 
+    this.legendHidro.style.display = 'none';
+    // console.log(this.legendHidro);
+    this.legendPreci.style.display = 'none';
+    this.legendDespacho.style.display = 'flex';
+
+
+    const legendDiv = document.getElementById('legend');
+    // legendDiv.classList.toggle('legend-expanded');
+    let isExpanded = false;
+    // tslint:disable-next-line:prefer-for-of
+    for (let index = 0; index < legendDiv.classList.length; index++) {
+      const element = legendDiv.classList[index];
+      if (element === 'legend-expanded') {
+        isExpanded = true;
+      }
+    }
+    // console.log(isExpanded);
+    if (!isExpanded) {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
+    } else {
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+      legendDiv.classList.add('legend-expanded');
+      const legendCollapsed = document.getElementById('legendCollapsed');
+      legendCollapsed.style.display = 'none';
+      const legendExpanded = document.getElementById('legendExpanded');
+      legendExpanded.style.display = 'block';
+      const legendButton = document.getElementById('buttonCollapseLegend');
+      legendButton.style.display = 'block';
+    }
   }
 
   removeEstaciones() {
@@ -227,6 +303,14 @@ export class SidebarComponent implements OnInit {
     this.interaction.setLayer(this.layerDespacho, false, false);
     this.interaction.setSelectLayer(this.layerVMEstaciones, true, false);
     this.legendHidro.style.display = 'none';
+    this.legendPreci.style.display = 'none';
+    this.legendDespacho.style.display = 'none';
+    const legendExpanded = document.getElementById('legendExpanded');
+    legendExpanded.style.display = 'none';
+    const legendButton = document.getElementById('buttonCollapseLegend');
+    legendButton.style.display = 'none';
+    const legendCollapsed = document.getElementById('legendCollapsed');
+    legendCollapsed.style.display = 'none';
   }
 
   removeLegendRaster = () => {

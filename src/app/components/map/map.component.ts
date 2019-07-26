@@ -69,6 +69,7 @@ export class MapComponent implements OnInit {
   precipitation = {};
 
   legend: any;
+  textLedend: any;
 
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService,
@@ -234,6 +235,7 @@ export class MapComponent implements OnInit {
         const type = this.getLayerTypeFromHref(rasterSeleccionado);
         if (type && type === this.geoservice.RASTERS) {
           this.addLayerTileWMS(rasterSeleccionado.name, type, false, false);
+          this.textLedend = rasterSeleccionado.name;
           this.legend = this.geoservice.getRasterLegend(rasterSeleccionado.name);
         }
 

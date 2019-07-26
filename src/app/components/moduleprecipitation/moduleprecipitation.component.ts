@@ -151,9 +151,9 @@ export class ModuleprecipitationComponent implements OnInit {
     document.getElementById(rasterSeleccionado.name).classList.add('active');
   }
 
-  changeNameDrop(rasterSeleccionado: any) {
-    this.nameRasterActual = rasterSeleccionado.title;
-  }
+  // changeNameDrop(rasterSeleccionado: any) {
+  //   this.nameRasterActual = rasterSeleccionado.title;
+  // }
 
   removeAllRasters() {
     this.rasters.forEach(element => {
