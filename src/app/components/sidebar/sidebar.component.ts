@@ -60,8 +60,20 @@ export class SidebarComponent implements OnInit {
       width: 2})})})
   };
 
-  stylesDespacho = helper.stylesDespacho;
-
+  stylesDespacho = {
+    EmgesaHidraulica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaHidraulica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaTermica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaTermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaFotovoltaica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaFotovoltaica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    EmgesaEolica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/IconoPlantaEmgesaEolica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 2}),
+    OtrosTermica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/rojoTermica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
+    OtrosHidraulica:  new Style({
+      image: new Icon({ src: './assets/icons/estaciones/azulHidraulica.png', scale: 0.041, anchor: [0.5, 1]}), zIndex: 0}),
+  };
   legendHidro: any;
   legendRaster: any;
   legendDiv: any;
