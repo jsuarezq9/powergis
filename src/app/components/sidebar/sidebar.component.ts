@@ -170,7 +170,7 @@ export class SidebarComponent implements OnInit {
     this.removeLegendRaster();
     this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro);
     this.interval = setInterval(this.runLayersHidroHourly, 3600000);
-    // console.log(this.legendHidro);
+    // // console.log(this.legendHidro);
     this.legendDespacho.style.display = 'none';
     this.legendPreci.style.display = 'none';
     this.legendHidro.style.display = 'flex';
@@ -185,7 +185,7 @@ export class SidebarComponent implements OnInit {
         isExpanded = true;
       }
     }
-    // console.log(isExpanded);
+    // // console.log(isExpanded);
     if (!isExpanded) {
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       legendDiv.classList.add('legend-expanded');
@@ -217,7 +217,7 @@ export class SidebarComponent implements OnInit {
     this.legendHidro.style.display = 'none';
     this.legendDespacho.style.display = 'none';
     this.legendRaster.style.display = 'block';
-    // console.log(this.legendHidro);
+    // // console.log(this.legendHidro);
     this.legendPreci.style.display = 'flex';
 
     const legendDiv = document.getElementById('legend');
@@ -230,7 +230,7 @@ export class SidebarComponent implements OnInit {
         isExpanded = true;
       }
     }
-    // console.log(isExpanded);
+    // // console.log(isExpanded);
     if (!isExpanded) {
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       legendDiv.classList.add('legend-expanded');
@@ -258,7 +258,7 @@ export class SidebarComponent implements OnInit {
     this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro);
 
     this.legendHidro.style.display = 'none';
-    // console.log(this.legendHidro);
+    // // console.log(this.legendHidro);
     this.legendPreci.style.display = 'none';
     this.legendDespacho.style.display = 'flex';
 
@@ -273,7 +273,7 @@ export class SidebarComponent implements OnInit {
         isExpanded = true;
       }
     }
-    // console.log(isExpanded);
+    // // console.log(isExpanded);
     if (!isExpanded) {
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       legendDiv.classList.add('legend-expanded');

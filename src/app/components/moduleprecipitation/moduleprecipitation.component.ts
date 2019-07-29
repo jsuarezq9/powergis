@@ -180,7 +180,7 @@ export class ModuleprecipitationComponent implements OnInit {
       // Cambio de estaciones con booleano en true
       this.isQuery = true;
       this.changeEstaciones(inicio, final);
-      console.log('query ', this.isQuery, inicio, final);
+      // console.log('query ', this.isQuery, inicio, final);
       this.isQuery = false;
     }
   }

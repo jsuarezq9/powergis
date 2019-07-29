@@ -109,7 +109,7 @@ export class MapComponent implements OnInit {
 
       // 0. Guardar las capas con los Títulos ** EN PROGRESO, AÚN NO FUNCIONA. PROCESO ASÍNCRONO **
       this.interaction.layerTitlesInteraction.subscribe(( layers: any ) => {
-        // console.log('Recibo en map *******************', layers)
+        // // console.log('Recibo en map *******************', layers)
         // tslint:disable-next-line: prefer-for-of
         for (let index = 0; index < layers.length; index++) {
           const element = layers[index];
@@ -149,11 +149,11 @@ export class MapComponent implements OnInit {
           });
 
           element.geomFeature = {};
-          // console.log(layerFeatureVS)
+          // // console.log(layerFeatureVS)
           layerFeatureVS.on('change', (evt) => {
-            // console.log('********* ON CHANGE', layerFeatureVS.getFeatures())
+            // // console.log('********* ON CHANGE', layerFeatureVS.getFeatures())
             element.geomFeature = layerFeatureVS.getFeatures()[0];
-            // console.log('********* ON CHANGE', element)
+            // // console.log('********* ON CHANGE', element)
           });
 
           this.layersInfo[element.name] = element;
@@ -407,7 +407,7 @@ export class MapComponent implements OnInit {
                 });
             }
           } catch (error) {
-            console.log(error);
+            // console.log(error);
           }
         } else {
           const style = {
@@ -480,7 +480,7 @@ export class MapComponent implements OnInit {
       }
       newLayer.setOpacity(0.5);
       this.saveLayer(name, newLayer);
-      // console.log('TIPO DE CAPA', name, newLayer, this.layers);
+      // // console.log('TIPO DE CAPA', name, newLayer, this.layers);
       if (overlay) {
         this.eventTooltip(newLayer, overlay);
       }
@@ -705,7 +705,7 @@ export class MapComponent implements OnInit {
             };
             info.push(item);
           } else {
-            console.log('No es la capa de despacho');
+            // console.log('No es la capa de despacho');
           }
         }
         // , {
@@ -751,7 +751,7 @@ export class MapComponent implements OnInit {
             };
             info.push(item);
           } else {
-            console.log('No es la capa de estaciones');
+            // console.log('No es la capa de estaciones');
           }
         }
         // , {
@@ -848,8 +848,8 @@ export class MapComponent implements OnInit {
     }
 
     removeLayer(name: string) {
-      // console.log(this.layers[name].layer);
-      // console.log(this.layers);
+      // // console.log(this.layers[name].layer);
+      // // console.log(this.layers);
       if (this.layers[name]) {
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);

@@ -74,7 +74,7 @@ ngOnInit() {
       this.stationState = popup.estadoEstacion;
       this.dwhService.getDespachoSin(this.plantId).subscribe(response => {
         // tslint:disable-next-line:no-string-literal
-        // console.log(response);
+        // // console.log(response);
         this.setData(response);
         });
     }

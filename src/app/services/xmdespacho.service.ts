@@ -40,7 +40,7 @@ export class XmdespachoService {
     return this.http.get(this.host + planta, { headers })
       .pipe(
         map((res: Response) => {
-          console.log(res);
+          // console.log(res);
           const datas = res;
           return datas;
         })
@@ -56,7 +56,7 @@ export class XmdespachoService {
     //   "fecha_inicio": "10-07-2019",
     //   "fecha_fin": "10-07-2019"
     // });
-    // console.log(body);
+    // // console.log(body);
     // return this.http.post(urlBase, body, { headers });
   }
 

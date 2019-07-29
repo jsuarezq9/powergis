@@ -112,7 +112,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log(this.firstDateYear);
+    // // console.log(this.firstDateYear);
     const initial = moment(this.firstDateYear.valueOf()).format('YYYY-MM-DD HH:mm:ss');
     const today = moment().format('YYYY-MM-DD HH:mm:ss');
     this.interaction.timeSeriesInteraction.subscribe(sensor => {
@@ -122,11 +122,11 @@ export class ModulehidroTimeseriesComponent implements OnInit {
   }
   onValueChangeA(value: Date): void {
     this.fecha_inicio = value;
-    console.log(this.fecha_inicio);
+    // console.log(this.fecha_inicio);
   }
   onValueChangeB(value: Date): void {
     this.fecha_fin = value;
-    console.log(this.fecha_fin);
+    // console.log(this.fecha_fin);
   }
   renderTimeSeries(initial, final, idStation, idSensor) {
     this.formingRequest(initial, final, idStation, idSensor);
@@ -137,7 +137,7 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     //   const initialDate = moment(dates[0]).format('YYYY-MM-DD HH:mm:ss');
     //   const finalDate = moment(dates[dates.length - 1]).format('YYYY-MM-DD HH:mm:ss');
     //   existsDate =  initialDate < initial && final < finalDate ? true : false;
-    //   console.log(initialDate, '>', initial, '?', final, '<', finalDate, '?', existsDate);
+    //   // console.log(initialDate, '>', initial, '?', final, '<', finalDate, '?', existsDate);
     //   if (existsDate) {
     //     // ARREGLO
     //     // Reemplazo en data
@@ -148,8 +148,8 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     //       const b = moment(final).add(i , 'days').format('YYYY-MM-DDTHH:mm:ss');
     //       initialIdx = dates.indexOf(a);
     //       finalIdx = dates.indexOf(b);
-    //       console.log('fechas', a, b);
-    //       console.log('indexes', initialIdx, finalIdx);
+    //       // console.log('fechas', a, b);
+    //       // console.log('indexes', initialIdx, finalIdx);
     //       if (initialIdx !== -1 && finalIdx !== -1) {
     //         break;
     //       }
@@ -158,8 +158,8 @@ export class ModulehidroTimeseriesComponent implements OnInit {
     //     this.data[idSensor][idSensor].total = this.data[idSensor][idSensor].fecha.slice(initialIdx, finalIdx + 1);
     //     this.actualData = this.data[idSensor];
     //     this.setData(this.actualData[idSensor]);
-    //     console.log('Existeeeee date', initial, initialIdx, finalIdx);
-    //     console.log(dates)
+    //     // console.log('Existeeeee date', initial, initialIdx, finalIdx);
+    //     // console.log(dates)
     //   } else {
     //     // CONSULTA
     //     this.formingRequest(initial, final, idStation, idSensor);
@@ -202,16 +202,16 @@ export class ModulehidroTimeseriesComponent implements OnInit {
       // document.getElementById(`warningText2`).style.display = 'none';
       // this.fi = document.getElementById('fechaInicio');
       // this.ff = document.getElementById('fechaFin');
-      console.log(inicio);
-      console.log(final);
+      // console.log(inicio);
+      // console.log(final);
       const today = moment().format('YYYY-MM-DD HH:mm:ss');
-      // console.log('Fechas input', inicio, final);
-      // console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
+      // // console.log('Fechas input', inicio, final);
+      // // console.log('Fechas desde getelementbyid', this.fi.value, this.ff.value);
       const a = moment(inicio).format('YYYY-MM-DD');
       const b = moment(final).format('YYYY-MM-DD 23:00:00');
-      console.log('Fechas ffff', a, b);
-      console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor);
-      console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion);
+      // console.log('Fechas ffff', a, b);
+      // console.log('Sensor seleccionado ffff', this.selectedSensor, typeof this.selectedSensor);
+      // console.log('Sensor idEstacion ffff', this.selectedSensor.idEstacion);
 
       this.renderTimeSeries(a, b, this.selectedSensor.idEstacion, this.selectedSensor.idSensor);
     }

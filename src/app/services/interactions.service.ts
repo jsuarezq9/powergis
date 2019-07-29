@@ -34,7 +34,7 @@ export class ComponentsInteractionService {
   }
 
   setLayerTitles(layer: any): void {
-    // console.log('INTERACTION');
+    // // console.log('INTERACTION');
     this.layerTitlesInteraction.next(layer);
   }
 
@@ -115,7 +115,7 @@ export class ComponentsInteractionService {
   }
 
   returnInfoLayers(info: any): void {
-    // console.log('returnInfoLayers!!!')
+    // // console.log('returnInfoLayers!!!')
     this.layerTitlesPlusGeometryInteraction.next(info);
   }
 

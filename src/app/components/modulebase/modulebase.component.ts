@@ -21,7 +21,7 @@ export class ModulebaseComponent implements OnInit {
   constructor(private geoservice: GeoserverService,
               private interaction: ComponentsInteractionService) {
     forkJoin(this.getBases(), this.getTems()).subscribe((layers) => {
-      // console.log('Construc');
+      // // console.log('Construc');
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < layers.length; i++) {
         const element = layers[i];
@@ -34,7 +34,7 @@ export class ModulebaseComponent implements OnInit {
         element.source = source;
       }
       this.getLayersTitles(this.layers);
-      // console.log(this.layers);
+      // // console.log(this.layers);
 
     }, (error) => {
       this.handleError('carga inicial de capas', error);

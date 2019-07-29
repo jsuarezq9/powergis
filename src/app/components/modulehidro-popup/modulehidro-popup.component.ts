@@ -51,7 +51,7 @@ export class ModulehidroPopupComponent implements OnInit {
             const formatDates = this.date.valueOf().toString().split(',')[0].split('/');
             this.date = `${formatDates[0]} ${this.months[Number(formatDates[1]) - 1]}`;
           } else {
-            // console.log('NO hay datos de la estación seleccionada');
+            // // console.log('NO hay datos de la estación seleccionada');
             this.showInfo = false;
             this.info = [];
             this.date = undefined;

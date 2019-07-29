@@ -23,7 +23,7 @@ export class LegendComponent implements OnInit {
   ngOnInit() {
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
-      // console.log('llegando a LEGEND', layersArray);
+      // // console.log('llegando a LEGEND', layersArray);
       this.layersInfo = layersArray;
     });
 
@@ -45,7 +45,7 @@ export class LegendComponent implements OnInit {
       }
 
       this.getLegend();
-      // console.log('LEGENDCOMP', this.layersInLegend);
+      // // console.log('LEGENDCOMP', this.layersInLegend);
 
       // Consulto el tipo de geometría de la nueva capa
       // this.requestLayerWFS();
@@ -69,11 +69,11 @@ export class LegendComponent implements OnInit {
     if (this.layersInLegend.length === 0) {
       // ESCONDER LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
-      console.log('pasa por aqui');
+      // console.log('pasa por aqui');
     } else {
       // MOSTRAR LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
-      console.log('cuando pasa por aqui');
+      // console.log('cuando pasa por aqui');
     }
   }
 
