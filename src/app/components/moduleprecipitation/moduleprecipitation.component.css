@@ -111,3 +111,11 @@
 .dropleft .dropdown-toggle::before {
     content: none!important;
 }
+
+.show {
+    visibility: visible;
+}
+
+.hide {
+    visibility: hidden;
+}

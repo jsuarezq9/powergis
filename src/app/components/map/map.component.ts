@@ -112,6 +112,7 @@ export class MapComponent implements OnInit {
         // // console.log('Recibo en map *******************', layers)
         // tslint:disable-next-line: prefer-for-of
         for (let index = 0; index < layers.length; index++) {
+          // tslint:disable-next-line:no-shadowed-variable
           const element = layers[index];
           const type = this.getLayerTypeFromHref(element);
           const count1 = 'count=1&';
@@ -849,17 +850,27 @@ export class MapComponent implements OnInit {
 
     removeLayer(name: string) {
       // // console.log(this.layers[name].layer);
-      // // console.log(this.layers);
+      // console.log(name);
+      // console.log(this.layers);
       if (this.layers[name]) {
         this.layers[name].show = false;
         this.map.removeLayer(this.layers[name].layer);
       }
     }
+    // removeLayersBaseCustom(name: string) {
+    //   if (name.substr(0, 1) === 'c') {
+    //     if (this.layers[name]) {
+    //       this.layers[name].show = false;
+    //       this.map.removeLayer(this.layers[name].layer);
+    //     }
+    //   }
+    // }
 
     removeRasterCustom() {
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
       for (let index = 0; index < length; index++) {
+        // tslint:disable-next-line:no-shadowed-variable
         const element = keys[index];
         if (element.substr(0, 2) === 'PT') {
           this.removeLayer(element);
@@ -879,6 +890,7 @@ export class MapComponent implements OnInit {
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
       for (let index = 0; index < length; index++) {
+        // tslint:disable-next-line:no-shadowed-variable
         const element = keys[index];
         if (element === 'vm_ultimo_dato_rain_estacion') {
           this.removeLayer(element);
@@ -889,6 +901,7 @@ export class MapComponent implements OnInit {
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
       for (let index = 0; index < length; index++) {
+        // tslint:disable-next-line:no-shadowed-variable
         const element = keys[index];
         if (element === 'vm_ultimo_dato_rain_estacion') {
           this.removeLayer(element);
@@ -922,21 +935,22 @@ export class MapComponent implements OnInit {
     resetLayers() {
       const length = Object.keys(this.layers).length;
       const keys = Object.keys(this.layers);
-      this.legendRaster.style.display = 'none';
+      // this.legendRaster.style.display = 'none';
       for (let index = 0; index < length; index++) {
+        // tslint:disable-next-line:no-shadowed-variable
         const element = keys[index];
-        this.removeLayer(element);
-        if (element.substr(0, 1) === 'c' || element.substr(0, 4) === 'vm_c') {
+        if (element.substr(0, 1) === 'c') {
+          this.removeLayer(element);
         // tslint:disable-next-line:no-string-literal
           document.getElementById(`${element}`)['checked'] = false;
         }
       }
-      this.layers = {};
+      // this.layers = {};
       this.interaction.setActiveLayers(this.layers);
     }
 
-    resetCheckButton(element: any) {
-      const checkButton = document.getElementById(element);
+    resetCheckButton(name: any) {
+      const checkButton = document.getElementById(name);
       checkButton.classList.add('inactiveCheck');
       checkButton.classList.remove('activeCheck');
     }

@@ -217,6 +217,9 @@ export class SidebarComponent implements OnInit {
     this.legendHidro.style.display = 'none';
     this.legendDespacho.style.display = 'none';
     this.legendRaster.style.display = 'block';
+    const rasterActual = document.getElementById(`rasterActual`);
+    rasterActual.classList.remove('show');
+    rasterActual.classList.add('hide');
     // // console.log(this.legendHidro);
     this.legendPreci.style.display = 'flex';
 

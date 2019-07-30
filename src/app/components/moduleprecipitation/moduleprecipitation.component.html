@@ -7,7 +7,7 @@
                     <img src="./assets/icons/sidemenu/IconoIntervaloModulo3.png" alt="Intervalo de Tiempo" style="height: 30px">
                 </div>
                 <div class="col-9 btn-lg text-center" style="color: #5B5B61;font-size: 1.2vw">
-                    Intervalo de tiempo
+                    Intervalo de tiempo <span class="active" id="rasterActual">{{nameRasterActual}}</span>
                 </div>
             </div>
             <div class="row mt-2 rounded-pill shadow-sm align-items-center itemsWhite">
@@ -16,7 +16,7 @@
                         <span id="buttonPreestablecido">Preestablecido</span>
                     </div>
                     <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonPreestablecido" style="width: 200%; max-height: 180px;" id="drop1">
-                        <a class="dropdown-item pointer" *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones();' id="{{item.name}}" aria-labelledby="buttonPreestablecido">{{item.title}}</a>
+                        <a class="dropdown-item pointer" *ngFor="let item of rasters" (click)='changeRaster(item); changeEstaciones(); changeNameDrop(item)' id="{{item.name}}" aria-labelledby="buttonPreestablecido">{{item.title}}</a>
                     </div>
                 </div>
                 <div class="dropdown w-50">

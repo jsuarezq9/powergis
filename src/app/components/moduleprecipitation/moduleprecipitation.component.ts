@@ -22,7 +22,7 @@ export class ModuleprecipitationComponent implements OnInit {
   zoomRioBogota = 10;
   zoomGuavio = 10;
   rasters = [];
-  nameRasterActual = 'Preestablecido';
+  nameRasterActual;
   layerEstaciones: any;
   layerVMEstaciones: any;
   isQuery = false;
@@ -34,7 +34,6 @@ export class ModuleprecipitationComponent implements OnInit {
   constructor(private interaction: ComponentsInteractionService,
               private geoservice: GeoserverService ) {
   this.getRasters();
-  this.nameRasterActual = 'Preestablecido';
   }
 
   ngOnInit() {
@@ -48,7 +47,6 @@ export class ModuleprecipitationComponent implements OnInit {
       name: 'vm_ultimo_dato_estacion',
       edit: false,
     };
-    this.nameRasterActual = 'Preestablecido';
   }
 
   viewColombia() {
@@ -93,6 +91,7 @@ export class ModuleprecipitationComponent implements OnInit {
 
   getRasters() {
     const source = this.geoservice.RASTERS;
+    this.nameRasterActual = '';
     this.geoservice.getLayers(source).subscribe(async (rasters: any) => {
       this.concatLayers(rasters);
       this.getRastersNames();
@@ -151,9 +150,12 @@ export class ModuleprecipitationComponent implements OnInit {
     document.getElementById(rasterSeleccionado.name).classList.add('active');
   }
 
-  // changeNameDrop(rasterSeleccionado: any) {
-  //   this.nameRasterActual = rasterSeleccionado.title;
-  // }
+  changeNameDrop(rasterSeleccionado: any) {
+    const rasterActual = document.getElementById(`rasterActual`);
+    rasterActual.classList.remove('hide');
+    rasterActual.classList.add('show');
+    this.nameRasterActual = rasterSeleccionado.title;
+  }
 
   removeAllRasters() {
     this.rasters.forEach(element => {

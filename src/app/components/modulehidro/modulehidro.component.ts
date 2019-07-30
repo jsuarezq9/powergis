@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ComponentsInteractionService } from '../../services/interactions.service';
+import * as helper from '../../../environments/helper';
 
 @Component({
   selector: 'app-modulehidro',
@@ -10,10 +11,15 @@ export class ModulehidroComponent implements OnInit {
 
   layersInHidro = [];
   layersInfo = [];
+  filterTechnology = [];
+  filterEntidad = [];
 
   constructor(private interaction: ComponentsInteractionService) { }
 
   ngOnInit() {
+
+    this.filterTechnology = helper.filterTechnology;
+    this.filterEntidad = helper.filterEntidad;
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
       this.layersInfo = layersArray;

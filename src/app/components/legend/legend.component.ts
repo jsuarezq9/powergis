@@ -53,8 +53,8 @@ export class LegendComponent implements OnInit {
     // Eliminando desde el botón limpiar la ayuda del layend
     this.interaction.setActiveBaseLayers.subscribe((layer: any) => {
       this.layersInLegend = [];
-      document.getElementById('buttonCollapseLegend').style.display = 'none';
-      document.getElementById('legendExpanded').style.display = 'none';
+      // document.getElementById('buttonCollapseLegend').style.display = 'none';
+      // document.getElementById('legendExpanded').style.display = 'none';
     });
 
 
@@ -69,17 +69,9 @@ export class LegendComponent implements OnInit {
     if (this.layersInLegend.length === 0) {
       // ESCONDER LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
-<<<<<<< Updated upstream
-      // console.log('pasa por aqui');
     } else {
       // MOSTRAR LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
-      // console.log('cuando pasa por aqui');
-=======
-    } else {
-      // MOSTRAR LEYENDA
-      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
->>>>>>> Stashed changes
     }
   }
 

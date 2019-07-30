@@ -11,6 +11,19 @@
     title: 'Fotovoltaica'
   }];
 
+  export const filterEntidad = [{
+    name: 'EMGESA',
+    title: 'Emgesa'
+  },
+  {
+    name: 'IDEAM',
+    title: 'IDEAM'
+  },
+  {
+    name: 'CAR',
+    title: 'CAR'
+  }];
+
   export const filterAgente = [{
     id: 18,
     name: 'AES CHIVOR & CIA. S.C.A. E.S.P.',

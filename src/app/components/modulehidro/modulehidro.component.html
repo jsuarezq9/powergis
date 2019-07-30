@@ -1,7 +1,53 @@
 <div class="col-12 modules-outer-hidro shadow" style="padding-left: 5px">
-    <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%">
+        <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 100%">
+            <!-- Búsqueda y añadir capas -->
+            <div class="container mt-3 mb-3" style="width: 95%;">
+                <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
+                  <div class="col-10">
+                      <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
+                  </div>
+                  <hr>
+                  <button class="col btn btn-lg ripple roundedInputSearch" type="button" aria-pressed="mixed">
+                  <i class="ripple fas fa-search"></i>
+              </button>
+              </div> -->
+                <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                    <div class="col-1 btn-lg text-left">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="col-9 btn-lg text-left" style="font-size: 1.2vw">
+                        Capas
+                    </div>
+                </div>
+            </div>
+            <!-- Seleccionar la tecnología -->
+    
+            <div class="row m-2 rounded-pill shadow-sm align-items-center itemsWhite">
+                <div class="dropdown w-50">
+                    <div class="col btn-lg buttonLeft text-center border-right pointer dropdown-toggle" style="font-size: 1.0vw" id="buttonEntidad" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span id="buttonEntidad">Entidad</span>
+                    </div>
+                    <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonEntidad" style="width: 100%; max-height: 180px;" id="drop1">
+                        <a class="dropdown-item pointer" *ngFor="let item of filterEntidad" (click)="selectTech(item)" id="{{item.name}}" aria-labelledby="buttonEntidad"><small>{{item.title}}</small></a>
+                    </div>
+                </div>
+                <div class="dropdown w-50">
+                    <div class="col btn-lg buttonRight text-center pointer dropdown-toggle" style="font-size: 1.0vw" id="buttonTecnolgia" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span id="buttonTecnolgia">Tecnología</span>
+                    </div>
+                    <div class="dropdown-menu mt-2 overflow-auto" aria-labelledby="buttonTecnolgia" style="width: 100%; max-height: 180px;" id="drop2">
+                        <a class="dropdown-item pointer" *ngFor="let item of filterTechnology" (click)="selectTech(item, 'agente')" id="{{item.name}}" aria-labelledby="buttonTecnolgia"><small>{{item.title}}</small></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- <div class="col-12 modules-outer-hidro shadow" style="padding-left: 5px">
+    <div class="animated fadeIn moduleFloat dropToolMenu border border-white rounded" style="min-height: 100%; max-height: 50%"> -->
         <!-- Búsqueda y añadir capas -->
-        <div class="container mt-3" style="width: 95%;">
+        <!-- <div class="container mt-3" style="width: 95%;"> -->
             <!-- <div class="row p-2 shadow-sm rounded-pill align-items-center itemsWhite">
               <div class="col-10">
                   <input class="form-control p-2 roundedInputSearchLeft" placeholder="&#61447;" type="search" placeholder="Buscar capa" aria-label="Search" #buscarTexto>
@@ -11,7 +57,7 @@
               <i class="ripple fas fa-search"></i>
           </button>
           </div> -->
-            <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
+            <!-- <div class="row mt-2 p-2 rounded-pill shadow-sm align-items-center itemsWhite">
                 <div class="col-1 btn-lg text-left">
                     <i class="fas fa-layer-group"></i>
                 </div>
@@ -19,9 +65,9 @@
                     Capas
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Capas disponibles en mapa -->
-        <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
+        <!-- <div class="container-fluid mt-3 rounded-lg overflow-auto" style="width: 95%; min-height: 300px; max-height: 250px; background-color: white">
             <div class="row m-1 border border-primary rounded text-justify text-center" *ngFor="let layer of layersInHidro" [id]="layer.name" style="height: 41px; font-style: normal; font-size: 21px; line-height: 15px; display: flex; align-items: center;">
                 <div class="custom-control custom-switch">
                     <div class="text-justify text-center" style="margin-top: 6px">
@@ -32,4 +78,4 @@
         </div>
 
     </div>
-</div>
+</div> -->
