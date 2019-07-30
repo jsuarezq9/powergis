@@ -69,11 +69,17 @@ export class LegendComponent implements OnInit {
     if (this.layersInLegend.length === 0) {
       // ESCONDER LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+<<<<<<< Updated upstream
       // console.log('pasa por aqui');
     } else {
       // MOSTRAR LEYENDA
       document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
       // console.log('cuando pasa por aqui');
+=======
+    } else {
+      // MOSTRAR LEYENDA
+      document.getElementById('buttonCollapseLegendDiv').style.display = 'flex';
+>>>>>>> Stashed changes
     }
   }
 
