@@ -11,14 +11,14 @@ export class ModulehidroComponent implements OnInit {
 
   layersInHidro = [];
   layersInfo = [];
-  filterTechnology = [];
+  filterClass = [];
   filterEntidad = [];
 
   constructor(private interaction: ComponentsInteractionService) { }
 
   ngOnInit() {
 
-    this.filterTechnology = helper.filterTechnology;
+    this.filterClass = helper.filterClass;
     this.filterEntidad = helper.filterEntidad;
     // Información con título desde map
     this.interaction.layerTitlesPlusGeometryInteraction.subscribe(( layersArray: any ) => {
@@ -44,5 +44,16 @@ export class ModulehidroComponent implements OnInit {
       this.layersInHidro = [];
     });
   }
-}
 
+
+  selectTech(item: any, agente?: any) {
+    if (!agente) {
+      const CQLfilter = `CQL_FILTER=nombre_entidad=%27${item.name}%27&`;
+      this.interaction.setFilterEstaciones(CQLfilter);
+    } else {
+      const CQLfilter = `CQL_FILTER=nombre_clase=%27${item.name}%27&`;
+      this.interaction.setFilterEstaciones(CQLfilter);
+    }
+  }
+
+}

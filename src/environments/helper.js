@@ -11,6 +11,19 @@
     title: 'Fotovoltaica'
   }];
 
+  export const filterClass = [{
+    name: 'Hidrologica',
+    title: 'Hidrológica'
+  },
+  {
+    name: 'Meteorologica',
+    title: 'Meteorológica'
+  },
+  {
+    name: 'Hidrometeorologica',
+    title: 'Hidrometeorológica'
+  }];
+
   export const filterEntidad = [{
     name: 'EMGESA',
     title: 'Emgesa'

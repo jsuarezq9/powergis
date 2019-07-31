@@ -186,7 +186,7 @@ export class MapComponent implements OnInit {
       this.interaction.stationsInteraction.subscribe((layer: any) => {
 
         const type = this.getLayerTypeFromHref(layer);
-        const layerStations = this.addStationsWFS(type, layer.name, layer.style);
+        const layerStations = this.addStationsWFS(type, layer.name, layer.style, layer.query);
         const selectPointerMove2 = new Select({
           condition: pointerMove,
           style: layer.selectedstyle.hidroSelected,
@@ -599,58 +599,14 @@ export class MapComponent implements OnInit {
 
 
     // MODULO 2 funciones -----------------------------------------------
-    addStationsWFS(type: string, name: string, styleIn: any) {
-      const vectorSource = this.requestLayerWFS(type, name);
-      const vector = this.styleStationsLayer(vectorSource, name, styleIn);
-      return vector;
-    }
-
-    addStationsDespachoWFS(type: string, name: string, styleIn: any, query?: any) {
+    addStationsWFS(type: string, name: string, styleIn: any, query?: any) {
       let vectorSource;
       if (query) {
         vectorSource = this.requestLayerWFS(type, name, query);
       } else {
         vectorSource = this.requestLayerWFS(type, name);
       }
-      const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
-      return vector;
-    }
-
-
-    styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
-      let vector: any;
-      let setStyle: any;
-      if (styleIn) {
-        setStyle = (feature) => {
-          if (feature.get('id_agente') === 35 ) {
-            switch (feature.get('tipo_gener')) {
-              case 'HIDRAULICA':
-                return styleIn.EmgesaHidraulica;
-              case 'TERMICA':
-                return styleIn.EmgesaTermica;
-              case 'FOTOVOLTAICA':
-                return styleIn.EmgesaFotovoltaica;
-              case 'EOLICA':
-                return styleIn.EmgesaEolica;
-              default:
-                break;
-            }
-          } else {
-            if (feature.get('tipo_gener') === 'HIDRAULICA') {
-                return styleIn.OtrosHidraulica;
-            } else {
-              return styleIn.OtrosTermica;
-            }
-          }
-        };
-      } else {
-        setStyle = (feature) => {};
-      }
-      vector = new lVector({
-        source: vectorSource,
-        style: setStyle
-      });
-      this.saveLayer(name, vector);
+      const vector = this.styleStationsLayer(vectorSource, name, styleIn);
       return vector;
     }
 
@@ -683,52 +639,6 @@ export class MapComponent implements OnInit {
       this.saveLayer(name, vector);
       return vector;
     }
-    // Agregando popup modulo 4 despacho
-    addPopupDespacho() {
-       // OVERLAY
-       const overlay = new Overlay({
-        element: this.popupDespacho,
-        autoPan: true
-      });
-
-      // POPUP
-       this.map.on('singleclick', (evt: any) => {
-        const info = [];
-        const coordinate = evt.coordinate;
-        overlay.setPosition(coordinate);
-        this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
-          if ( feature.id_.substr(0, 17) === 'despacho_nacional') {
-            const item = {
-              idDedec: feature.values_.id_dedec,
-              nombreAge: feature.values_.nombre_age,
-              tipoGener: feature.values_.tipo_gener,
-              tipoPlant: feature.values_.id_agente
-            };
-            info.push(item);
-          } else {
-            // console.log('No es la capa de despacho');
-          }
-        }
-        // , {
-        //   layerFiltter: (layer) => {
-        //     return layer.get('layer_name') === 'vector2';
-        //   }
-        // }
-        );
-        if (info.length > 0) {
-          this.map.addOverlay(overlay);
-          if (!this.popupDespacho.classList.contains('show')) {
-            this.popupDespacho.classList.add('show');
-            this.popup.classList.remove('show');
-          }
-          // this.popup.classList.add('show');
-
-        } else {
-          this.popupDespacho.classList.remove('show');
-        }
-        this.createPopupDespacho(info[0]);
-    });
-  }
 
     addPopupStations() {
       // OVERLAY
@@ -779,9 +689,6 @@ export class MapComponent implements OnInit {
     createPopup(info) {
       this.interaction.setPopup(info);
     }
-    createPopupDespacho(info) {
-      this.interaction.setPopupDespacho(info);
-    }
 
     initializePopup() {
       // Muestro el popup
@@ -803,6 +710,110 @@ export class MapComponent implements OnInit {
       // }
     }
     // FIN MODULO 2
+
+    // FUNCIONES MODULO 4
+
+    addStationsDespachoWFS(type: string, name: string, styleIn: any, query?: any) {
+      let vectorSource;
+      if (query) {
+        vectorSource = this.requestLayerWFS(type, name, query);
+      } else {
+        vectorSource = this.requestLayerWFS(type, name);
+      }
+      const vector = this.styleStationsDespachoLayer(vectorSource, name, styleIn);
+      return vector;
+    }
+
+    styleStationsDespachoLayer(vectorSource: any, name: any, styleIn?: any) {
+      let vector: any;
+      let setStyle: any;
+      if (styleIn) {
+        setStyle = (feature) => {
+          if (feature.get('id_agente') === 35 ) {
+            switch (feature.get('tipo_gener')) {
+              case 'HIDRAULICA':
+                return styleIn.EmgesaHidraulica;
+              case 'TERMICA':
+                return styleIn.EmgesaTermica;
+              case 'FOTOVOLTAICA':
+                return styleIn.EmgesaFotovoltaica;
+              case 'EOLICA':
+                return styleIn.EmgesaEolica;
+              default:
+                break;
+            }
+          } else {
+            if (feature.get('tipo_gener') === 'HIDRAULICA') {
+                return styleIn.OtrosHidraulica;
+            } else {
+              return styleIn.OtrosTermica;
+            }
+          }
+        };
+      } else {
+        setStyle = (feature) => {};
+      }
+      vector = new lVector({
+        source: vectorSource,
+        style: setStyle
+      });
+      this.saveLayer(name, vector);
+      return vector;
+    }
+
+
+     // Agregando popup modulo 4 despacho
+     addPopupDespacho() {
+      // OVERLAY
+      const overlay = new Overlay({
+       element: this.popupDespacho,
+       autoPan: true
+     });
+
+     // POPUP
+      this.map.on('singleclick', (evt: any) => {
+       const info = [];
+       const coordinate = evt.coordinate;
+       overlay.setPosition(coordinate);
+       this.map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+         if ( feature.id_.substr(0, 17) === 'despacho_nacional') {
+           const item = {
+             idDedec: feature.values_.id_dedec,
+             nombreAge: feature.values_.nombre_age,
+             tipoGener: feature.values_.tipo_gener,
+             tipoPlant: feature.values_.id_agente
+           };
+           info.push(item);
+         } else {
+           // console.log('No es la capa de despacho');
+         }
+       }
+       // , {
+       //   layerFiltter: (layer) => {
+       //     return layer.get('layer_name') === 'vector2';
+       //   }
+       // }
+       );
+       if (info.length > 0) {
+         this.map.addOverlay(overlay);
+         if (!this.popupDespacho.classList.contains('show')) {
+           this.popupDespacho.classList.add('show');
+           this.popup.classList.remove('show');
+         }
+         // this.popup.classList.add('show');
+
+       } else {
+         this.popupDespacho.classList.remove('show');
+       }
+       this.createPopupDespacho(info[0]);
+   });
+ }
+
+    createPopupDespacho(info) {
+      this.interaction.setPopupDespacho(info);
+    }
+
+    // FIN MODULO 4
 
 
     // GENERALES

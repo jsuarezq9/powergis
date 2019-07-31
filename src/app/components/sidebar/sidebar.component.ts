@@ -118,6 +118,11 @@ export class SidebarComponent implements OnInit {
       this.interaction.setLayer(this.layerDespacho, false, false);
       this.interaction.setStationsDespacho(this.layerDespacho, this.stylesDespacho, this.selectedStylesHidro, filter);
     });
+
+    this.interaction.setFilterEstacion.subscribe((filter: any) => {
+      this.interaction.setLayer(this.layerEstaciones, false, false);
+      this.interaction.setStationsLayer(this.layerEstaciones, this.stylesHidro, this.selectedStylesHidro, filter);
+    });
   }
 
   collapseAll(event: any) {
